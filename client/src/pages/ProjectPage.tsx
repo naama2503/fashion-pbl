@@ -467,13 +467,13 @@ export default function ProjectPage() {
       {/* Tab Navigation */}
       <div className="sticky top-0 bg-white border-b-4 border-gray-900 z-10">
         <div className="container py-4">
-          <div className="flex gap-2 overflow-x-auto pb-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
             {translations.nav && Object.values(translations.nav).map((label, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentTab(idx)}
                 disabled={!canAccessTab(idx)}
-                className={`px-4 py-2 rounded font-bold whitespace-nowrap transition-all ${
+                className={`px-2 py-2 rounded font-bold text-xs sm:text-sm transition-all ${
                   currentTab === idx
                     ? "bg-gray-900 text-white"
                     : canAccessTab(idx)
@@ -481,7 +481,8 @@ export default function ProjectPage() {
                     : "bg-gray-100 text-gray-400 cursor-not-allowed"
                 }`}
               >
-                {idx + 1}. {label.split("(")[0].trim()}
+                <div className="font-bold text-lg">{idx + 1}</div>
+                <div className="text-xs leading-tight">{label.split("(")[0].trim()}</div>
               </button>
             ))}
           </div>
