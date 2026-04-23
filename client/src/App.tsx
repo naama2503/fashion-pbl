@@ -6,14 +6,18 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import Home from "./pages/Home";
+import ProjectPage from "./pages/ProjectPage";
+import AdminDashboard from "./pages/AdminDashboard";
 import StudentDemo from "./pages/StudentDemo";
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/demo" component={StudentDemo} />
-      <Route path="/404" component={NotFound} />
+      <Route path={"/"} component={Home} />
+      <Route path={"/project"} component={ProjectPage} />
+      <Route path={"/admin"} component={AdminDashboard} />
+      <Route path={"/404"} component={NotFound} />
+      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
