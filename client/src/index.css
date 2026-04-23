@@ -1,199 +1,86 @@
-/*
- * Fashion PBL – Soft Atelier / Couture Studio Design System
- * Warm parchment tones, Cormorant Garamond display, dusty rose accent
- * Full RTL (Hebrew) support
- */
-@import "tailwindcss";
-@import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Alef:wght@400;700&family=Assistant:wght@400;600;700&display=swap');
 
-@custom-variant dark (&:is(.dark *));
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+* {
+  font-family: 'Alef', 'Assistant', sans-serif;
 }
 
+body {
+  background-color: #b79d8a;
+  color: #333333;
+  font-family: 'Alef', 'Assistant', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  font-family: 'Alef', 'Assistant', sans-serif;
+}
+
+button, input, textarea, select {
+  font-family: 'Alef', 'Assistant', sans-serif;
+}
+
+/* Matte Color Palette */
 :root {
-  --radius: 0.5rem;
-
-  /* Atelier Palette */
-  --background:        oklch(0.98 0.012 75);   /* warm parchment */
-  --foreground:        oklch(0.22 0.025 55);   /* deep espresso */
-  --card:              oklch(0.995 0.008 75);  /* near-white parchment */
-  --card-foreground:   oklch(0.22 0.025 55);
-  --popover:           oklch(0.995 0.008 75);
-  --popover-foreground: oklch(0.22 0.025 55);
-
-  /* Dusty rose primary */
-  --primary:           oklch(0.55 0.12 10);    /* dusty rose */
-  --primary-foreground: oklch(0.98 0.008 75);
-
-  /* Sage secondary */
-  --secondary:         oklch(0.88 0.04 145);   /* soft sage */
-  --secondary-foreground: oklch(0.25 0.04 145);
-
-  --muted:             oklch(0.94 0.015 75);
-  --muted-foreground:  oklch(0.52 0.025 55);
-
-  --accent:            oklch(0.88 0.04 145);   /* sage accent */
-  --accent-foreground: oklch(0.25 0.04 145);
-
-  --destructive:       oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-
-  --border:            oklch(0.88 0.018 75);
-  --input:             oklch(0.88 0.018 75);
-  --ring:              oklch(0.55 0.12 10);
-
-  /* Charts */
-  --chart-1: oklch(0.55 0.12 10);
-  --chart-2: oklch(0.60 0.10 145);
-  --chart-3: oklch(0.70 0.08 75);
-  --chart-4: oklch(0.65 0.09 30);
-  --chart-5: oklch(0.50 0.12 300);
-
-  /* Sidebar */
-  --sidebar:           oklch(0.96 0.015 75);
-  --sidebar-foreground: oklch(0.22 0.025 55);
-  --sidebar-primary:   oklch(0.55 0.12 10);
-  --sidebar-primary-foreground: oklch(0.98 0.008 75);
-  --sidebar-accent:    oklch(0.88 0.04 145);
-  --sidebar-accent-foreground: oklch(0.25 0.04 145);
-  --sidebar-border:    oklch(0.88 0.018 75);
-  --sidebar-ring:      oklch(0.55 0.12 10);
+  --color-stage-1: #FDE68A;
+  --color-stage-2: #FDBA74;
+  --color-stage-3: #FCA5A5;
+  --color-stage-4: #D8B4FE;
+  --color-stage-5: #93C5FD;
+  --color-stage-6: #86EFAC;
+  --color-stage-7: #94A3B8;
+  --bg-primary: #b79d8a;
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-    font-family: 'Nunito', sans-serif;
-  }
-  h1, h2, h3, .font-display {
-    font-family: 'Cormorant Garamond', serif;
-  }
-  button:not(:disabled),
-  [role="button"]:not([aria-disabled="true"]),
-  [type="button"]:not(:disabled),
-  [type="submit"]:not(:disabled),
-  [type="reset"]:not(:disabled),
-  a[href],
-  select:not(:disabled),
-  input[type="checkbox"]:not(:disabled),
-  input[type="radio"]:not(:disabled) {
-    @apply cursor-pointer;
-  }
+.stage-1 { background-color: #FDE68A; }
+.stage-2 { background-color: #FDBA74; }
+.stage-3 { background-color: #FCA5A5; }
+.stage-4 { background-color: #D8B4FE; }
+.stage-5 { background-color: #93C5FD; }
+.stage-6 { background-color: #86EFAC; }
+.stage-7 { background-color: #94A3B8; }
+
+.bento-card {
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 200px;
 }
 
-@layer components {
-  .container {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
+.bento-card:hover:not(.locked) {
+  transform: scale(1.05);
+}
 
-  .flex {
-    min-height: 0;
-    min-width: 0;
-  }
+.bento-card.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
-  @media (min-width: 640px) {
-    .container {
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-  }
+.bento-card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333333;
+}
 
-  @media (min-width: 1024px) {
-    .container {
-      padding-left: 2rem;
-      padding-right: 2rem;
-      max-width: 1200px;
-    }
-  }
+.bento-card-subtitle {
+  font-size: 0.875rem;
+  color: #333333;
+  margin-top: 0.5rem;
+}
 
-  /* Tab content fade-in animation */
-  @keyframes tabFadeUp {
-    from {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .tab-content-enter {
-    animation: tabFadeUp 0.3s ease-out forwards;
-  }
-
-  /* Stitch divider */
-  .stitch-divider {
-    border: none;
-    border-top: 2px dashed oklch(0.80 0.025 75);
-    margin: 1.5rem 0;
-  }
-
-  /* Progress bar */
-  .progress-fill {
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* RTL support */
-  .rtl {
-    direction: rtl;
-    text-align: right;
-  }
-  .ltr {
-    direction: ltr;
-    text-align: left;
-  }
-
-  /* Color swatch */
-  .color-swatch {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .color-swatch:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px oklch(0 0 0 / 0.15);
-  }
+.container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
