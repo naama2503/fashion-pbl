@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
-import { Lock, AlertCircle } from "lucide-react";
+import { Lock, AlertCircle, HelpCircle, Upload } from "lucide-react";
+import CanvasDraw from "react-canvas-draw";
 
 const TABS = [
   { label: "Home", labelHe: "בית" },
@@ -32,24 +33,33 @@ const IMAGES = {
   presentationBottom: "https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/icon-presentation-bottom-eHcm6h6JT4YzGy4JjyLXds.webp",
 };
 
-// Color meaning chart
+// Color meaning chart (Matte colors)
 const COLOR_MEANINGS = [
-  { color: "#FFD700", name: "Yellow", nameHe: "צהוב", meaning: "Optimistic", meaningHe: "אופטימי" },
-  { color: "#FFA500", name: "Orange", nameHe: "כתום", meaning: "Friendly", meaningHe: "חברותי" },
-  { color: "#FF6B6B", name: "Red", nameHe: "אדום", meaning: "Excitement", meaningHe: "התרגשות" },
-  { color: "#9370DB", name: "Purple", nameHe: "סגול", meaning: "Creative", meaningHe: "יצירתי" },
-  { color: "#4A90E2", name: "Blue", nameHe: "כחול", meaning: "Trust", meaningHe: "אמון" },
-  { color: "#52C41A", name: "Green", nameHe: "ירוק", meaning: "Peace/Growth", meaningHe: "שלום/צמיחה" },
-  { color: "#999999", name: "Grey", nameHe: "אפור", meaning: "Balance", meaningHe: "איזון" },
+  { color: "#FDE68A", name: "Yellow", nameHe: "צהוב", meaning: "Optimistic", meaningHe: "אופטימי" },
+  { color: "#FDBA74", name: "Orange", nameHe: "כתום", meaning: "Friendly", meaningHe: "חברותי" },
+  { color: "#FCA5A5", name: "Red", nameHe: "אדום", meaning: "Excitement", meaningHe: "התרגשות" },
+  { color: "#D8B4FE", name: "Purple", nameHe: "סגול", meaning: "Creative", meaningHe: "יצירתי" },
+  { color: "#93C5FD", name: "Blue", nameHe: "כחול", meaning: "Trust", meaningHe: "אמון" },
+  { color: "#86EFAC", name: "Green", nameHe: "ירוק", meaning: "Peace/Growth", meaningHe: "שלום/צמיחה" },
+  { color: "#94A3B8", name: "Grey", nameHe: "אפור", meaning: "Balance", meaningHe: "איזון" },
 ];
 
-// Validation helper
-const validateText = (text: string): { valid: boolean; errors: string[] } => {
+// Gestalt principles
+const GESTALT_PRINCIPLES = [
+  { name: "Proximity", nameHe: "קרבה", desc: "Objects close together are perceived as a group" },
+  { name: "Similarity", nameHe: "דמיון", desc: "Objects that look similar are perceived as related" },
+  { name: "Continuity", nameHe: "המשכיות", desc: "Elements arranged in a line or curve are perceived as connected" },
+  { name: "Closure", nameHe: "סגירה", desc: "The mind fills in missing parts to complete a shape" },
+  { name: "Figure-Ground", nameHe: "דמות-רקע", desc: "Objects stand out from their background" },
+];
+
+// Validation helper for research questions
+const validateResearchAnswer = (text: string, minSentences: number): { valid: boolean; errors: string[] } => {
   const errors = [];
   
   const sentences = text.trim().split(/[.!?]+/).filter(s => s.trim().length > 0);
-  if (sentences.length < 2) {
-    errors.push("לפחות 2 משפטים נדרשים (At least 2 sentences required)");
+  if (sentences.length < minSentences) {
+    errors.push(`לפחות ${minSentences} משפטים נדרשים (At least ${minSentences} sentences required)`);
   }
   
   if (text.length > 0 && !/^[A-Z]/.test(text) && !/^[א-ת]/.test(text)) {
@@ -58,6 +68,11 @@ const validateText = (text: string): { valid: boolean; errors: string[] } => {
   
   if (text.length > 0 && !/[.!?]$/.test(text.trim())) {
     errors.push("סימן פיסוק בסוף (Punctuation at the end required)");
+  }
+
+  // Check for statistics mention (for "Who are they" question)
+  if (minSentences === 2 && text.length > 0 && !/\d+%|\d+\s*(million|billion|thousand|million|מיליון|מליארד|אלף)/i.test(text)) {
+    errors.push("Include statistics from a reliable source (כלול סטטיסטיקה ממקור אמין)");
   }
   
   return { valid: errors.length === 0, errors };
@@ -69,6 +84,9 @@ export default function ProjectPage() {
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [studentNames, setStudentNames] = useState(["Student 1", "Student 2", "Student 3"]);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [showGrammarTips, setShowGrammarTips] = useState(false);
+  const canvasRef = useRef<any>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const canAccessTab = (tabIndex: number): boolean => {
     return tabIndex === 0 || approvals[tabIndex - 1];
@@ -83,24 +101,47 @@ export default function ProjectPage() {
     // Validate based on tab
     if (currentTab === 1) {
       const whyText = responses.whyChosen || "";
-      const validation = validateText(whyText);
+      const validation = validateResearchAnswer(whyText, 2);
       if (!validation.valid) {
         setValidationErrors(validation.errors);
         toast.error("Please fix your writing before continuing!");
         return;
       }
     } else if (currentTab === 2) {
-      // Research tab validation
-      const hasAllAnswers = responses.q1 && responses.q2 && responses.q3 && responses.q4;
-      if (!hasAllAnswers) {
-        toast.error("Please answer all 4 research questions!");
+      // Research tab validation with specific requirements
+      const q1Validation = validateResearchAnswer(responses.q1 || "", 2);
+      const q2Validation = validateResearchAnswer(responses.q2 || "", 2);
+      const q3Validation = validateResearchAnswer(responses.q3 || "", 3);
+      const q4Validation = validateResearchAnswer(responses.q4 || "", 2);
+
+      const allErrors = [
+        ...q1Validation.errors.map(e => `Q1 (Who): ${e}`),
+        ...q2Validation.errors.map(e => `Q2 (Why special): ${e}`),
+        ...q3Validation.errors.map(e => `Q3 (Problem): ${e}`),
+        ...q4Validation.errors.map(e => `Q4 (What changes): ${e}`),
+      ];
+
+      if (allErrors.length > 0) {
+        setValidationErrors(allErrors);
+        toast.error("Please fix all validation errors before continuing!");
         return;
       }
     } else if (currentTab === 4) {
       // Logo design validation
       const logoDesc = responses.logoDescription || "";
+      const populationName = responses.chosenPopulation || responses.logoPopulation || "";
+      const gestaltUsed = responses.logoGestalt || "";
+
+      if (!populationName.trim()) {
+        toast.error("Please enter the population name in the logo!");
+        return;
+      }
+      if (!gestaltUsed.trim()) {
+        toast.error("Please describe which Gestalt principle you used!");
+        return;
+      }
       if (logoDesc.trim().length < 20) {
-        toast.error("Please provide a detailed logo description (at least 20 characters)!");
+        toast.error("Please provide a detailed logo description!");
         return;
       }
     } else if (currentTab === 5) {
@@ -127,6 +168,27 @@ export default function ProjectPage() {
 
   const updateResponse = (key: string, value: any) => {
     setResponses({ ...responses, [key]: value });
+  };
+
+  const handleCanvasExport = () => {
+    if (canvasRef.current) {
+      const canvas = canvasRef.current.canvas.drawing;
+      const image = canvas.toDataURL("image/png");
+      updateResponse("logoImage", image);
+      toast.success("Logo saved!");
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        updateResponse("logoUploadedFile", event.target?.result);
+        toast.success("Logo file uploaded!");
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const tabColor = COLORS[currentTab];
@@ -388,12 +450,46 @@ export default function ProjectPage() {
                   </div>
                 )}
 
+                <button
+                  onClick={() => setShowGrammarTips(!showGrammarTips)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    backgroundColor: "#E0E7FF",
+                    color: "#333333",
+                    padding: "0.75rem 1rem",
+                    fontSize: "0.875rem",
+                    fontWeight: "bold",
+                    border: "1px solid #C7D2FE",
+                    borderRadius: "0.375rem",
+                    cursor: "pointer",
+                    marginBottom: "1.5rem",
+                  }}
+                >
+                  <HelpCircle size={18} />
+                  {showGrammarTips ? "Hide Grammar Tips" : "Show Grammar Tips"}
+                </button>
+
+                {showGrammarTips && (
+                  <div style={{ backgroundColor: "#F0F9FF", border: "2px solid #93C5FD", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem" }}>
+                    <h3 style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Writing Rules (חוקי כתיבה)</h3>
+                    <ul style={{ color: "#555555", lineHeight: "1.8", fontSize: "0.875rem" }}>
+                      <li>✓ Use CAPITAL LETTERS at the start (אותיות גדולות בהתחלה)</li>
+                      <li>✓ Use PUNCTUATION at the end (סימן פיסוק בסוף)</li>
+                      <li>✓ Use SIMPLE PAST TENSE (עבר פשוט) for events that happened</li>
+                      <li>✓ Use SIMPLE PRESENT TENSE (הווה פשוט) for current situations</li>
+                      <li>✓ Include STATISTICS from reliable sources (סטטיסטיקה ממקור אמין)</li>
+                    </ul>
+                  </div>
+                )}
+
                 <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
                   {[
-                    { q: "Who are they? (מי הם?)", key: "q1" },
-                    { q: "Why are they special? (למה הם מיוחדים?)", key: "q2" },
-                    { q: "What is their problem? (מה הבעיה שלהם?)", key: "q3" },
-                    { q: "What needs to change? (מה צריך להשתנות?)", key: "q4" },
+                    { q: "1. Who are they? (מי הם?) - At least 2 sentences + statistics", key: "q1", minSentences: 2 },
+                    { q: "2. Why are they special? (למה הם מיוחדים?) - At least 2 sentences", key: "q2", minSentences: 2 },
+                    { q: "3. What is their problem? (מה הבעיה שלהם?) - At least 3 sentences", key: "q3", minSentences: 3 },
+                    { q: "4. What needs to change? (מה צריך להשתנות?) - At least 2 sentences", key: "q4", minSentences: 2 },
                   ].map((item, idx) => (
                     <div key={idx} style={{ marginBottom: "1.5rem" }}>
                       <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
@@ -409,13 +505,24 @@ export default function ProjectPage() {
                           border: "1px solid #D1D5DB",
                           borderRadius: "0.375rem",
                           fontFamily: "'Alef', 'Assistant', sans-serif",
-                          minHeight: "80px",
+                          minHeight: "100px",
                           resize: "vertical",
                         }}
                         placeholder="Enter your answer..."
                       />
                     </div>
                   ))}
+
+                  {validationErrors.length > 0 && (
+                    <div style={{ backgroundColor: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: "0.375rem", padding: "1rem", marginBottom: "1.5rem" }}>
+                      {validationErrors.map((error, idx) => (
+                        <div key={idx} style={{ display: "flex", gap: "0.5rem", color: "#DC2626", fontSize: "0.875rem", marginBottom: idx < validationErrors.length - 1 ? "0.5rem" : 0 }}>
+                          <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                          <span>{error}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   <button
                     onClick={handleSaveAndContinue}
@@ -448,7 +555,7 @@ export default function ProjectPage() {
     );
   }
 
-  // Tab 3: Design Inquiry (Color Meanings)
+  // Tab 3: Design Inquiry (Color Meanings + Gestalt)
   if (currentTab === 3) {
     return (
       <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
@@ -462,7 +569,7 @@ export default function ProjectPage() {
                   Design Inquiry (חוקי עיצוב)
                 </h1>
                 <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
-                  Color Meaning Chart - Learn what each color represents.
+                  Learn about color meanings and design principles.
                 </p>
 
                 {isLocked && (
@@ -473,6 +580,9 @@ export default function ProjectPage() {
                 )}
 
                 <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
+                  <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                    Color Meaning Chart (תרשים משמעויות צבע)
+                  </h2>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem", marginBottom: "2rem" }}>
                     {COLOR_MEANINGS.map((item, idx) => (
                       <div key={idx} style={{ padding: "1.5rem", borderRadius: "0.5rem", backgroundColor: item.color, opacity: 0.9, textAlign: "center", border: "2px solid #333333" }}>
@@ -484,6 +594,25 @@ export default function ProjectPage() {
                         </p>
                         <p style={{ fontSize: "0.875rem", color: "#333333" }}>
                           ({item.meaningHe})
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                    Gestalt Principles (עקרונות גשטלט)
+                  </h2>
+                  <p style={{ color: "#555555", marginBottom: "1rem", lineHeight: "1.6" }}>
+                    Gestalt principles describe how our eyes and brain perceive visual elements. Use these principles to create a strong logo that communicates your message clearly.
+                  </p>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem", marginBottom: "2rem" }}>
+                    {GESTALT_PRINCIPLES.map((principle, idx) => (
+                      <div key={idx} style={{ padding: "1rem", backgroundColor: "#F3F4F6", borderRadius: "0.375rem", borderLeft: "4px solid #333333" }}>
+                        <h4 style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.25rem" }}>
+                          {principle.name} ({principle.nameHe})
+                        </h4>
+                        <p style={{ fontSize: "0.875rem", color: "#555555" }}>
+                          {principle.desc}
                         </p>
                       </div>
                     ))}
@@ -541,14 +670,14 @@ export default function ProjectPage() {
     );
   }
 
-  // Tab 4: Creating a Logo
+  // Tab 4: Creating a Logo with Canvas
   if (currentTab === 4) {
     return (
       <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
         <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
         
         <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
-          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "2rem", alignItems: "start" }}>
               <div>
                 <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
@@ -568,8 +697,147 @@ export default function ProjectPage() {
                 <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
                   <div style={{ marginBottom: "2rem", backgroundColor: "#F3F4F6", padding: "1rem", borderRadius: "0.375rem", borderLeft: "4px solid #333333" }}>
                     <p style={{ fontSize: "0.95rem", color: "#333333", lineHeight: "1.6" }}>
-                      <strong>Instructions:</strong> Keep it simple. Use 2 colors. Use 1 symbol.
+                      <strong>Instructions (הוראות):</strong>
+                      <br />• Include the population name in the logo
+                      <br />• Use BLACK color (#000000)
+                      <br />• Use 1 Gestalt principle in your design
+                      <br />• Keep it simple and memorable
                     </p>
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Population Name in Logo (שם האוכלוסייה בלוגו)
+                    </label>
+                    <input
+                      type="text"
+                      value={responses.logoPopulation || responses.chosenPopulation || ""}
+                      onChange={(e) => updateResponse("logoPopulation", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        marginBottom: "1rem",
+                      }}
+                      placeholder="Enter population name..."
+                    />
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Which Gestalt Principle did you use? (איזה עקרון גשטלט השתמשת?)
+                    </label>
+                    <select
+                      value={responses.logoGestalt || ""}
+                      onChange={(e) => updateResponse("logoGestalt", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        marginBottom: "1rem",
+                      }}
+                    >
+                      <option value="">Select a principle...</option>
+                      {GESTALT_PRINCIPLES.map((p) => (
+                        <option key={p.name} value={p.name}>{p.name} ({p.nameHe})</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Draw Your Logo on Canvas (צייר את הלוגו שלך)
+                    </label>
+                    <div style={{ border: "2px solid #D1D5DB", borderRadius: "0.375rem", overflow: "hidden", marginBottom: "1rem" }}>
+                      <CanvasDraw
+                        ref={canvasRef}
+                        canvasWidth={500}
+                        canvasHeight={300}
+                        brushColor="#000000"
+                        brushRadius={3}
+                        lazyRadius={0}
+                        hideGrid
+                        disabled={isLocked}
+                      />
+                    </div>
+                    <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+                      <button
+                        onClick={handleCanvasExport}
+                        disabled={isLocked}
+                        style={{
+                          flex: 1,
+                          backgroundColor: isLocked ? "#D1D5DB" : "#333333",
+                          color: "white",
+                          padding: "0.5rem",
+                          fontSize: "0.875rem",
+                          fontWeight: "bold",
+                          border: "none",
+                          borderRadius: "0.375rem",
+                          cursor: isLocked ? "not-allowed" : "pointer",
+                        }}
+                      >
+                        Save Canvas Drawing
+                      </button>
+                      <button
+                        onClick={() => canvasRef.current?.clearCanvas()}
+                        disabled={isLocked}
+                        style={{
+                          flex: 1,
+                          backgroundColor: "#D1D5DB",
+                          color: "#333333",
+                          padding: "0.5rem",
+                          fontSize: "0.875rem",
+                          fontWeight: "bold",
+                          border: "none",
+                          borderRadius: "0.375rem",
+                          cursor: isLocked ? "not-allowed" : "pointer",
+                        }}
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Or Upload Your Logo File (או העלה קובץ לוגו)
+                    </label>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      disabled={isLocked}
+                      style={{ display: "none" }}
+                    />
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        backgroundColor: isLocked ? "#D1D5DB" : "#93C5FD",
+                        color: "#333333",
+                        padding: "0.75rem",
+                        fontSize: "1rem",
+                        fontWeight: "bold",
+                        border: "2px dashed #93C5FD",
+                        borderRadius: "0.5rem",
+                        cursor: isLocked ? "not-allowed" : "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <Upload size={20} />
+                      Upload Logo File
+                    </button>
                   </div>
 
                   <div style={{ marginBottom: "2rem" }}>
@@ -586,31 +854,10 @@ export default function ProjectPage() {
                         border: "1px solid #D1D5DB",
                         borderRadius: "0.375rem",
                         fontFamily: "'Alef', 'Assistant', sans-serif",
-                        minHeight: "100px",
-                        resize: "vertical",
-                      }}
-                      placeholder="Describe your logo design, colors, and symbol..."
-                    />
-                  </div>
-
-                  <div style={{ marginBottom: "2rem" }}>
-                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      Why did you choose this design? (למה בחרת בעיצוב זה?)
-                    </label>
-                    <textarea
-                      value={responses.logoReason || ""}
-                      onChange={(e) => updateResponse("logoReason", e.target.value)}
-                      disabled={isLocked}
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        border: "1px solid #D1D5DB",
-                        borderRadius: "0.375rem",
-                        fontFamily: "'Alef', 'Assistant', sans-serif",
                         minHeight: "80px",
                         resize: "vertical",
                       }}
-                      placeholder="Explain your design choices..."
+                      placeholder="Describe your logo design, colors, and symbols..."
                     />
                   </div>
 
