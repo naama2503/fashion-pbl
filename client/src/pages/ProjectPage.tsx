@@ -81,12 +81,12 @@ const DESIGN_EXERCISES = [
   {
     word: "CHANGE",
     options: [
-      { text: "CHANGE", style: { fontSize: "2rem", fontWeight: "bold", color: "#333333" }, label: "Bold Black" },
+      { text: "CHANGE", style: { fontSize: "2rem", fontStyle: "italic", fontFamily: "cursive", color: "#86EFAC" }, label: "Fluid Green" },
       { text: "CHANGE", style: { fontSize: "2rem", fontWeight: "bold", color: "#FDE68A", textShadow: "2px 2px 4px #333333" }, label: "Yellow with Shadow" },
       { text: "CHANGE", style: { fontSize: "2rem", fontWeight: "bold", color: "#FCA5A5", fontStyle: "italic" }, label: "Red Italic" },
     ],
     correct: 0,
-    feedback: "Bold black is the most clear and professional choice for a message about change."
+    feedback: "Green represents growth and change - the fluid green font makes the message feel dynamic and hopeful. (ירוק מייצג צמיחה ושינוי - הגופן הנוזלי הירוק הופך את ההודעה לדינמית ומלאת תקווה.)"
   },
   {
     word: "HOPE",
@@ -659,7 +659,7 @@ export default function ProjectPage() {
                   Design Inquiry (חוקי עיצוב)
                 </h1>
                 <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
-                  Learn about color meanings and design principles to create powerful messages.
+                  Learn about color meanings and design principles to create powerful messages. (למדו על משמעויות צבע ועקרונות עיצוב כדי ליצור הודעות חזקות.)
                 </p>
 
                 {isLocked && (
@@ -674,7 +674,7 @@ export default function ProjectPage() {
                     Color Meaning Chart (תרשים משמעויות צבע)
                   </h2>
                   <p style={{ color: "#555555", marginBottom: "1rem", fontSize: "0.95rem" }}>
-                    Different colors communicate different emotions and meanings. Choose colors that match your message for social change.
+                    Different colors communicate different emotions and meanings. Choose colors that match your message for social change. (צבעים שונים מעבירים רגשות ומשמעויות שונות. בחרו צבעים שתואמים את ההודעה שלכם לשינוי חברתי.)
                   </p>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem", marginBottom: "2rem" }}>
                     {COLOR_MEANINGS.map((item, idx) => (
@@ -696,7 +696,7 @@ export default function ProjectPage() {
                     Design Exercises (תרגילי עיצוב)
                   </h2>
                   <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
-                    Choose the best design option for each word. Think about which design communicates the message most effectively.
+                    Choose the best design option for each word. Think about which design communicates the message most effectively. (בחרו את אפשרות העיצוב הטובה ביותר לכל מילה. חשבו איזה עיצוב מעביר את ההודעה בצורה יעילה ביותר.)
                   </p>
 
                   {DESIGN_EXERCISES.map((exercise, exIdx) => (
@@ -760,30 +760,11 @@ export default function ProjectPage() {
                     Gestalt Principles (עקרונות גשטלט)
                   </h2>
                   <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
-                    Gestalt principles describe how our eyes and brain perceive visual elements. Use these principles to create a strong logo that communicates your message clearly. (עקרונות גשטלט מתארים כיצד עיננו והמוח שלנו תופסים אלמנטים ויזואליים.)
+                    Gestalt principles describe how our eyes and brain perceive visual elements. Use these principles to create a strong logo that communicates your message clearly. (עקרונות גשטלט מתארים כיצד עיננו והמוח שלנו תופסים אלמנטים ויזואליים. השתמשו בעקרונות אלה כדי ליצור לוגו חזק שמעביר את ההודעה שלכם בבירור.)
                   </p>
 
-                  <div style={{ marginBottom: "2rem" }}>
-                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
-                      Gestalt Logo Examples - Which principles are used?
-                    </h3>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
-                      {GESTALT_LOGOS.map((logo, idx) => (
-                        <div key={idx} style={{ backgroundColor: "#F9FAFB", padding: "1rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
-                          <img src={logo.url} alt={logo.principle} style={{ width: "100%", height: "200px", objectFit: "contain", marginBottom: "1rem" }} />
-                          <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "0.75rem" }}>
-                            <strong>Example {idx + 1}:</strong> Which principle is used here?
-                          </p>
-                          <p style={{ fontSize: "0.875rem", color: "#333333", fontWeight: "bold" }}>
-                            Answer: {logo.principle} ({logo.principleHe})
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
                   <div style={{ marginBottom: "2rem", backgroundColor: "#F3F4F6", padding: "1rem", borderRadius: "0.375rem", borderLeft: "4px solid #333333" }}>
-                    <h4 style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Gestalt Principles Reference:</h4>
+                    <h4 style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Gestalt Principles Reference (עקרונות גשטלט):</h4>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem" }}>
                       {GESTALT_PRINCIPLES.map((principle, idx) => (
                         <div key={idx} style={{ fontSize: "0.875rem" }}>
@@ -793,6 +774,27 @@ export default function ProjectPage() {
                       ))}
                     </div>
                   </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                      Gestalt Logo Examples - Which principles are used? (דוגמאות לוגו בגשטלט - אילו עקרונות בשימוש?)
+                    </h3>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
+                      {GESTALT_LOGOS.map((logo, idx) => (
+                        <div key={idx} style={{ backgroundColor: "#F9FAFB", padding: "1rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
+                          <img src={logo.url} alt={logo.principle} style={{ width: "100%", height: "200px", objectFit: "contain", marginBottom: "1rem" }} />
+                          <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "0.75rem" }}>
+                            <strong>Example {idx + 1}:</strong> Which principle is used here?
+                          </p>
+                          <p style={{ fontSize: "0.875rem", color: "#555555" }}>
+                            <em>Answer will appear after you select</em>
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+
 
                   <div style={{ marginBottom: "2rem" }}>
                     <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
