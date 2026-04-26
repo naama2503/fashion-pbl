@@ -112,7 +112,7 @@ const DESIGN_EXERCISES = [
 ];
 
 // Validation helper for research questions
-const validateResearchAnswer = (text: string, minSentences: number): { valid: boolean; errors: string[] } => {
+const validateResearchAnswer = (text: string, minSentences: number, needsStats: boolean = false): { valid: boolean; errors: string[] } => {
   const errors = [];
   
   const sentences = text.trim().split(/[.!?]+/).filter(s => s.trim().length > 0);
@@ -126,6 +126,14 @@ const validateResearchAnswer = (text: string, minSentences: number): { valid: bo
   
   if (text.length > 0 && !/[.!?]$/.test(text.trim())) {
     errors.push("סימן פיסוק בסוף");
+  }
+  
+  // Check for statistics keywords if required
+  if (needsStats) {
+    const hasStats = /(%|אחוז|מחקר|נתונים|סטטיסטיקה|research|data|percent)/i.test(text);
+    if (!hasStats) {
+      errors.push("נדרשת סטטיסטיקה (%, מחקר, נתונים)");
+    }
   }
   
   return { valid: errors.length === 0, errors };
@@ -164,10 +172,10 @@ export default function ProjectPage() {
       }
     } else if (currentTab === 2) {
       // Research tab validation with specific requirements
-      const q1Validation = validateResearchAnswer(responses.q1 || "", 2);
-      const q2Validation = validateResearchAnswer(responses.q2 || "", 2);
-      const q3Validation = validateResearchAnswer(responses.q3 || "", 3);
-      const q4Validation = validateResearchAnswer(responses.q4 || "", 2);
+      const q1Validation = validateResearchAnswer(responses.q1 || "", 2, true); // Q1 needs statistics
+      const q2Validation = validateResearchAnswer(responses.q2 || "", 2, false);
+      const q3Validation = validateResearchAnswer(responses.q3 || "", 3, true); // Q3 needs statistics
+      const q4Validation = validateResearchAnswer(responses.q4 || "", 2, false);
 
       const allErrors = [
         ...q1Validation.errors.map(e => `Q1 (Who): ${e}`),
