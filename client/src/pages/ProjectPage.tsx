@@ -50,7 +50,7 @@ const IMAGES = {
 const BRAND_LOGOS = [
   { 
     name: "Nike", 
-    logo: "https://seeklogo.com/images/N/nike-logo-D0F1FD2D50-seeklogo.com.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg",
     principle: "Continuity",
     principleHe: "המשכיות",
     explanation: "The swoosh creates a continuous curved line that our eye follows.",
@@ -58,7 +58,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Adidas", 
-    logo: "https://seeklogo.com/images/A/Adidas-logo-B0730CDBF5-seeklogo.com.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg",
     principle: "Similarity",
     principleHe: "דמיון",
     explanation: "Three parallel stripes create unity through repetition and similarity.",
@@ -66,7 +66,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Apple", 
-    logo: "https://seeklogo.com/images/A/Apple-logo-C4451CFF17-seeklogo.com.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
     principle: "Closure",
     principleHe: "סגירה",
     explanation: "The missing bite is completed by our mind, creating the whole apple.",
@@ -74,7 +74,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Gucci", 
-    logo: "https://seeklogo.com/images/G/Gucci-logo-9B3D7F5F0D-seeklogo.com.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/7/79/1960s_Gucci_Logo.svg",
     principle: "Balance",
     principleHe: "איזון",
     explanation: "Symmetrical interlocking Gs create perfect visual balance and harmony.",
@@ -82,7 +82,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Shell", 
-    logo: "https://seeklogo.com/images/S/Shell-logo-DBAB1A9F4B-seeklogo.com.png",
+    logo: "https://upload.wikimedia.org/wikipedia/en/e/e8/Shell_logo.svg",
     principle: "Proximity",
     principleHe: "קרבה",
     explanation: "Segments grouped closely together form the shell shape.",
