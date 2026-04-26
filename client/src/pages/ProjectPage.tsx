@@ -497,13 +497,20 @@ export default function ProjectPage() {
                 {/* PART C: Gestalt Gallery with Brand Logos */}
                 <>
                 <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
+                  <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                    Part C - Gestalt Principles (חלק ג - עקרונות גשטלט)
+                  </h2>
+                  <p style={{ backgroundColor: "#DBEAFE", border: "2px solid #3B82F6", borderRadius: "0.5rem", padding: "1rem", marginBottom: "2rem", color: "#1E40AF", fontSize: "0.95rem", lineHeight: "1.6" }}>
+                    Gestalt principles explain how our brain naturally organizes visual elements into groups or a whole. (עקרונות הגשטלט מסבירים כיצד המוח שלנו מארגן באופן טבעי אלמנטים חזותיים לקבוצות או ליחידה אחת שלמה.)
+                  </p>
+
                   {/* PART A: Learning Phase */}
                   <div style={{ marginBottom: "3rem" }}>
-                    <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-                      Part C - Learning: Gestalt Principles (חלק ג - למידה: עקרונות גשטלט)
-                    </h2>
+                    <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                      Learning: 3 Classic Examples (למידה: 3 דוגמאות קלאסיות)
+                    </h3>
                     <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
-                      Study these 3 classic examples. The principle and explanation are shown immediately. (למד את 3 הדוגמאות הקלאסיות. העקרון וההסבר מוצגים מיד.)
+                      Study these examples. The principle and explanation are shown immediately. (למד את הדוגמאות הללו. העקרון וההסבר מוצגים מיד.)
                     </p>
 
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
@@ -529,9 +536,9 @@ export default function ProjectPage() {
 
                   {/* PART B: Practice Quiz */}
                   <div>
-                    <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-                      Part C - Practice Quiz: Guess the Principle (חלק ג - תרגול: נחש את העקרון)
-                    </h2>
+                    <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                      Practice Quiz: Guess the Principle (תרגול: נחש את העקרון)
+                    </h3>
                     <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
                       Now it's your turn! These are NEW logos. Select the principle you think each one uses. (עכשיו תורך! בחר את העקרון שלדעתך כל לוגו משתמש בו.)
                     </p>
@@ -541,7 +548,7 @@ export default function ProjectPage() {
                         const selectedAnswer = tab3Responses[`gestalt_quiz_${idx}`] || null;
                         const isCorrect = selectedAnswer === logo.principle;
                         const showFeedback = selectedAnswer !== null;
-                        const principles = ["Closure", "Figure/Ground", "Continuation", "Unity/Proximity", "Balance/Symmetry"];
+                        const principles = ["Closure", "Figure/Ground", "Unity/Proximity", "Balance/Symmetry"];
 
                         return (
                           <div key={idx} style={{ backgroundColor: "#FEF3C7", padding: "1.5rem", borderRadius: "0.5rem", border: "2px solid #FBBF24" }}>
@@ -568,7 +575,7 @@ export default function ProjectPage() {
                                   <button
                                     key={principle}
                                     onClick={() => setTab3Responses(prev => ({ ...prev, [`gestalt_quiz_${idx}`]: principle }))}
-                                    disabled={selectedAnswer !== null}
+                                    disabled={selectedAnswer !== null && !isCorrect}
                                     style={{
                                       width: "100%",
                                       backgroundColor: selectedAnswer === principle ? (isCorrect ? "#22C55E" : "#EF4444") : "#FFFFFF",
