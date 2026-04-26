@@ -1151,6 +1151,316 @@ export default function ProjectPage() {
     );
   }
 
+  // Tab 6: Creating a Vector
+  if (currentTab === 5) {
+    const uploadedFile = (responses as any).vectorFile || null;
+    const [fileError, setFileError] = React.useState("");
+    
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      
+      const allowedTypes = ['.svg', '.pdf', '.png', '.jpg', '.jpeg'];
+      const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+      
+      if (!allowedTypes.includes(fileExtension)) {
+        setFileError('Please upload a valid file (SVG, PDF, PNG, or JPG)');
+        return;
+      }
+      
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        setFileError('File size must be less than 10MB');
+        return;
+      }
+      
+      setFileError('');
+      updateResponse('vectorFile', { name: file.name, size: file.size, type: file.type });
+    };
+    
+    return (
+      <div style={{ backgroundColor: "#FEF9C3", minHeight: "100vh" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        
+        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
+          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+            <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+              Stage 6: Transforming your Logo to a Vector / שלב 6: הפכת הלוגו לוקטור
+            </h1>
+            <p style={{ color: "#555555", marginBottom: "2rem" }}>
+              Learn how to convert your design into a professional vector file. / למדו כיצד להפוך את העיצוב לקובץ וקטור מפורסי.
+            </p>
+            
+            {/* Tutorial Section */}
+            <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                📚 Tutorial / מדריך
+              </h2>
+              <p style={{ color: "#555555", marginBottom: "1.5rem", lineHeight: "1.6" }}>
+                Before you finish, you must learn how to turn your design into a high-quality vector file. Click the button below to open the tutorial. / לפני שתסיימו, עליכם ללמוד כיצד להפוך את העיצוב לקובץ וקטור איכותי. לחצו על הכפתור במטה כדי לפתוח את המדריך.
+              </p>
+              <a
+                href="https://docs.google.com/presentation/d/1cyOzGa0tvc2jad1-eFhgCy-TqYCiPJWj5d75rQ0zzlQ/edit?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-block",
+                  backgroundColor: "#FCD34D",
+                  color: "#333333",
+                  padding: "0.75rem 1.5rem",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  border: "2px solid #333333",
+                  borderRadius: "0.5rem",
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "#FBBF24";
+                  (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1.05)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "#FCD34D";
+                  (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1)";
+                }}
+              >
+                Open Tutorial / פתח מדריך →
+              </a>
+            </div>
+            
+            {/* File Upload Section */}
+            <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                📄 Upload Your Final File / העלו את הקובץ הסופי
+              </h2>
+              <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
+                After following the tutorial, upload your final vector file here (SVG, PDF, or high-res PNG/JPG). / אחרי עיצוב המדריך, העלו את קובץ הוקטור הסופי שלכם כאן.
+              </p>
+              
+              <div style={{
+                border: "2px dashed #D1D5DB",
+                borderRadius: "0.5rem",
+                padding: "2rem",
+                textAlign: "center",
+                backgroundColor: "#F9FAFB",
+                marginBottom: "1rem",
+              }}>
+                <input
+                  type="file"
+                  accept=".svg,.pdf,.png,.jpg,.jpeg"
+                  onChange={handleFileUpload}
+                  style={{ display: "none" }}
+                  id="vectorFileInput"
+                />
+                <label
+                  htmlFor="vectorFileInput"
+                  style={{
+                    display: "block",
+                    cursor: "pointer",
+                    padding: "1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>📁</div>
+                  <p style={{ color: "#333333", fontWeight: "bold", marginBottom: "0.25rem" }}>
+                    Click to upload or drag and drop / לחץ לטעינה או גרור ורטוב
+                  </p>
+                  <p style={{ color: "#555555", fontSize: "0.875rem" }}>
+                    SVG, PDF, PNG, JPG (Max 10MB)
+                  </p>
+                </label>
+              </div>
+              
+              {fileError && (
+                <div style={{
+                  backgroundColor: "#FEE2E2",
+                  border: "1px solid #FCA5A5",
+                  borderRadius: "0.375rem",
+                  padding: "0.75rem",
+                  marginBottom: "1rem",
+                  color: "#DC2626",
+                  fontSize: "0.875rem",
+                }}>
+                  ⚠️ {fileError}
+                </div>
+              )}
+              
+              {uploadedFile && (
+                <div style={{
+                  backgroundColor: "#ECFDF5",
+                  border: "2px solid #86EFAC",
+                  borderRadius: "0.375rem",
+                  padding: "1rem",
+                  marginBottom: "1rem",
+                }}>
+                  <p style={{ color: "#16A34A", fontWeight: "bold", marginBottom: "0.25rem" }}>
+                    ✓ File uploaded / קובץ טוען
+                  </p>
+                  <p style={{ color: "#555555", fontSize: "0.875rem" }}>
+                    {uploadedFile.name} ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
+                  </p>
+                </div>
+              )}
+            </div>
+            
+            <button
+              onClick={handleSaveAndContinue}
+              disabled={!uploadedFile}
+              style={{
+                width: "100%",
+                backgroundColor: uploadedFile ? "#FBBF24" : "#D1D5DB",
+                color: "#333333",
+                padding: "0.75rem",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                border: "none",
+                borderRadius: "0.5rem",
+                cursor: uploadedFile ? "pointer" : "not-allowed",
+              }}
+            >
+              Finish / סיים
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Tab 7: Presentation
+  if (currentTab === 6) {
+    const uploadedPresentation = (responses as any).presentationFile || null;
+    const [presentationError, setPresentationError] = React.useState("");
+    
+    const handlePresentationUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      
+      const allowedTypes = ['.ppt', '.pptx', '.pdf', '.key'];
+      const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+      
+      if (!allowedTypes.includes(fileExtension)) {
+        setPresentationError('Please upload a valid presentation file (PPT, PPTX, PDF, or Keynote)');
+        return;
+      }
+      
+      if (file.size > 50 * 1024 * 1024) { // 50MB limit for presentations
+        setPresentationError('File size must be less than 50MB');
+        return;
+      }
+      
+      setPresentationError('');
+      updateResponse('presentationFile', { name: file.name, size: file.size, type: file.type });
+    };
+    
+    return (
+      <div style={{ backgroundColor: "#E0E7FF", minHeight: "100vh" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        
+        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
+          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+            <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+              Stage 7: Final Presentation / שלב 7: מצגה סופית
+            </h1>
+            <p style={{ color: "#555555", marginBottom: "2rem" }}>
+              Upload your final presentation about how fashion can create social change. / העלו את המצגה הסופית שלכם על איך אופנה יכולה ליצור שינוי חברה.
+            </p>
+            
+            {/* Presentation Upload Section */}
+            <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                📊 Upload Your Presentation / העלו את המצגה
+              </h2>
+              <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
+                Upload your presentation file (PowerPoint, PDF, or Keynote). / העלו קובץ מצגה (PowerPoint, PDF, או Keynote).
+              </p>
+              
+              <div style={{
+                border: "2px dashed #818CF8",
+                borderRadius: "0.5rem",
+                padding: "2rem",
+                textAlign: "center",
+                backgroundColor: "#F0F4FF",
+                marginBottom: "1rem",
+              }}>
+                <input
+                  type="file"
+                  accept=".ppt,.pptx,.pdf,.key"
+                  onChange={handlePresentationUpload}
+                  style={{ display: "none" }}
+                  id="presentationFileInput"
+                />
+                <label
+                  htmlFor="presentationFileInput"
+                  style={{
+                    display: "block",
+                    cursor: "pointer",
+                    padding: "1rem",
+                  }}
+                >
+                  <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>📄</div>
+                  <p style={{ color: "#333333", fontWeight: "bold", marginBottom: "0.25rem" }}>
+                    Click to upload or drag and drop / לחץ לטעינה או גרור ורטוב
+                  </p>
+                  <p style={{ color: "#555555", fontSize: "0.875rem" }}>
+                    PPT, PPTX, PDF, Keynote (Max 50MB)
+                  </p>
+                </label>
+              </div>
+              
+              {presentationError && (
+                <div style={{
+                  backgroundColor: "#FEE2E2",
+                  border: "1px solid #FCA5A5",
+                  borderRadius: "0.375rem",
+                  padding: "0.75rem",
+                  marginBottom: "1rem",
+                  color: "#DC2626",
+                  fontSize: "0.875rem",
+                }}>
+                  ⚠️ {presentationError}
+                </div>
+              )}
+              
+              {uploadedPresentation && (
+                <div style={{
+                  backgroundColor: "#ECFDF5",
+                  border: "2px solid #86EFAC",
+                  borderRadius: "0.375rem",
+                  padding: "1rem",
+                  marginBottom: "1rem",
+                }}>
+                  <p style={{ color: "#16A34A", fontWeight: "bold", marginBottom: "0.25rem" }}>
+                    ✓ Presentation uploaded / מצגה טוענה
+                  </p>
+                  <p style={{ color: "#555555", fontSize: "0.875rem" }}>
+                    {uploadedPresentation.name} ({(uploadedPresentation.size / 1024 / 1024).toFixed(2)} MB)
+                  </p>
+                </div>
+              )}
+            </div>
+            
+            <button
+              onClick={handleSaveAndContinue}
+              disabled={!uploadedPresentation}
+              style={{
+                width: "100%",
+                backgroundColor: uploadedPresentation ? "#A78BFA" : "#D1D5DB",
+                color: "#333333",
+                padding: "0.75rem",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                border: "none",
+                borderRadius: "0.5rem",
+                cursor: uploadedPresentation ? "pointer" : "not-allowed",
+              }}
+            >
+              Submit & Complete / שלח והשלמו
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Placeholder for other tabs
   return (
     <div style={{ backgroundColor: tabColor, minHeight: "100vh", padding: "2rem", textAlign: "center" }}>

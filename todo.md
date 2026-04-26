@@ -20,8 +20,20 @@
 - [x] Step 3: Share Canva Link - with validation and bilingual messages
 - [x] Add complete Hebrew translations to all Tab 5 text
 
-## Future Features
-- [ ] Tab 6 (Fashion Item Design) - Build with file upload/drawing
-- [ ] Tab 7 (Presentation) - Build with file upload/drawing
+## Tab 6 - Creating a Vector (יצירה וקטור)
+- [x] Build Tab 6 structure with #FEF9C3 background
+- [x] Add tutorial section with Google Slides link button
+- [x] Add file upload component (SVG, PDF, PNG, JPG)
+- [x] Add Hebrew translations to all Tab 6 text
+- [x] Implement file upload handling and validation
+- [x] Add "Finish" button (disabled until file uploaded)
+
+## Tab 7 - Presentation (מצגה)
+- [x] Build Tab 7 structure for presentation file upload
+- [x] Add Hebrew translations to all Tab 7 text
+- [x] Implement file upload handling
+
+## Backend & Admin
 - [ ] Teacher Admin Dashboard - Review and approve submissions
 - [ ] tRPC backend wiring - Connect all tabs to database
+- [ ] Translate all remaining UI strings
