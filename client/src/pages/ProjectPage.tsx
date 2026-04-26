@@ -80,34 +80,36 @@ const GESTALT_PRINCIPLES = [
 // Design exercises
 const DESIGN_EXERCISES = [
   {
-    word: "CHANGE",
+    title: "Exercise 1: Similarity (דמיון)",
+    principle: "Similarity",
+    principleHe: "דמיון",
+    description: "Match the image to the shape that represents it. Objects that look similar are perceived as related.",
+    descriptionHe: "התאם את התמונה לצורה המייצגת אותה. עצמים שנראים דומים נתפסים כקשורים.",
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/gestalt-exercise-similarity-2XgPLmqLuCeH9tEMGDKGLS.webp",
     options: [
-      { text: "CHANGE", style: { fontSize: "2rem", fontStyle: "italic", fontFamily: "cursive", color: "#86EFAC" }, label: "Fluid Green" },
-      { text: "CHANGE", style: { fontSize: "2rem", fontWeight: "bold", color: "#FDE68A", textShadow: "2px 2px 4px #333333" }, label: "Yellow with Shadow" },
-      { text: "CHANGE", style: { fontSize: "2rem", fontWeight: "bold", color: "#FCA5A5", fontStyle: "italic" }, label: "Red Italic" },
+      { shape: "Circle (עיגול)", correct: true },
+      { shape: "Triangle (משולש)", correct: false },
+      { shape: "Square (ריבוע)", correct: false },
     ],
     correct: 0,
-    feedback: "Green represents growth and change - the fluid green font makes the message feel dynamic and hopeful. (ירוק מייצג צמיחה ושינוי - הגופן הנוזלי הירוק הופך את ההודעה לדינמית ומלאת תקווה.)"
+    feedback: "Correct! The circle matches the child's round face shape. This demonstrates the Similarity principle - the mind groups objects that share similar characteristics. (נכון! העיגול תואם את צורת הפנים העגולה של הילד. זה מדגים את עקרון הדמיון - המוח מקבץ עצמים שחולקים מאפיינים דומים.)",
+    wrongFeedback: "Not quite. Look at the shape of the child's face. Which geometric shape matches it best? (לא בדיוק. תסתכל על צורת הפנים של הילד. איזו צורה גיאומטרית מתאימה לה הכי טוב?)"
   },
   {
-    word: "HOPE",
+    title: "Exercise 2: Continuation (המשכיות)",
+    principle: "Continuation",
+    principleHe: "המשכיות",
+    description: "Match the image to the shape that represents its direction. Elements arranged in a line or curve are perceived as connected.",
+    descriptionHe: "התאם את התמונה לצורה המייצגת את כיוונה. אלמנטים המסודרים בקו או בעקומה נתפסים כמחוברים.",
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/gestalt-exercise-continuation-gx76GeimrG9wVBEtJ6ZPWc.webp",
     options: [
-      { text: "HOPE", style: { fontSize: "2rem", color: "#333333", textDecoration: "line-through" }, label: "Strikethrough" },
-      { text: "HOPE", style: { fontSize: "2rem", fontWeight: "bold", color: "#86EFAC" }, label: "Bold Green" },
-      { text: "HOPE", style: { fontSize: "1rem", color: "#333333" }, label: "Small Black" },
+      { shape: "Circle (עיגול)", correct: false },
+      { shape: "Triangle (משולש)", correct: true },
+      { shape: "Square (ריבוע)", correct: false },
     ],
     correct: 1,
-    feedback: "Green represents growth and hope - the bold green makes the message powerful and visible."
-  },
-  {
-    word: "UNITY",
-    options: [
-      { text: "UNITY", style: { fontSize: "2rem", letterSpacing: "0.5rem", color: "#333333" }, label: "Spaced Out" },
-      { text: "UNITY", style: { fontSize: "2rem", fontWeight: "bold", color: "#D8B4FE", letterSpacing: "0rem" }, label: "Bold Purple Tight" },
-      { text: "UNITY", style: { fontSize: "0.5rem", color: "#333333" }, label: "Tiny Black" },
-    ],
-    correct: 1,
-    feedback: "Purple represents creativity and unity. Tight spacing makes the word feel unified and strong."
+    feedback: "Correct! The triangle matches the pointed, directional nature of the plant stem. This demonstrates the Continuation principle - the mind follows visual lines and curves to connect elements. (נכון! המשולש תואם את הטבע המחודד וכיווני של גבעול הצמח. זה מדגים את עקרון ההמשכיות - המוח עוקב אחר קווים וקימורים חזותיים כדי לחבר אלמנטים.)",
+    wrongFeedback: "Not quite. Look at the direction and shape of the plant stem. Which geometric shape represents its pointed direction? (לא בדיוק. תסתכל על כיוון וצורת גבעול הצמח. איזו צורה גיאומטרית מייצגת את כיוונו המחודד?)"
   },
 ];
 
@@ -736,9 +738,13 @@ export default function ProjectPage() {
 
                   {DESIGN_EXERCISES.map((exercise, exIdx) => (
                     <div key={exIdx} style={{ marginBottom: "2rem", backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
-                      <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
-                        Exercise {exIdx + 1}: Which design is best for the word "{exercise.word}"?
+                      <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                        {exercise.title}
                       </h3>
+                      <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "1rem" }}>
+                        {exercise.description} ({exercise.descriptionHe})
+                      </p>
+                      <img src={exercise.image} alt={exercise.title} style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "300px", objectFit: "contain" }} />
                       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1rem" }}>
                         {exercise.options.map((option, optIdx) => (
                           <button
@@ -754,11 +760,8 @@ export default function ProjectPage() {
                               transition: "all 0.2s",
                             }}
                           >
-                            <div style={option.style}>
-                              {option.text}
-                            </div>
-                            <p style={{ fontSize: "0.75rem", color: "#555555", marginTop: "0.5rem" }}>
-                              {option.label}
+                            <p style={{ fontSize: "0.875rem", color: "#333333", fontWeight: "bold" }}>
+                              {option.shape}
                             </p>
                           </button>
                         ))}
@@ -780,10 +783,10 @@ export default function ProjectPage() {
                           )}
                           <div>
                             <p style={{ fontWeight: "bold", color: exerciseFeedback[exIdx] ? "#16A34A" : "#DC2626", marginBottom: "0.25rem" }}>
-                              {exerciseFeedback[exIdx] ? "Correct!" : "Not quite right"}
+                              {exerciseFeedback[exIdx] ? "Correct!" : "Try again"}
                             </p>
                             <p style={{ fontSize: "0.875rem", color: "#555555" }}>
-                              {exercise.feedback}
+                              {exerciseFeedback[exIdx] ? exercise.feedback : exercise.wrongFeedback}
                             </p>
                           </div>
                         </div>
