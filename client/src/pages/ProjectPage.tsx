@@ -20,6 +20,15 @@ const COLORS = [
   "#FDE68A", "#FDBA74", "#FCA5A5", "#D8B4FE", "#93C5FD", "#86EFAC", "#94A3B8", "#C7D2FE"
 ];
 
+// Correct answers for font verification
+const FONT_CORRECT_ANSWERS = {
+  thornVsSmile: ["cinzel", "fredoka"], // Cinzel for thorns (serious/sharp), Fredoka for smile (fun/rounded)
+  toyStore: "fredoka", // Fun, playful
+  gamingSpace: "orbitron", // Tech, futuristic
+  restaurant: "cinzel", // Elegant, formal
+  hospital: "anton", // Strong, trustworthy, bold
+};
+
 const IMAGES = {
   groupTop: "https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/icon-group-decision-top-bRGmLFS52tVBmxVuPyKH7h.webp",
   groupBottom: "https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/icon-group-decision-bottom-F2rHCYhXzzEByzunwAExR5.webp",
@@ -41,7 +50,7 @@ const IMAGES = {
 const BRAND_LOGOS = [
   { 
     name: "Nike", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Nike_logo.svg/1024px-Nike_logo.svg.png",
+    logo: "https://seeklogo.com/images/N/nike-logo-D0F1FD2D50-seeklogo.com.png",
     principle: "Continuity",
     principleHe: "המשכיות",
     explanation: "The swoosh creates a continuous curved line that our eye follows.",
@@ -49,7 +58,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Adidas", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_logo.svg/1024px-Adidas_logo.svg.png",
+    logo: "https://seeklogo.com/images/A/Adidas-logo-B0730CDBF5-seeklogo.com.png",
     principle: "Similarity",
     principleHe: "דמיון",
     explanation: "Three parallel stripes create unity through repetition and similarity.",
@@ -57,7 +66,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Apple", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1024px-Apple_logo_black.svg.png",
+    logo: "https://seeklogo.com/images/A/Apple-logo-C4451CFF17-seeklogo.com.png",
     principle: "Closure",
     principleHe: "סגירה",
     explanation: "The missing bite is completed by our mind, creating the whole apple.",
@@ -65,7 +74,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Gucci", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Gucci_logo.svg/1024px-Gucci_logo.svg.png",
+    logo: "https://seeklogo.com/images/G/Gucci-logo-9B3D7F5F0D-seeklogo.com.png",
     principle: "Balance",
     principleHe: "איזון",
     explanation: "Symmetrical interlocking Gs create perfect visual balance and harmony.",
@@ -73,7 +82,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Shell", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Shell_logo.svg/1024px-Shell_logo.svg.png",
+    logo: "https://seeklogo.com/images/S/Shell-logo-DBAB1A9F4B-seeklogo.com.png",
     principle: "Proximity",
     principleHe: "קרבה",
     explanation: "Segments grouped closely together form the shell shape.",
@@ -415,7 +424,30 @@ export default function ProjectPage() {
                   </div>
 
                   <button
-                    onClick={handleSaveAndContinue}
+                    onClick={() => {
+                      // Verify font answers
+                      const thornAnswer = tab3Responses.thornVsSmile.toLowerCase();
+                      const toyAnswer = tab3Responses.toyStore.toLowerCase();
+                      const gamingAnswer = tab3Responses.gamingSpace.toLowerCase();
+                      const restaurantAnswer = tab3Responses.restaurant.toLowerCase();
+                      const hospitalAnswer = tab3Responses.hospital.toLowerCase();
+
+                      // Check if answers contain correct keywords
+                      const thornCorrect = (thornAnswer.includes("cinzel") || thornAnswer.includes("sharp") || thornAnswer.includes("serious")) &&
+                                         (thornAnswer.includes("fredoka") || thornAnswer.includes("smile") || thornAnswer.includes("fun"));
+                      const toyCorrect = toyAnswer.includes("fredoka") || toyAnswer.includes("fun") || toyAnswer.includes("playful");
+                      const gamingCorrect = gamingAnswer.includes("orbitron") || gamingAnswer.includes("tech") || gamingAnswer.includes("futuristic");
+                      const restaurantCorrect = restaurantAnswer.includes("cinzel") || restaurantAnswer.includes("elegant") || restaurantAnswer.includes("formal");
+                      const hospitalCorrect = hospitalAnswer.includes("anton") || hospitalAnswer.includes("strong") || hospitalAnswer.includes("trust");
+
+                      if (!thornCorrect || !toyCorrect || !gamingCorrect || !restaurantCorrect || !hospitalCorrect) {
+                        toast.error("Some answers are not quite right. Please review the font psychology and try again. (חלק מהתשובות לא נכונות. אנא בדוק שוב.)");
+                        return;
+                      }
+
+                      toast.success("Excellent! All answers are correct! (מעולה! כל התשובות נכונות!)");
+                      handleSaveAndContinue();
+                    }}
                     disabled={isLocked}
                     style={{
                       width: "100%",
