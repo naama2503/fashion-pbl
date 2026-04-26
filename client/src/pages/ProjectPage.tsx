@@ -360,6 +360,44 @@ export default function ProjectPage() {
     );
   }
 
+  // Tab 0: Home
+  if (currentTab === 0) {
+    return (
+      <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        
+        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", alignItems: "center" }}>
+          <div>
+            <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+              HOW CAN FASHION CREATE SOCIAL CHANGE?
+            </h1>
+            <p style={{ fontSize: "1.125rem", color: "#555555", lineHeight: "1.6", marginBottom: "2rem" }}>
+              In this project, you will work in groups to design a fashion item that sends a message for social change. (בפרויקט זה, תעבדו בקבוצות כדי לעצב פריט אופנה השולח הודעה לשינוי חברתי.)
+            </p>
+            <button
+              onClick={() => setCurrentTab(1)}
+              style={{
+                backgroundColor: "#333333",
+                color: "white",
+                padding: "1rem 2rem",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                border: "none",
+                borderRadius: "0.5rem",
+                cursor: "pointer",
+              }}
+            >
+              Start Your Project →
+            </button>
+          </div>
+          <div>
+            <img src={IMAGES.groupTop} alt="Group decision" style={{ width: "100%", borderRadius: "0.5rem" }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Placeholder for other tabs
   return (
     <div style={{ backgroundColor: tabColor, minHeight: "100vh", padding: "2rem", textAlign: "center" }}>
