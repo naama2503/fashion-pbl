@@ -68,13 +68,38 @@ const COLOR_MEANINGS = [
   { color: "#94A3B8", name: "Grey", nameHe: "אפור", meaning: "Balance", meaningHe: "איזון" },
 ];
 
-// Gestalt principles
+// Gestalt principles with Hebrew translations and descriptions
 const GESTALT_PRINCIPLES = [
-  { name: "Proximity", nameHe: "קרבה", desc: "Objects close together are perceived as a group" },
-  { name: "Similarity", nameHe: "דמיון", desc: "Objects that look similar are perceived as related" },
-  { name: "Continuity", nameHe: "המשכיות", desc: "Elements arranged in a line or curve are perceived as connected" },
-  { name: "Closure", nameHe: "סגירה", desc: "The mind fills in missing parts to complete a shape" },
-  { name: "Figure-Ground", nameHe: "דמות-רקע", desc: "Objects stand out from their background" },
+  { 
+    name: "Closure", 
+    nameHe: "סגירה", 
+    desc: "The mind fills in missing parts to complete a shape. Example: Noreico, INTI logos - we see the complete form even though parts are missing.",
+    descHe: "המוח ממלא חלקים חסרים כדי להשלים צורה. דוגמה: לוגו Noreico, INTI - אנחנו רואים את הצורה השלמה למרות שחלקים חסרים."
+  },
+  { 
+    name: "Figure/Ground", 
+    nameHe: "דמות/רקע", 
+    desc: "Objects stand out from their background. Example: BUGS!, EAT.N logos - the figure pops out from the background.",
+    descHe: "עצמים בולטים מהרקע שלהם. דוגמה: לוגו BUGS!, EAT.N - הדמות בולטת מהרקע."
+  },
+  { 
+    name: "Continuation", 
+    nameHe: "המשכיות", 
+    desc: "Elements arranged in a line or curve are perceived as connected. Example: W, DIRECTV, leaf logos - our eye follows the continuous line.",
+    descHe: "אלמנטים המסודרים בקו או עקומה נתפסים כמחוברים. דוגמה: לוגו W, DIRECTV, עלה - העין שלנו עוקבת אחרי הקו הרציף."
+  },
+  { 
+    name: "Unity", 
+    nameHe: "אחדות", 
+    desc: "Similar elements are grouped together to create a unified whole. Example: JAMS, BRIDGE logos - multiple elements work as one.",
+    descHe: "אלמנטים דומים מקובצים יחד כדי ליצור שלם מאוחד. דוגמה: לוגו JAMS, BRIDGE - אלמנטים מרובים עובדים כאחד."
+  },
+  { 
+    name: "Balance", 
+    nameHe: "איזון", 
+    desc: "Visual weight is distributed evenly creating harmony. Example: Gucci, Adidas, Prada logos - symmetrical and balanced designs.",
+    descHe: "המשקל הויזואלי מחולק באופן שווה ויוצר הרמוניה. דוגמה: לוגו Gucci, Adidas, Prada - עיצובים סימטריים ומאוזנים."
+  },
 ];
 
 // Design exercises
@@ -736,7 +761,7 @@ export default function ProjectPage() {
                   <div style={{ marginBottom: "2rem", backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
                     <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Exercise 1: Bank Logos (תרגיל 1: לוגו בנקים)</h3>
                     <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "1rem" }}>Which logo represents a serious bank? Which represents growth? Which represents an unserious bank? (איזה לוגו מייצג בנק רציני? איזה מייצג צמיחה? איזה מייצג בנק שאינו רציני?)</p>
-                    <img src="/manus-storage/image12.jpg" alt="Bank Logos" style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "400px", objectFit: "contain" }} />
+                    <img src="/manus-storage/image12_2c596f38.jpg" alt="Bank Logos" style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "400px", objectFit: "contain" }} />
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1rem" }}>
                       {["Serious Bank (בנק רציני)", "Growth Bank (בנק צמיחה)", "Unserious Bank (בנק לא רציני)"].map((label, idx) => (
                         <button key={idx} onClick={() => updateResponse(`bankExercise_${idx}`, label)} disabled={isLocked} style={{ padding: "1rem", border: responses[`bankExercise_${idx}`] ? "3px solid #333333" : "1px solid #D1D5DB", borderRadius: "0.375rem", backgroundColor: responses[`bankExercise_${idx}`] ? "#F0F9FF" : "white", cursor: isLocked ? "not-allowed" : "pointer", transition: "all 0.2s" }}>
@@ -754,7 +779,7 @@ export default function ProjectPage() {
                   <div style={{ marginBottom: "2rem", backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
                     <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Exercise 2: Font Shapes (תרגיל 2: צורות פונט)</h3>
                     <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "1rem" }}>Which font represents childlike innocence? Which represents seriousness? Which represents a religious organization? (איזה פונט מייצג תמימות ילדותית? איזה מייצג רציניות? איזה מייצג ארגון דתי?)</p>
-                    <img src="/manus-storage/image1.jpg" alt="Font Examples" style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "400px", objectFit: "contain" }} />
+                    <img src="/manus-storage/image1_c556ed59.jpg" alt="Font Examples" style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "400px", objectFit: "contain" }} />
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1rem" }}>
                       {["Childlike (ילדותי)", "Serious (רציני)", "Religious (דתי)"].map((label, idx) => (
                         <button key={idx} onClick={() => updateResponse(`fontExercise_${idx}`, label)} disabled={isLocked} style={{ padding: "1rem", border: responses[`fontExercise_${idx}`] ? "3px solid #333333" : "1px solid #D1D5DB", borderRadius: "0.375rem", backgroundColor: responses[`fontExercise_${idx}`] ? "#F0F9FF" : "white", cursor: isLocked ? "not-allowed" : "pointer", transition: "all 0.2s" }}>
