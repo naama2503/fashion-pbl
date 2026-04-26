@@ -170,6 +170,10 @@ export default function ProjectPage() {
   const [currentTab, setCurrentTab] = useState(0);
   const [approvals, setApprovals] = useState([true, false, false, false, false, false, false, false]);
   const [responses, setResponses] = useState<Record<string, any>>({});
+  const [colorAnswers, setColorAnswers] = useState<Record<number, string>>({});
+  const [showColorMeanings, setShowColorMeanings] = useState(false);
+  const [fontShapeAnswers, setFontShapeAnswers] = useState<{strong?: string; kind?: string}>({});
+  const [showFontMeanings, setShowFontMeanings] = useState(false);
   const [studentNames, setStudentNames] = useState(["Student 1", "Student 2", "Student 3"]);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [showGrammarTips, setShowGrammarTips] = useState(false);
@@ -709,10 +713,7 @@ export default function ProjectPage() {
 
   // Tab 3: Design Inquiry - 3 Parts (Color, Font/Shape, Gestalt)
   if (currentTab === 3) {
-    const [colorAnswers, setColorAnswers] = useState<Record<number, string>>({});
-    const [showColorMeanings, setShowColorMeanings] = useState(false);
-    const [fontShapeAnswers, setFontShapeAnswers] = useState<{strong?: string; kind?: string}>({});
-    const [showFontMeanings, setShowFontMeanings] = useState(false);
+
 
     return (
       <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
