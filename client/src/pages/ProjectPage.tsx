@@ -116,6 +116,7 @@ export default function ProjectPage() {
   const [responses, setResponses] = useState({});
   const [isLocked, setIsLocked] = useState(false);
   const [validationErrors, setValidationErrors] = useState([]);
+  const [studentNames, setStudentNames] = useState(["Student 1", "Student 2", "Student 3"]);
   
   // Tab 4 specific states
   const [colorRevealed, setColorRevealed] = useState<Record<number, boolean>>({});
@@ -352,6 +353,299 @@ export default function ProjectPage() {
               <div>
                 <img src={IMAGES.designTop} alt="Design" style={{ width: "100%", borderRadius: "0.5rem", marginBottom: "1rem" }} />
                 <img src={IMAGES.designBottom} alt="Design" style={{ width: "100%", borderRadius: "0.5rem" }} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Tab 1: Group Decision
+  if (currentTab === 1) {
+    return (
+      <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        
+        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
+          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "2rem", alignItems: "start" }}>
+              <div>
+                <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                  Group Decision (החלטה קבוצתית)
+                </h1>
+                <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
+                  Work in groups of 2-3. Choose a population to help.
+                </p>
+                {isLocked && (
+                  <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
+                    <Lock size={24} style={{ color: "#D97706" }} />
+                    <p style={{ fontWeight: "bold", color: "#92400E" }}>This tab is locked. Get teacher approval for Tab 1 first!</p>
+                  </div>
+                )}
+                <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
+                  <div style={{ marginBottom: "2rem", backgroundColor: "#F3F4F6", padding: "1rem", borderRadius: "0.375rem", borderLeft: "4px solid #333333" }}>
+                    <p style={{ fontSize: "0.95rem", color: "#333333", lineHeight: "1.6" }}>
+                      <strong>Assignment (משימה):</strong> Think of a group of people in the world today who are suffering and people are not aware enough of their struggle. 
+                      (חשבו על קבוצת אנשים בעולם היום שסובלים ואנשים לא מודעים מספיק למאבקם.)
+                    </p>
+                  </div>
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Group Members (חברי הקבוצה)
+                    </label>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }}>
+                      {studentNames.map((name, idx) => (
+                        <input
+                          key={idx}
+                          type="text"
+                          value={name}
+                          onChange={(e) => {
+                            const newNames = [...studentNames];
+                            newNames[idx] = e.target.value;
+                            setStudentNames(newNames);
+                          }}
+                          disabled={isLocked}
+                          style={{
+                            padding: "0.75rem",
+                            border: "1px solid #D1D5DB",
+                            borderRadius: "0.375rem",
+                            fontFamily: "'Alef', 'Assistant', sans-serif",
+                          }}
+                          placeholder={`Student ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem", color: "#333333" }}>
+                      Compare Populations (השווה בין אוכלוסיות)
+                    </label>
+                    <div style={{ overflowX: "auto" }}>
+                      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
+                        <thead>
+                          <tr style={{ backgroundColor: "#F3F4F6", borderBottom: "2px solid #D1D5DB" }}>
+                            <th style={{ padding: "0.75rem", textAlign: "left", fontWeight: "bold", color: "#333333", borderRight: "1px solid #D1D5DB" }}>
+                              Population Name
+                            </th>
+                            {studentNames.map((name: string, idx: number) => (
+                              <th key={idx} style={{ padding: "0.75rem", textAlign: "center", fontWeight: "bold", color: "#333333", borderRight: "1px solid #D1D5DB" }}>
+                                {name}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {["Name of Population", "Why they're a good choice?", "Why NOT to choose them?"].map((row, rowIdx) => (
+                            <tr key={rowIdx} style={{ borderBottom: "1px solid #E5E7EB" }}>
+                              <td style={{ padding: "0.75rem", fontWeight: "bold", color: "#555555", backgroundColor: "#F9FAFB", borderRight: "1px solid #D1D5DB" }}>
+                                {row}
+                              </td>
+                              {studentNames.map((name: string, colIdx: number) => (
+                                <td key={colIdx} style={{ padding: "0.75rem", borderRight: "1px solid #D1D5DB" }}>
+                                  <textarea
+                                    value={(responses as any)[`table_${rowIdx}_${colIdx}`] || ""}
+                                    onChange={(e) => updateResponse(`table_${rowIdx}_${colIdx}`, e.target.value)}
+                                    disabled={isLocked}
+                                    style={{
+                                      width: "100%",
+                                      padding: "0.5rem",
+                                      border: "1px solid #D1D5DB",
+                                      borderRadius: "0.375rem",
+                                      fontFamily: "'Alef', 'Assistant', sans-serif",
+                                      minHeight: "60px",
+                                      resize: "vertical",
+                                    }}
+                                    placeholder="Enter text..."
+                                  />
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Which population did you choose? (איזו אוכלוסייה בחרתם?)
+                    </label>
+                    <input
+                      type="text"
+                      value={(responses as any).chosenPopulation || ""}
+                      onChange={(e) => updateResponse("chosenPopulation", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        marginBottom: "1rem",
+                      }}
+                      placeholder="Enter population name..."
+                    />
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Why? (at least 2 sentences) (למה? לפחות 2 משפטים)
+                    </label>
+                    <textarea
+                      value={(responses as any).whyChosen || ""}
+                      onChange={(e) => {
+                        updateResponse("whyChosen", e.target.value);
+                        setValidationErrors([]);
+                      }}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: validationErrors.length > 0 ? "2px solid #DC2626" : "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        minHeight: "100px",
+                        resize: "vertical",
+                      }}
+                      placeholder="Explain your choice..."
+                    />
+                    
+                    {validationErrors.length > 0 && (
+                      <div style={{ backgroundColor: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: "0.375rem", padding: "0.75rem", marginTop: "0.75rem" }}>
+                        {validationErrors.map((error, idx) => (
+                          <div key={idx} style={{ display: "flex", gap: "0.5rem", color: "#DC2626", fontSize: "0.875rem", marginBottom: idx < validationErrors.length - 1 ? "0.5rem" : 0 }}>
+                            <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                            <span>{error}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={handleSaveAndContinue}
+                    disabled={isLocked}
+                    style={{
+                      width: "100%",
+                      backgroundColor: isLocked ? "#D1D5DB" : "#FDBA74",
+                      color: "#333333",
+                      padding: "0.75rem",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                      border: "none",
+                      borderRadius: "0.5rem",
+                      cursor: isLocked ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    Save & Continue
+                  </button>
+                </div>
+              </div>
+              <div>
+                <img src={IMAGES.groupBottom} alt="Social change" style={{ width: "100%", borderRadius: "0.5rem", marginBottom: "1rem" }} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Tab 2: Research & Writing
+  if (currentTab === 2) {
+    const researchText = (responses as any).researchText || "";
+    const wordCount = researchText.trim().split(/\s+/).filter((w: string) => w.length > 0).length;
+    const meetsMinimum = wordCount >= 100;
+    
+    return (
+      <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        
+        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
+          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "2rem", alignItems: "start" }}>
+              <div>
+                <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                  Research & Writing (מחקר וכתיבה)
+                </h1>
+                <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
+                  Research your chosen population and find statistics about their situation.
+                </p>
+                {isLocked && (
+                  <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
+                    <Lock size={24} style={{ color: "#D97706" }} />
+                    <p style={{ fontWeight: "bold", color: "#92400E" }}>This tab is locked. Get teacher approval for Tab 1 first!</p>
+                  </div>
+                )}
+                <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
+                  <div style={{ marginBottom: "2rem", backgroundColor: "#F3F4F6", padding: "1rem", borderRadius: "0.375rem", borderLeft: "4px solid #333333" }}>
+                    <p style={{ fontSize: "0.95rem", color: "#333333", lineHeight: "1.6", marginBottom: "1rem" }}>
+                      <strong>Assignment (משימה):</strong> Research your chosen population and write about their situation. Include statistics and facts.
+                    </p>
+                    <p style={{ fontSize: "0.9rem", color: "#555555", marginBottom: "1rem" }}>
+                      <strong>Example (דוגמה):</strong> "According to UNICEF, 160 million children worldwide are engaged in child labor. In developing countries, children often work instead of attending school, limiting their future opportunities. This population needs awareness and support."
+                    </p>
+                    <p style={{ fontSize: "0.9rem", color: "#555555" }}>
+                      <strong>💡 Tip:</strong> Use Google Gemini to help with your research and writing. <a href="https://gemini.google.com/gem/1AnFJbpYQ-hsXjJDhota5pIkU3Qt9h6Vy?usp=sharing" target="_blank" rel="noopener noreferrer" style={{ color: "#2563EB", textDecoration: "underline" }}>Open Gem Helper →</a>
+                    </p>
+                  </div>
+                  
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Your Research & Writing (מינימום 100 מילים)
+                    </label>
+                    <textarea
+                      value={researchText}
+                      onChange={(e) => {
+                        updateResponse("researchText", e.target.value);
+                        setValidationErrors([]);
+                      }}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "1rem",
+                        border: !meetsMinimum && researchText.length > 0 ? "2px solid #DC2626" : "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        minHeight: "200px",
+                        resize: "vertical",
+                        fontSize: "1rem",
+                      }}
+                      placeholder="Paste your research and writing here. Minimum 100 words required."
+                    />
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.5rem" }}>
+                      <span style={{ fontSize: "0.875rem", color: meetsMinimum ? "#16A34A" : "#DC2626", fontWeight: "bold" }}>
+                        Word count: {wordCount} / 100 {meetsMinimum ? "✓" : ""}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {!meetsMinimum && researchText.length > 0 && (
+                    <div style={{ backgroundColor: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: "0.375rem", padding: "0.75rem", marginBottom: "1.5rem" }}>
+                      <div style={{ display: "flex", gap: "0.5rem", color: "#DC2626", fontSize: "0.875rem" }}>
+                        <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                        <span>Please write at least 100 words. Currently {wordCount} words.</span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <button
+                    onClick={handleSaveAndContinue}
+                    disabled={isLocked || !meetsMinimum}
+                    style={{
+                      width: "100%",
+                      backgroundColor: isLocked || !meetsMinimum ? "#D1D5DB" : "#FCA5A5",
+                      color: "#333333",
+                      padding: "0.75rem",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                      border: "none",
+                      borderRadius: "0.5rem",
+                      cursor: isLocked || !meetsMinimum ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    Save & Continue
+                  </button>
+                </div>
+              </div>
+              <div>
+                <img src={IMAGES.researchBottom} alt="Research" style={{ width: "100%", borderRadius: "0.5rem", marginBottom: "1rem" }} />
               </div>
             </div>
           </div>
