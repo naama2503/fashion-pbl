@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import { Lock, AlertCircle, HelpCircle, Upload, CheckCircle, XCircle } from "lucide-react";
@@ -39,22 +39,25 @@ const IMAGES = {
 const GESTALT_LOGOS = [
   { 
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/gestalt-logo-proximity-nuNgWMJud2ZHVRaCqpAtiq.webp",
-    principle: "Proximity (קרבה)",
-    desc: "Which principle is used here? (איזה עקרון משמש כאן?)"
+    principle: "Proximity",
+    principleHe: "קרבה",
+    desc: "Which principle is used here?"
   },
   { 
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/gestalt-logo-closure-aW3zXAaeXzpACXWKz7RPdd.webp",
-    principle: "Closure (סגירה)",
-    desc: "Which principle is used here? (איזה עקרון משמש כאן?)"
+    principle: "Closure",
+    principleHe: "סגירה",
+    desc: "Which principle is used here?"
   },
   { 
-    url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/gestalt-logo-continuity-Jx5zKmRyP8sL2NvWqTyUhh.webp",
-    principle: "Continuity (רציפות)",
-    desc: "Which principle is used here? (איזה עקרון משמש כאן?)"
-  }
+    url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/gestalt-logo-continuity-NGcqDuAmUNehSLvDXEMdca.webp",
+    principle: "Continuity",
+    principleHe: "המשכיות",
+    desc: "Which principle is used here?"
+  },
 ];
 
-// Color meanings
+// Color meaning chart (Matte colors)
 const COLOR_MEANINGS = [
   { color: "#FDE68A", name: "Yellow", nameHe: "צהוב", meaning: "Optimistic", meaningHe: "אופטימי" },
   { color: "#FDBA74", name: "Orange", nameHe: "כתום", meaning: "Friendly", meaningHe: "חברותי" },
@@ -65,114 +68,83 @@ const COLOR_MEANINGS = [
   { color: "#94A3B8", name: "Grey", nameHe: "אפור", meaning: "Balance", meaningHe: "איזון" },
 ];
 
+// Gestalt principles
+const GESTALT_PRINCIPLES = [
+  { name: "Proximity", nameHe: "קרבה", desc: "Objects close together are perceived as a group" },
+  { name: "Similarity", nameHe: "דמיון", desc: "Objects that look similar are perceived as related" },
+  { name: "Continuity", nameHe: "המשכיות", desc: "Elements arranged in a line or curve are perceived as connected" },
+  { name: "Closure", nameHe: "סגירה", desc: "The mind fills in missing parts to complete a shape" },
+  { name: "Figure-Ground", nameHe: "דמות-רקע", desc: "Objects stand out from their background" },
+];
+
+// Design exercises
+const DESIGN_EXERCISES = [
+  {
+    word: "CHANGE",
+    options: [
+      { text: "CHANGE", style: { fontSize: "2rem", fontStyle: "italic", fontFamily: "cursive", color: "#86EFAC" }, label: "Fluid Green" },
+      { text: "CHANGE", style: { fontSize: "2rem", fontWeight: "bold", color: "#FDE68A", textShadow: "2px 2px 4px #333333" }, label: "Yellow with Shadow" },
+      { text: "CHANGE", style: { fontSize: "2rem", fontWeight: "bold", color: "#FCA5A5", fontStyle: "italic" }, label: "Red Italic" },
+    ],
+    correct: 0,
+    feedback: "Green represents growth and change - the fluid green font makes the message feel dynamic and hopeful. (ירוק מייצג צמיחה ושינוי - הגופן הנוזלי הירוק הופך את ההודעה לדינמית ומלאת תקווה.)"
+  },
+  {
+    word: "HOPE",
+    options: [
+      { text: "HOPE", style: { fontSize: "2rem", color: "#333333", textDecoration: "line-through" }, label: "Strikethrough" },
+      { text: "HOPE", style: { fontSize: "2rem", fontWeight: "bold", color: "#86EFAC" }, label: "Bold Green" },
+      { text: "HOPE", style: { fontSize: "1rem", color: "#333333" }, label: "Small Black" },
+    ],
+    correct: 1,
+    feedback: "Green represents growth and hope - the bold green makes the message powerful and visible."
+  },
+  {
+    word: "UNITY",
+    options: [
+      { text: "UNITY", style: { fontSize: "2rem", letterSpacing: "0.5rem", color: "#333333" }, label: "Spaced Out" },
+      { text: "UNITY", style: { fontSize: "2rem", fontWeight: "bold", color: "#D8B4FE", letterSpacing: "0rem" }, label: "Bold Purple Tight" },
+      { text: "UNITY", style: { fontSize: "0.5rem", color: "#333333" }, label: "Tiny Black" },
+    ],
+    correct: 1,
+    feedback: "Purple represents creativity and unity. Tight spacing makes the word feel unified and strong."
+  },
+];
+
+// Validation helper for research questions
+const validateResearchAnswer = (text: string, minSentences: number): { valid: boolean; errors: string[] } => {
+  const errors = [];
+  
+  const sentences = text.trim().split(/[.!?]+/).filter(s => s.trim().length > 0);
+  if (sentences.length < minSentences) {
+    errors.push(`לפחות ${minSentences} משפטים נדרשים`);
+  }
+  
+  if (text.length > 0 && !/^[A-Z]/.test(text) && !/^[א-ת]/.test(text)) {
+    errors.push("אות גדולה בהתחלה");
+  }
+  
+  if (text.length > 0 && !/[.!?]$/.test(text.trim())) {
+    errors.push("סימן פיסוק בסוף");
+  }
+  
+  return { valid: errors.length === 0, errors };
+};
+
 export default function ProjectPage() {
   const [currentTab, setCurrentTab] = useState(0);
+  const [approvals, setApprovals] = useState([true, false, false, false, false, false, false, false]);
   const [responses, setResponses] = useState<Record<string, any>>({});
-  const [approvals, setApprovals] = useState<Record<number, boolean>>({
-    0: true,
-    1: true,
-  });
+  const [studentNames, setStudentNames] = useState(["Student 1", "Student 2", "Student 3"]);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [showGrammarTips, setShowGrammarTips] = useState(false);
-  const [showSpellCheck, setShowSpellCheck] = useState(false);
+  const [exerciseAnswers, setExerciseAnswers] = useState<Record<number, number>>({});
+  const [exerciseFeedback, setExerciseFeedback] = useState<Record<number, boolean>>({});
+  const canvasRef = useRef<any>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const updateResponse = (key: string, value: any) => {
-    setResponses((prev) => ({ ...prev, [key]: value }));
-  };
-
-  // Simple spell check function
-  const checkSpelling = (text: string): { errors: string[], suggestions: Record<string, string[]> } => {
-    const commonMisspellings: Record<string, string[]> = {
-      "teh": ["the"],
-      "recieve": ["receive"],
-      "occured": ["occurred"],
-      "seperate": ["separate"],
-      "definately": ["definitely"],
-    };
-
-    const errors: string[] = [];
-    const suggestions: Record<string, string[]> = {};
-    const words = text.toLowerCase().split(/\s+/);
-
-    words.forEach((word) => {
-      const cleaned = word.replace(/[.,!?;:]/g, "");
-      if (commonMisspellings[cleaned]) {
-        errors.push(cleaned);
-        suggestions[cleaned] = commonMisspellings[cleaned];
-      }
-    });
-
-    return { errors, suggestions };
-  };
-
-  // Validate text requirements
-  const validateText = (text: string, minSentences: number = 2): { valid: boolean; errors: string[] } => {
-    const errors: string[] = [];
-
-    // Check sentence count
-    const sentences = text.split(/[.!?]+/).filter((s) => s.trim().length > 0);
-    if (sentences.length < minSentences) {
-      errors.push(`At least ${minSentences} sentences required (כמה משפטים נדרשים: ${minSentences})`);
-    }
-
-    // Check capital letter at start
-    if (text.length > 0 && !/^[A-Z\u05D0-\u05EA]/.test(text)) {
-      errors.push("Must start with a capital letter (חייב להתחיל באות גדולה)");
-    }
-
-    // Check punctuation at end
-    if (text.length > 0 && !/[.!?]$/.test(text.trim())) {
-      errors.push("Must end with punctuation (חייב להסתיים בסימן פיסוק)");
-    }
-
-    return { valid: errors.length === 0, errors };
-  };
-
-  // Validate research tab
-  const validateResearch = (): boolean => {
-    const errors: string[] = [];
-
-    // Q1: Who are they? (2 sentences + statistics)
-    const q1 = responses.researchQ1 || "";
-    const q1Validation = validateText(q1, 2);
-    if (!q1Validation.valid) {
-      errors.push("Q1 - Who are they? " + q1Validation.errors.join(", "));
-    }
-    if (!q1.includes("http") && !q1.includes("statistic") && !q1.includes("data")) {
-      errors.push("Q1 must include statistics from a reliable source (צריך סטטיסטיקה)");
-    }
-
-    // Q2: Why special? (2 sentences)
-    const q2 = responses.researchQ2 || "";
-    const q2Validation = validateText(q2, 2);
-    if (!q2Validation.valid) {
-      errors.push("Q2 - Why special? " + q2Validation.errors.join(", "));
-    }
-
-    // Q3: What's the problem? (3 sentences + statistics)
-    const q3 = responses.researchQ3 || "";
-    const q3Validation = validateText(q3, 3);
-    if (!q3Validation.valid) {
-      errors.push("Q3 - Problem? " + q3Validation.errors.join(", "));
-    }
-    if (!q3.includes("http") && !q3.includes("statistic") && !q3.includes("data")) {
-      errors.push("Q3 must include statistics from a reliable source (צריך סטטיסטיקה)");
-    }
-
-    // Q4: What needs to change? (2 sentences)
-    const q4 = responses.researchQ4 || "";
-    const q4Validation = validateText(q4, 2);
-    if (!q4Validation.valid) {
-      errors.push("Q4 - Change? " + q4Validation.errors.join(", "));
-    }
-
-    if (errors.length > 0) {
-      setValidationErrors(errors);
-      errors.forEach((err) => toast.error(err));
-      return false;
-    }
-
-    return true;
+  const canAccessTab = (tabIndex: number): boolean => {
+    return tabIndex === 0 || approvals[tabIndex - 1];
   };
 
   const handleSaveAndContinue = () => {
@@ -181,44 +153,151 @@ export default function ProjectPage() {
       return;
     }
 
-    // Tab-specific validation
-    if (currentTab === 2) {
-      // Research tab
-      if (!validateResearch()) {
+    // Validate based on tab
+    if (currentTab === 1) {
+      const whyText = responses.whyChosen || "";
+      const validation = validateResearchAnswer(whyText, 2);
+      if (!validation.valid) {
+        setValidationErrors(validation.errors);
+        toast.error("Please fix your writing before continuing!");
+        return;
+      }
+    } else if (currentTab === 2) {
+      // Research tab validation with specific requirements
+      const q1Validation = validateResearchAnswer(responses.q1 || "", 2);
+      const q2Validation = validateResearchAnswer(responses.q2 || "", 2);
+      const q3Validation = validateResearchAnswer(responses.q3 || "", 3);
+      const q4Validation = validateResearchAnswer(responses.q4 || "", 2);
+
+      const allErrors = [
+        ...q1Validation.errors.map(e => `Q1 (Who): ${e}`),
+        ...q2Validation.errors.map(e => `Q2 (Why special): ${e}`),
+        ...q3Validation.errors.map(e => `Q3 (Problem): ${e}`),
+        ...q4Validation.errors.map(e => `Q4 (What changes): ${e}`),
+      ];
+
+      if (allErrors.length > 0) {
+        setValidationErrors(allErrors);
+        toast.error("Please fix all validation errors before continuing!");
         return;
       }
     } else if (currentTab === 3) {
-      // Design Inquiry tab
-      const colorExercises = responses.colorExerciseAnswers || [];
-      if (colorExercises.length === 0) {
-        toast.error("Please complete all design exercises!");
+      // Design Inquiry validation - check exercises
+      const allAnswered = Object.keys(exerciseAnswers).length === DESIGN_EXERCISES.length;
+      if (!allAnswered) {
+        toast.error("Please answer all design exercises before continuing!");
         return;
       }
     } else if (currentTab === 4) {
-      // Logo Design tab
+      // Logo design validation
       const logoDesc = responses.logoDescription || "";
+      const populationName = responses.logoPopulation || responses.chosenPopulation || "";
+      const gestaltUsed = responses.logoGestalt || "";
+
+      if (!populationName.trim()) {
+        toast.error("Please enter the population name in the logo!");
+        return;
+      }
+      if (!gestaltUsed.trim()) {
+        toast.error("Please describe which Gestalt principle you used!");
+        return;
+      }
       if (logoDesc.trim().length < 20) {
         toast.error("Please provide a detailed logo description!");
         return;
       }
-      if (!responses.selectedGestaltPrinciples || responses.selectedGestaltPrinciples.length === 0) {
-        toast.error("Please select at least one Gestalt principle!");
+    } else if (currentTab === 5) {
+      // Vector art validation
+      const vectorDesc = responses.vectorDescription || "";
+      if (vectorDesc.trim().length < 20) {
+        toast.error("Please describe your silhouette vector (at least 20 characters)!");
+        return;
+      }
+    } else if (currentTab === 6) {
+      // Fashion item validation
+      const itemDesc = responses.itemDescription || "";
+      if (itemDesc.trim().length < 20) {
+        toast.error("Please describe the fashion item (at least 20 characters)!");
+        return;
+      }
+    } else if (currentTab === 7) {
+      // Presentation validation
+      const checkCount = Object.values(responses).filter((v, k) => k.toString().startsWith("check_") && v).length;
+      if (checkCount < 4) {
+        toast.error("Please check at least 4 items before continuing!");
+        return;
+      }
+    } else if (currentTab === 8) {
+      // Presentation validation
+      const checkCount = Object.values(responses).filter((v, k) => k.toString().startsWith("check_") && v).length;
+      if (checkCount < 4) {
+        toast.error("Please check at least 4 items before continuing!");
+        return;
+      }
+    } else if (currentTab === 9) {
+      // Reflection validation
+      const reflection = responses.reflection || "";
+      if (reflection.trim().length < 50) {
+        toast.error("Please write a meaningful reflection (at least 50 characters)!");
         return;
       }
     }
 
     setValidationErrors([]);
-
+    
     if (currentTab < TABS.length - 1) {
+      const newApprovals = [...approvals];
+      newApprovals[currentTab] = true;
+      setApprovals(newApprovals);
       setCurrentTab(currentTab + 1);
-      toast.success("Moving to next tab!");
+      toast.success(`Tab saved! Moving to next stage...`);
     } else {
       toast.success("Project completed!");
     }
   };
 
-  const canAccessTab = (tabIndex: number): boolean => {
-    return tabIndex === 0 || approvals[tabIndex - 1];
+  const updateResponse = (key: string, value: any) => {
+    setResponses({ ...responses, [key]: value });
+  };
+
+  const handleExerciseAnswer = (exerciseIdx: number, optionIdx: number) => {
+    setExerciseAnswers({ ...exerciseAnswers, [exerciseIdx]: optionIdx });
+    const exercise = DESIGN_EXERCISES[exerciseIdx];
+    const isCorrect = optionIdx === exercise.correct;
+    setExerciseFeedback({ ...exerciseFeedback, [exerciseIdx]: isCorrect });
+  };
+
+  const handleCanvasExport = () => {
+    if (canvasRef.current) {
+      const canvas = canvasRef.current.canvas.drawing;
+      const image = canvas.toDataURL("image/png");
+      updateResponse("logoImage", image);
+      toast.success("Logo saved!");
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        updateResponse("logoUploadedFile", event.target?.result);
+        toast.success("Logo file uploaded!");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleVectorUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        updateResponse("vectorUploadedFile", event.target?.result);
+        toast.success("Silhouette file uploaded!");
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const tabColor = COLORS[currentTab];
@@ -251,11 +330,205 @@ export default function ProjectPage() {
                 cursor: "pointer",
               }}
             >
-              Start Your Journey (התחל את הדרך שלך)
+              Start Your Project →
             </button>
           </div>
           <div>
-            <img src={IMAGES.groupTop} alt="Home" style={{ width: "100%", borderRadius: "0.5rem" }} />
+            <img src={IMAGES.groupTop} alt="Group decision" style={{ width: "100%", borderRadius: "0.5rem" }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Tab 1: Group Decision
+  if (currentTab === 1) {
+    return (
+      <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        
+        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
+          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "2rem", alignItems: "start" }}>
+              <div>
+                <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                  Group Decision (החלטה קבוצתית)
+                </h1>
+                <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
+                  Work in groups of 2-3. Choose a population to help.
+                </p>
+
+                {isLocked && (
+                  <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
+                    <Lock size={24} style={{ color: "#D97706" }} />
+                    <p style={{ fontWeight: "bold", color: "#92400E" }}>This tab is locked. Get teacher approval for Tab 1 first!</p>
+                  </div>
+                )}
+
+                <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
+                  <div style={{ marginBottom: "2rem", backgroundColor: "#F3F4F6", padding: "1rem", borderRadius: "0.375rem", borderLeft: "4px solid #333333" }}>
+                    <p style={{ fontSize: "0.95rem", color: "#333333", lineHeight: "1.6" }}>
+                      <strong>Assignment (משימה):</strong> Think of a group of people in the world today who are suffering and people are not aware enough of their struggle. 
+                      (חשבו על קבוצת אנשים בעולם היום שסובלים ואנשים לא מודעים מספיק למאבקם.)
+                    </p>
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Group Members (חברי הקבוצה)
+                    </label>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }}>
+                      {studentNames.map((name, idx) => (
+                        <input
+                          key={idx}
+                          type="text"
+                          value={name}
+                          onChange={(e) => {
+                            const newNames = [...studentNames];
+                            newNames[idx] = e.target.value;
+                            setStudentNames(newNames);
+                          }}
+                          disabled={isLocked}
+                          style={{
+                            padding: "0.75rem",
+                            border: "1px solid #D1D5DB",
+                            borderRadius: "0.375rem",
+                            fontFamily: "'Alef', 'Assistant', sans-serif",
+                          }}
+                          placeholder={`Student ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem", color: "#333333" }}>
+                      Compare Populations (השווה בין אוכלוסיות)
+                    </label>
+                    <div style={{ overflowX: "auto" }}>
+                      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
+                        <thead>
+                          <tr style={{ backgroundColor: "#F3F4F6", borderBottom: "2px solid #D1D5DB" }}>
+                            <th style={{ padding: "0.75rem", textAlign: "left", fontWeight: "bold", color: "#333333", borderRight: "1px solid #D1D5DB" }}>
+                              Population Name
+                            </th>
+                            {studentNames.map((name, idx) => (
+                              <th key={idx} style={{ padding: "0.75rem", textAlign: "center", fontWeight: "bold", color: "#333333", borderRight: "1px solid #D1D5DB" }}>
+                                {name}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {["Name of Population", "Why they're a good choice?", "Why NOT to choose them?"].map((row, rowIdx) => (
+                            <tr key={rowIdx} style={{ borderBottom: "1px solid #E5E7EB" }}>
+                              <td style={{ padding: "0.75rem", fontWeight: "bold", color: "#555555", backgroundColor: "#F9FAFB", borderRight: "1px solid #D1D5DB" }}>
+                                {row}
+                              </td>
+                              {studentNames.map((name, colIdx) => (
+                                <td key={colIdx} style={{ padding: "0.75rem", borderRight: "1px solid #D1D5DB" }}>
+                                  <textarea
+                                    value={responses[`table_${rowIdx}_${colIdx}`] || ""}
+                                    onChange={(e) => updateResponse(`table_${rowIdx}_${colIdx}`, e.target.value)}
+                                    disabled={isLocked}
+                                    style={{
+                                      width: "100%",
+                                      padding: "0.5rem",
+                                      border: "1px solid #D1D5DB",
+                                      borderRadius: "0.375rem",
+                                      fontFamily: "'Alef', 'Assistant', sans-serif",
+                                      minHeight: "60px",
+                                      resize: "vertical",
+                                    }}
+                                    placeholder="Enter text..."
+                                  />
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Which population did you choose? (איזו אוכלוסייה בחרתם?)
+                    </label>
+                    <input
+                      type="text"
+                      value={responses.chosenPopulation || ""}
+                      onChange={(e) => updateResponse("chosenPopulation", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        marginBottom: "1rem",
+                      }}
+                      placeholder="Enter population name..."
+                    />
+
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Why? (at least 2 sentences) (למה? לפחות 2 משפטים)
+                    </label>
+                    <textarea
+                      value={responses.whyChosen || ""}
+                      onChange={(e) => {
+                        updateResponse("whyChosen", e.target.value);
+                        setValidationErrors([]);
+                      }}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: validationErrors.length > 0 ? "2px solid #DC2626" : "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        minHeight: "100px",
+                        resize: "vertical",
+                      }}
+                      placeholder="Explain your choice..."
+                    />
+                    
+                    {validationErrors.length > 0 && (
+                      <div style={{ backgroundColor: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: "0.375rem", padding: "0.75rem", marginTop: "0.75rem" }}>
+                        {validationErrors.map((error, idx) => (
+                          <div key={idx} style={{ display: "flex", gap: "0.5rem", color: "#DC2626", fontSize: "0.875rem", marginBottom: idx < validationErrors.length - 1 ? "0.5rem" : 0 }}>
+                            <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                            <span>{error}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={handleSaveAndContinue}
+                    disabled={isLocked}
+                    style={{
+                      width: "100%",
+                      backgroundColor: isLocked ? "#D1D5DB" : "#FDBA74",
+                      color: "#333333",
+                      padding: "0.75rem",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                      border: "none",
+                      borderRadius: "0.5rem",
+                      cursor: isLocked ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    Save & Continue
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <img src={IMAGES.groupBottom} alt="Social change" style={{ width: "100%", borderRadius: "0.5rem", marginBottom: "1rem" }} />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -276,7 +549,7 @@ export default function ProjectPage() {
                   Research (מחקר)
                 </h1>
                 <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
-                  Research your population using reliable sources and statistics. (חקור את האוכלוסייה שלך באמצעות מקורות אמינים וסטטיסטיקה.)
+                  Answer these 4 questions about the population you chose.
                 </p>
 
                 {isLocked && (
@@ -289,133 +562,82 @@ export default function ProjectPage() {
                 <button
                   onClick={() => setShowGrammarTips(!showGrammarTips)}
                   style={{
-                    backgroundColor: "#E5E7EB",
-                    color: "#333333",
-                    padding: "0.5rem 1rem",
-                    fontSize: "0.875rem",
-                    fontWeight: "bold",
-                    border: "none",
-                    borderRadius: "0.375rem",
-                    cursor: "pointer",
-                    marginBottom: "1.5rem",
                     display: "flex",
                     alignItems: "center",
                     gap: "0.5rem",
+                    backgroundColor: "#E0E7FF",
+                    color: "#333333",
+                    padding: "0.75rem 1rem",
+                    fontSize: "0.875rem",
+                    fontWeight: "bold",
+                    border: "1px solid #C7D2FE",
+                    borderRadius: "0.375rem",
+                    cursor: "pointer",
+                    marginBottom: "1.5rem",
                   }}
                 >
-                  <HelpCircle size={16} />
-                  Grammar Tips (טיפים דקדוקיים)
+                  <HelpCircle size={18} />
+                  {showGrammarTips ? "Hide Grammar Tips" : "Show Grammar Tips"}
                 </button>
 
                 {showGrammarTips && (
-                  <div style={{ backgroundColor: "#F3F4F6", padding: "1rem", borderRadius: "0.5rem", marginBottom: "1.5rem", border: "1px solid #D1D5DB" }}>
-                    <p style={{ color: "#333333", fontWeight: "bold", marginBottom: "0.5rem" }}>Writing Requirements (דרישות כתיבה):</p>
-                    <ul style={{ color: "#555555", lineHeight: "1.8", margin: 0, paddingLeft: "1.5rem" }}>
-                      <li>Use CAPITAL LETTERS at the start (אותיות גדולות בהתחלה)</li>
-                      <li>Use PUNCTUATION at the end (סימן פיסוק בסוף)</li>
-                      <li>Use simple past and present tense (עבר פשוט והווה פשוט)</li>
-                      <li>Include statistics from reliable sources (כללול סטטיסטיקה ממקורות אמינים)</li>
+                  <div style={{ backgroundColor: "#F0F9FF", border: "2px solid #93C5FD", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem" }}>
+                    <h3 style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Writing Rules (חוקי כתיבה)</h3>
+                    <ul style={{ color: "#555555", lineHeight: "1.8", fontSize: "0.875rem" }}>
+                      <li>✓ Use CAPITAL LETTERS at the start (אותיות גדולות בהתחלה)</li>
+                      <li>✓ Use PUNCTUATION at the end (סימן פיסוק בסוף)</li>
+                      <li>✓ Use SIMPLE PAST TENSE (עבר פשוט) for events that happened</li>
+                      <li>✓ Use SIMPLE PRESENT TENSE (הווה פשוט) for current situations</li>
                     </ul>
                   </div>
                 )}
 
                 <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
-                  {/* Q1 */}
-                  <div style={{ marginBottom: "2rem" }}>
-                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      1. Who are they? (מי הם?) - 2 sentences + Statistics (סטטיסטיקה)
-                    </label>
-                    <textarea
-                      value={responses.researchQ1 || ""}
-                      onChange={(e) => updateResponse("researchQ1", e.target.value)}
-                      disabled={isLocked}
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        border: "1px solid #D1D5DB",
-                        borderRadius: "0.375rem",
-                        fontFamily: "'Alef', 'Assistant', sans-serif",
-                        minHeight: "100px",
-                        resize: "vertical",
-                      }}
-                      placeholder="Describe who this population is... (תאר מי היא האוכלוסייה הזו...)"
-                    />
-                  </div>
-
-                  {/* Q2 */}
-                  <div style={{ marginBottom: "2rem" }}>
-                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      2. Why are they special? (למה הם מיוחדים?) - 2 sentences (משפטים)
-                    </label>
-                    <textarea
-                      value={responses.researchQ2 || ""}
-                      onChange={(e) => updateResponse("researchQ2", e.target.value)}
-                      disabled={isLocked}
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        border: "1px solid #D1D5DB",
-                        borderRadius: "0.375rem",
-                        fontFamily: "'Alef', 'Assistant', sans-serif",
-                        minHeight: "100px",
-                        resize: "vertical",
-                      }}
-                      placeholder="Explain what makes them special... (הסבר מה הופך אותם למיוחדים...)"
-                    />
-                  </div>
-
-                  {/* Q3 */}
-                  <div style={{ marginBottom: "2rem" }}>
-                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      3. What is their problem? (מה הבעיה שלהם?) - 3 sentences + Statistics (סטטיסטיקה)
-                    </label>
-                    <textarea
-                      value={responses.researchQ3 || ""}
-                      onChange={(e) => updateResponse("researchQ3", e.target.value)}
-                      disabled={isLocked}
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        border: "1px solid #D1D5DB",
-                        borderRadius: "0.375rem",
-                        fontFamily: "'Alef', 'Assistant', sans-serif",
-                        minHeight: "100px",
-                        resize: "vertical",
-                      }}
-                      placeholder="Describe their problem... (תאר את הבעיה שלהם...)"
-                    />
-                  </div>
-
-                  {/* Q4 */}
-                  <div style={{ marginBottom: "2rem" }}>
-                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      4. What needs to change? (מה צריך להשתנות?) - 2 sentences (משפטים)
-                    </label>
-                    <textarea
-                      value={responses.researchQ4 || ""}
-                      onChange={(e) => updateResponse("researchQ4", e.target.value)}
-                      disabled={isLocked}
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        border: "1px solid #D1D5DB",
-                        borderRadius: "0.375rem",
-                        fontFamily: "'Alef', 'Assistant', sans-serif",
-                        minHeight: "100px",
-                        resize: "vertical",
-                      }}
-                      placeholder="Explain what should change... (הסבר מה צריך להשתנות...)"
-                    />
-                  </div>
+                  {[
+                    { q: "1. Who are they? (מי הם?) - At least 2 sentences", key: "q1", minSentences: 2 },
+                    { q: "2. Why are they special? (למה הם מיוחדים?) - At least 2 sentences", key: "q2", minSentences: 2 },
+                    { q: "3. What is their problem? (מה הבעיה שלהם?) - At least 3 sentences", key: "q3", minSentences: 3 },
+                    { q: "4. What needs to change? (מה צריך להשתנות?) - At least 2 sentences", key: "q4", minSentences: 2 },
+                  ].map((item, idx) => (
+                    <div key={idx} style={{ marginBottom: "1.5rem", display: "grid", gridTemplateColumns: "150px 1fr", gap: "1rem", alignItems: "start" }}>
+                      <div style={{ backgroundColor: "#F3F4F6", padding: "1rem", borderRadius: "0.375rem", borderLeft: "4px solid #333333", height: "fit-content" }}>
+                        <label style={{ display: "block", fontWeight: "bold", fontSize: "0.875rem", marginBottom: "0.5rem", color: "#333333" }}>
+                          {item.q}
+                        </label>
+                        <div style={{ fontSize: "0.75rem", color: "#555555", lineHeight: "1.4" }}>
+                          <p>✓ Capital letter</p>
+                          <p>✓ Punctuation</p>
+                          <p>✓ {item.minSentences} sentences</p>
+                        </div>
+                      </div>
+                      <div>
+                        <textarea
+                          value={responses[item.key] || ""}
+                          onChange={(e) => updateResponse(item.key, e.target.value)}
+                          disabled={isLocked}
+                          style={{
+                            width: "100%",
+                            padding: "0.75rem",
+                            border: "1px solid #D1D5DB",
+                            borderRadius: "0.375rem",
+                            fontFamily: "'Alef', 'Assistant', sans-serif",
+                            minHeight: "100px",
+                            resize: "vertical",
+                          }}
+                          placeholder="Enter your answer..."
+                        />
+                      </div>
+                    </div>
+                  ))}
 
                   {validationErrors.length > 0 && (
-                    <div style={{ backgroundColor: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem" }}>
-                      <p style={{ color: "#DC2626", fontWeight: "bold", marginBottom: "0.5rem" }}>Please fix these errors (תקן את השגיאות):</p>
-                      <ul style={{ color: "#991B1B", margin: 0, paddingLeft: "1.5rem" }}>
-                        {validationErrors.map((err, idx) => (
-                          <li key={idx}>{err}</li>
-                        ))}
-                      </ul>
+                    <div style={{ backgroundColor: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: "0.375rem", padding: "1rem", marginBottom: "1.5rem" }}>
+                      {validationErrors.map((error, idx) => (
+                        <div key={idx} style={{ display: "flex", gap: "0.5rem", color: "#DC2626", fontSize: "0.875rem", marginBottom: idx < validationErrors.length - 1 ? "0.5rem" : 0 }}>
+                          <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                          <span>{error}</span>
+                        </div>
+                      ))}
                     </div>
                   )}
 
@@ -424,7 +646,7 @@ export default function ProjectPage() {
                     disabled={isLocked}
                     style={{
                       width: "100%",
-                      backgroundColor: isLocked ? "#D1D5DB" : "#86EFAC",
+                      backgroundColor: isLocked ? "#D1D5DB" : "#FCA5A5",
                       color: "#333333",
                       padding: "0.75rem",
                       fontSize: "1rem",
@@ -434,7 +656,7 @@ export default function ProjectPage() {
                       cursor: isLocked ? "not-allowed" : "pointer",
                     }}
                   >
-                    Save & Continue (שמור והמשך)
+                    Save & Continue
                   </button>
                 </div>
               </div>
@@ -450,7 +672,7 @@ export default function ProjectPage() {
     );
   }
 
-  // Tab 3: Design Inquiry
+  // Tab 3: Design Inquiry (Color Meanings + Gestalt + Exercises)
   if (currentTab === 3) {
     return (
       <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
@@ -458,79 +680,194 @@ export default function ProjectPage() {
         
         <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
           <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-            <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-              Design Inquiry (חוקי עיצוב)
-            </h1>
-            <p style={{ color: "#555555", marginBottom: "2rem" }}>
-              Learn how colors and design principles communicate messages. (למד כיצד צבעים ועקרונות עיצוב מתקשרים הודעות.)
-            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "2rem", alignItems: "start" }}>
+              <div>
+                <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                  Design Inquiry (חוקי עיצוב)
+                </h1>
+                <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
+                  Learn about color meanings and design principles to create powerful messages. (למדו על משמעויות צבע ועקרונות עיצוב כדי ליצור הודעות חזקות.)
+                </p>
 
-            {isLocked && (
-              <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
-                <Lock size={24} style={{ color: "#D97706" }} />
-                <p style={{ fontWeight: "bold", color: "#92400E" }}>This tab is locked. Get teacher approval for Tab 3 first!</p>
-              </div>
-            )}
-
-            <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
-                Color Meanings (משמעויות צבעים)
-              </h2>
-              <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
-                Each color has a psychological meaning that affects how people perceive your message. (לכל צבע יש משמעות פסיכולוגית המשפיעה על אופן תפיסת ההודעה שלך.)
-              </p>
-              
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "1rem", marginBottom: "2rem" }}>
-                {COLOR_MEANINGS.map((item, idx) => (
-                  <div key={idx} style={{ backgroundColor: item.color, padding: "1rem", borderRadius: "0.5rem", textAlign: "center" }}>
-                    <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.25rem" }}>
-                      {item.name} ({item.nameHe})
-                    </p>
-                    <p style={{ color: "#555555", fontSize: "0.875rem" }}>
-                      {item.meaning} ({item.meaningHe})
-                    </p>
+                {isLocked && (
+                  <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
+                    <Lock size={24} style={{ color: "#D97706" }} />
+                    <p style={{ fontWeight: "bold", color: "#92400E" }}>This tab is locked. Get teacher approval for Tab 3 first!</p>
                   </div>
-                ))}
-              </div>
+                )}
 
-              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
-                Gestalt Principles (עקרונות גשטלט)
-              </h2>
-              <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
-                Gestalt principles explain how people perceive visual elements. (עקרונות גשטלט מסבירים כיצד אנשים תופסים אלמנטים ויזואליים.)
-              </p>
-
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1.5rem", marginBottom: "2rem" }}>
-                {GESTALT_LOGOS.map((logo, idx) => (
-                  <div key={idx} style={{ backgroundColor: "#F9FAFB", padding: "1rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
-                    <img src={logo.url} alt={logo.principle} style={{ width: "100%", borderRadius: "0.375rem", marginBottom: "1rem", height: "150px", objectFit: "cover" }} />
-                    <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-                      {logo.principle}
-                    </p>
-                    <p style={{ color: "#555555", fontSize: "0.875rem" }}>
-                      {logo.desc}
-                    </p>
+                <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
+                  <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>
+                    Color Meaning Chart (תרשים משמעויות צבע)
+                  </h2>
+                  <p style={{ color: "#555555", marginBottom: "1rem", fontSize: "0.95rem" }}>
+                    Different colors communicate different emotions and meanings. Choose colors that match your message for social change. (צבעים שונים מעבירים רגשות ומשמעויות שונות. בחרו צבעים שתואמים את ההודעה שלכם לשינוי חברתי.)
+                  </p>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem", marginBottom: "2rem" }}>
+                    {COLOR_MEANINGS.map((item, idx) => (
+                      <div key={idx} style={{ padding: "1.5rem", borderRadius: "0.5rem", backgroundColor: item.color, opacity: 0.9, textAlign: "center", border: "2px solid #333333" }}>
+                        <h3 style={{ fontSize: "1.125rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                          {item.name} ({item.nameHe})
+                        </h3>
+                        <p style={{ fontSize: "1rem", color: "#333333", fontWeight: "bold" }}>
+                          {item.meaning}
+                        </p>
+                        <p style={{ fontSize: "0.875rem", color: "#333333" }}>
+                          ({item.meaningHe})
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                ))}
+
+                  <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                    Design Exercises (תרגילי עיצוב)
+                  </h2>
+                  <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
+                    Choose the best design option for each word. Think about which design communicates the message most effectively. (בחרו את אפשרות העיצוב הטובה ביותר לכל מילה. חשבו איזה עיצוב מעביר את ההודעה בצורה יעילה ביותר.)
+                  </p>
+
+                  {DESIGN_EXERCISES.map((exercise, exIdx) => (
+                    <div key={exIdx} style={{ marginBottom: "2rem", backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
+                      <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                        Exercise {exIdx + 1}: Which design is best for the word "{exercise.word}"?
+                      </h3>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1rem" }}>
+                        {exercise.options.map((option, optIdx) => (
+                          <button
+                            key={optIdx}
+                            onClick={() => handleExerciseAnswer(exIdx, optIdx)}
+                            disabled={isLocked}
+                            style={{
+                              padding: "1rem",
+                              border: exerciseAnswers[exIdx] === optIdx ? "3px solid #333333" : "1px solid #D1D5DB",
+                              borderRadius: "0.375rem",
+                              backgroundColor: exerciseAnswers[exIdx] === optIdx ? "#F0F9FF" : "white",
+                              cursor: isLocked ? "not-allowed" : "pointer",
+                              transition: "all 0.2s",
+                            }}
+                          >
+                            <div style={option.style}>
+                              {option.text}
+                            </div>
+                            <p style={{ fontSize: "0.75rem", color: "#555555", marginTop: "0.5rem" }}>
+                              {option.label}
+                            </p>
+                          </button>
+                        ))}
+                      </div>
+
+                      {exerciseAnswers[exIdx] !== undefined && (
+                        <div style={{
+                          padding: "1rem",
+                          borderRadius: "0.375rem",
+                          backgroundColor: exerciseFeedback[exIdx] ? "#DCFCE7" : "#FEE2E2",
+                          border: `1px solid ${exerciseFeedback[exIdx] ? "#86EFAC" : "#FCA5A5"}`,
+                          display: "flex",
+                          gap: "0.75rem",
+                        }}>
+                          {exerciseFeedback[exIdx] ? (
+                            <CheckCircle size={20} style={{ color: "#16A34A", flexShrink: 0 }} />
+                          ) : (
+                            <XCircle size={20} style={{ color: "#DC2626", flexShrink: 0 }} />
+                          )}
+                          <div>
+                            <p style={{ fontWeight: "bold", color: exerciseFeedback[exIdx] ? "#16A34A" : "#DC2626", marginBottom: "0.25rem" }}>
+                              {exerciseFeedback[exIdx] ? "Correct!" : "Not quite right"}
+                            </p>
+                            <p style={{ fontSize: "0.875rem", color: "#555555" }}>
+                              {exercise.feedback}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                    Gestalt Principles (עקרונות גשטלט)
+                  </h2>
+                  <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
+                    Gestalt principles describe how our eyes and brain perceive visual elements. Use these principles to create a strong logo that communicates your message clearly. (עקרונות גשטלט מתארים כיצד עיננו והמוח שלנו תופסים אלמנטים ויזואליים. השתמשו בעקרונות אלה כדי ליצור לוגו חזק שמעביר את ההודעה שלכם בבירור.)
+                  </p>
+
+                  <div style={{ marginBottom: "2rem", backgroundColor: "#F3F4F6", padding: "1rem", borderRadius: "0.375rem", borderLeft: "4px solid #333333" }}>
+                    <h4 style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Gestalt Principles Reference (עקרונות גשטלט):</h4>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem" }}>
+                      {GESTALT_PRINCIPLES.map((principle, idx) => (
+                        <div key={idx} style={{ fontSize: "0.875rem" }}>
+                          <p style={{ fontWeight: "bold", color: "#333333" }}>{principle.name} ({principle.nameHe})</p>
+                          <p style={{ color: "#555555" }}>{principle.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                      Gestalt Logo Examples - Which principles are used? (דוגמאות לוגו בגשטלט - אילו עקרונות בשימוש?)
+                    </h3>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
+                      {GESTALT_LOGOS.map((logo, idx) => (
+                        <div key={idx} style={{ backgroundColor: "#F9FAFB", padding: "1rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
+                          <img src={logo.url} alt={logo.principle} style={{ width: "100%", height: "200px", objectFit: "contain", marginBottom: "1rem" }} />
+                          <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "0.75rem" }}>
+                            <strong>Example {idx + 1}:</strong> Which principle is used here?
+                          </p>
+                          <p style={{ fontSize: "0.875rem", color: "#555555" }}>
+                            <em>Answer will appear after you select</em>
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Which colors will you use for your fashion item? (אילו צבעים תשתמשו?)
+                    </label>
+                    <textarea
+                      value={responses.selectedColors || ""}
+                      onChange={(e) => updateResponse("selectedColors", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        minHeight: "80px",
+                        resize: "vertical",
+                      }}
+                      placeholder="Describe your color choices and why..."
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleSaveAndContinue}
+                    disabled={isLocked}
+                    style={{
+                      width: "100%",
+                      backgroundColor: isLocked ? "#D1D5DB" : "#D8B4FE",
+                      color: "#333333",
+                      padding: "0.75rem",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                      border: "none",
+                      borderRadius: "0.5rem",
+                      cursor: isLocked ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    Save & Continue
+                  </button>
+                </div>
               </div>
 
-              <button
-                onClick={handleSaveAndContinue}
-                disabled={isLocked}
-                style={{
-                  width: "100%",
-                  backgroundColor: isLocked ? "#D1D5DB" : "#86EFAC",
-                  color: "#333333",
-                  padding: "0.75rem",
-                  fontSize: "1rem",
-                  fontWeight: "bold",
-                  border: "none",
-                  borderRadius: "0.5rem",
-                  cursor: isLocked ? "not-allowed" : "pointer",
-                }}
-              >
-                Save & Continue (שמור והמשך)
-              </button>
+              <div>
+                <img src={IMAGES.designTop} alt="Design" style={{ width: "100%", borderRadius: "0.5rem", marginBottom: "1rem" }} />
+                <img src={IMAGES.designBottom} alt="Design" style={{ width: "100%", borderRadius: "0.5rem" }} />
+              </div>
             </div>
           </div>
         </div>
@@ -538,7 +875,7 @@ export default function ProjectPage() {
     );
   }
 
-  // Tab 4: Creating a Logo
+  // Tab 4: Creating a Logo with Canvas
   if (currentTab === 4) {
     return (
       <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
@@ -552,7 +889,7 @@ export default function ProjectPage() {
                   Creating a Logo (יצירת לוגו)
                 </h1>
                 <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
-                  Design a logo that represents your population and sends your message. (עצב לוגו המייצג את האוכלוסייה שלך ושולח את ההודעה שלך.)
+                  Design a simple, memorable logo for your message.
                 </p>
 
                 {isLocked && (
@@ -563,51 +900,24 @@ export default function ProjectPage() {
                 )}
 
                 <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
-                  <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
-                    Instructions (הוראות)
-                  </h2>
-                  <div style={{ backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", marginBottom: "2rem", border: "1px solid #E5E7EB" }}>
-                    <ul style={{ color: "#555555", lineHeight: "1.8", margin: 0, paddingLeft: "1.5rem" }}>
-                      <li>Keep it simple. (שמור על פשטות.)</li>
-                      <li>Use 2 colors. (השתמש ב-2 צבעים.)</li>
-                      <li>Use 1 symbol. (השתמש בסמל אחד.)</li>
-                      <li>Include the population name. (כלול את שם האוכלוסייה.)</li>
-                      <li>Use black as one color. (השתמש בשחור כצבע אחד.)</li>
-                    </ul>
-                  </div>
-
-                  <div style={{ marginBottom: "2rem" }}>
-                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      Think of 3 symbols that represent your group (חשוב על 3 סמלים המייצגים את הקבוצה שלך)
-                    </label>
-                    <p style={{ color: "#666666", fontSize: "0.875rem", marginBottom: "1rem" }}>
-                      For example - Jews: the Star of David, a lion, the shape of Israel (לדוגמה - יהודים: מגן דוד, אריה, צורת ישראל)
+                  <div style={{ marginBottom: "2rem", backgroundColor: "#F3F4F6", padding: "1rem", borderRadius: "0.375rem", borderLeft: "4px solid #333333" }}>
+                    <p style={{ fontSize: "0.95rem", color: "#333333", lineHeight: "1.6" }}>
+                      <strong>Instructions (הוראות):</strong>
+                      <br />• Include the population name in the logo
+                      <br />• Use BLACK color (#000000)
+                      <br />• Use 1 Gestalt principle in your design
+                      <br />• Keep it simple and memorable
                     </p>
-                    <textarea
-                      value={responses.logoSymbols || ""}
-                      onChange={(e) => updateResponse("logoSymbols", e.target.value)}
-                      disabled={isLocked}
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        border: "1px solid #D1D5DB",
-                        borderRadius: "0.375rem",
-                        fontFamily: "'Alef', 'Assistant', sans-serif",
-                        minHeight: "80px",
-                        resize: "vertical",
-                      }}
-                      placeholder="List your 3 symbols... (רשום את 3 הסמלים שלך...)"
-                    />
                   </div>
 
                   <div style={{ marginBottom: "2rem" }}>
                     <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      Population Name (שם האוכלוסייה)
+                      Population Name in Logo (שם האוכלוסייה בלוגו)
                     </label>
                     <input
                       type="text"
-                      value={responses.populationName || ""}
-                      onChange={(e) => updateResponse("populationName", e.target.value)}
+                      value={responses.logoPopulation || responses.chosenPopulation || ""}
+                      onChange={(e) => updateResponse("logoPopulation", e.target.value)}
                       disabled={isLocked}
                       style={{
                         width: "100%",
@@ -615,19 +925,19 @@ export default function ProjectPage() {
                         border: "1px solid #D1D5DB",
                         borderRadius: "0.375rem",
                         fontFamily: "'Alef', 'Assistant', sans-serif",
+                        marginBottom: "1rem",
                       }}
-                      placeholder="Enter population name... (הזן שם אוכלוסייה...)"
+                      placeholder="Enter population name..."
                     />
                   </div>
 
                   <div style={{ marginBottom: "2rem" }}>
                     <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      If you could switch a letter in the name of your group for one of the symbols, which letter would you choose? (אם היית יכול להחליף אות בשם הקבוצה שלך בסמל אחד, איזו אות היית בוחר?)
+                      Which Gestalt Principle did you use? (איזה עקרון גשטלט השתמשת?)
                     </label>
-                    <input
-                      type="text"
-                      value={responses.letterSwitch || ""}
-                      onChange={(e) => updateResponse("letterSwitch", e.target.value)}
+                    <select
+                      value={responses.logoGestalt || ""}
+                      onChange={(e) => updateResponse("logoGestalt", e.target.value)}
                       disabled={isLocked}
                       style={{
                         width: "100%",
@@ -635,41 +945,109 @@ export default function ProjectPage() {
                         border: "1px solid #D1D5DB",
                         borderRadius: "0.375rem",
                         fontFamily: "'Alef', 'Assistant', sans-serif",
+                        marginBottom: "1rem",
                       }}
-                      placeholder="Describe your choice... (תאר את הבחירה שלך...)"
-                    />
-                  </div>
-
-                  <div style={{ marginBottom: "2rem" }}>
-                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      Select Gestalt Principles (בחר עקרונות גשטלט)
-                    </label>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "1rem" }}>
-                      {["Proximity", "Closure", "Continuity"].map((principle) => (
-                        <label key={principle} style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
-                          <input
-                            type="checkbox"
-                            checked={responses.selectedGestaltPrinciples?.includes(principle) || false}
-                            onChange={(e) => {
-                              const selected = responses.selectedGestaltPrinciples || [];
-                              if (e.target.checked) {
-                                updateResponse("selectedGestaltPrinciples", [...selected, principle]);
-                              } else {
-                                updateResponse("selectedGestaltPrinciples", selected.filter((p: string) => p !== principle));
-                              }
-                            }}
-                            disabled={isLocked}
-                            style={{ cursor: "pointer" }}
-                          />
-                          <span style={{ color: "#333333" }}>{principle}</span>
-                        </label>
+                    >
+                      <option value="">Select a principle...</option>
+                      {GESTALT_PRINCIPLES.map((p) => (
+                        <option key={p.name} value={p.name}>{p.name} ({p.nameHe})</option>
                       ))}
+                    </select>
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Draw Your Logo on Canvas (צייר את הלוגו שלך)
+                    </label>
+                    <div style={{ border: "2px solid #D1D5DB", borderRadius: "0.375rem", overflow: "hidden", marginBottom: "1rem" }}>
+                      <CanvasDraw
+                        ref={canvasRef}
+                        canvasWidth={500}
+                        canvasHeight={300}
+                        brushColor="#000000"
+                        brushRadius={3}
+                        lazyRadius={0}
+                        hideGrid
+                        disabled={isLocked}
+                      />
+                    </div>
+                    <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+                      <button
+                        onClick={handleCanvasExport}
+                        disabled={isLocked}
+                        style={{
+                          flex: 1,
+                          backgroundColor: isLocked ? "#D1D5DB" : "#333333",
+                          color: "white",
+                          padding: "0.5rem",
+                          fontSize: "0.875rem",
+                          fontWeight: "bold",
+                          border: "none",
+                          borderRadius: "0.375rem",
+                          cursor: isLocked ? "not-allowed" : "pointer",
+                        }}
+                      >
+                        Save Canvas Drawing
+                      </button>
+                      <button
+                        onClick={() => canvasRef.current?.clearCanvas()}
+                        disabled={isLocked}
+                        style={{
+                          flex: 1,
+                          backgroundColor: "#D1D5DB",
+                          color: "#333333",
+                          padding: "0.5rem",
+                          fontSize: "0.875rem",
+                          fontWeight: "bold",
+                          border: "none",
+                          borderRadius: "0.375rem",
+                          cursor: isLocked ? "not-allowed" : "pointer",
+                        }}
+                      >
+                        Clear
+                      </button>
                     </div>
                   </div>
 
                   <div style={{ marginBottom: "2rem" }}>
                     <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      Logo Description (תיאור הלוגו)
+                      Or Upload Your Logo File (או העלה קובץ לוגו)
+                    </label>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      disabled={isLocked}
+                      style={{ display: "none" }}
+                    />
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        backgroundColor: isLocked ? "#D1D5DB" : "#93C5FD",
+                        color: "#333333",
+                        padding: "0.75rem",
+                        fontSize: "1rem",
+                        fontWeight: "bold",
+                        border: "2px dashed #93C5FD",
+                        borderRadius: "0.5rem",
+                        cursor: isLocked ? "not-allowed" : "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <Upload size={20} />
+                      Upload Logo File
+                    </button>
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Describe your logo (תאר את הלוגו שלך)
                     </label>
                     <textarea
                       value={responses.logoDescription || ""}
@@ -681,10 +1059,180 @@ export default function ProjectPage() {
                         border: "1px solid #D1D5DB",
                         borderRadius: "0.375rem",
                         fontFamily: "'Alef', 'Assistant', sans-serif",
+                        minHeight: "80px",
+                        resize: "vertical",
+                      }}
+                      placeholder="Describe your logo design, colors, and symbols..."
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleSaveAndContinue}
+                    disabled={isLocked}
+                    style={{
+                      width: "100%",
+                      backgroundColor: isLocked ? "#D1D5DB" : "#93C5FD",
+                      color: "#333333",
+                      padding: "0.75rem",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                      border: "none",
+                      borderRadius: "0.5rem",
+                      cursor: isLocked ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    Save & Continue
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <img src={IMAGES.logoTop} alt="Logo" style={{ width: "100%", borderRadius: "0.5rem", marginBottom: "1rem" }} />
+                <img src={IMAGES.logoBottom} alt="Logo" style={{ width: "100%", borderRadius: "0.5rem" }} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Tab 5: Vector Art - Silhouette
+  if (currentTab === 5) {
+    return (
+      <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        
+        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "2rem", alignItems: "start" }}>
+              <div>
+                <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                  וקטור אמנות - צל (Vector Art - Silhouette)
+                </h1>
+                <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
+                  עכשיו תעצבו וקטור של צל המייצג את האוכלוסייה שלכם. הצל צריך להיות פשוט, ברור, וקל להכרה. (Now design a silhouette vector that represents your population. The silhouette should be simple, clear, and easy to recognize.)
+                </p>
+
+                {isLocked && (
+                  <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
+                    <Lock size={24} style={{ color: "#D97706" }} />
+                    <p style={{ fontWeight: "bold", color: "#92400E" }}>This tab is locked. Get teacher approval for Tab 5 first!</p>
+                  </div>
+                )}
+
+                <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
+                  <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                    הוראות (Instructions)
+                  </h2>
+                  <div style={{ backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", marginBottom: "2rem", border: "1px solid #E5E7EB" }}>
+                    <ul style={{ color: "#555555", lineHeight: "1.8", margin: 0, paddingLeft: "1.5rem" }}>
+                      <li style={{ marginBottom: "0.75rem" }}>צייר צל של אדם, חפץ, או סמל המייצג את האוכלוסייה שלך (Draw a silhouette of a person, object, or symbol that represents your population)</li>
+                      <li style={{ marginBottom: "0.75rem" }}>השתמש בצבע שחור או בצל אחיד (Use black color or a solid shadow)</li>
+                      <li style={{ marginBottom: "0.75rem" }}>הצל צריך להיות קל להכרה וללא פרטים מיותרים (The silhouette should be recognizable and without unnecessary details)</li>
+                      <li style={{ marginBottom: "0.75rem" }}>אתה יכול להשתמש בכלי הציור או להעלות קובץ (You can use the drawing tool or upload a file)</li>
+                      <li>וודא שהצל מייצג את ההודעה החברתית שלך (Make sure the silhouette represents your social message)</li>
+                    </ul>
+                  </div>
+
+                  <h3 style={{ fontSize: "1.125rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                    צייר את הצל שלך (Draw Your Silhouette)
+                  </h3>
+                  <div style={{ marginBottom: "2rem", border: "2px solid #D1D5DB", borderRadius: "0.5rem", overflow: "hidden" }}>
+                    <CanvasDraw
+                      ref={(canvasRef) => { if (canvasRef) (window as any).vectorCanvas = canvasRef; }}
+                      canvasWidth={600}
+                      canvasHeight={400}
+                      brushColor="#000000"
+                      brushRadius={3}
+                      lazyRadius={0}
+                      hideGrid
+                      disabled={isLocked}
+                    />
+                  </div>
+
+                  <div style={{ marginBottom: "2rem", display: "flex", gap: "1rem" }}>
+                    <button
+                      onClick={() => {
+                        if ((window as any).vectorCanvas) (window as any).vectorCanvas.clear();
+                        toast.success("Canvas cleared!");
+                      }}
+                      disabled={isLocked}
+                      style={{
+                        flex: 1,
+                        backgroundColor: isLocked ? "#D1D5DB" : "#FCA5A5",
+                        color: "#333333",
+                        padding: "0.75rem",
+                        fontSize: "0.95rem",
+                        fontWeight: "bold",
+                        border: "none",
+                        borderRadius: "0.5rem",
+                        cursor: isLocked ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      Clear Canvas (נקה קנבס)
+                    </button>
+                    <button
+                      onClick={() => {
+                        if ((window as any).vectorCanvas) {
+                          const image = (window as any).vectorCanvas.canvasRef.current.toDataURL();
+                          updateResponse("vectorDrawing", image);
+                          toast.success("Silhouette saved!");
+                        }
+                      }}
+                      disabled={isLocked}
+                      style={{
+                        flex: 1,
+                        backgroundColor: isLocked ? "#D1D5DB" : "#86EFAC",
+                        color: "#333333",
+                        padding: "0.75rem",
+                        fontSize: "0.95rem",
+                        fontWeight: "bold",
+                        border: "none",
+                        borderRadius: "0.5rem",
+                        cursor: isLocked ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      Save Drawing (שמור ציור)
+                    </button>
+                  </div>
+
+                  <h3 style={{ fontSize: "1.125rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                    או העלה קובץ (Or Upload a File)
+                  </h3>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleVectorUpload}
+                    disabled={isLocked}
+                    style={{
+                      width: "100%",
+                      padding: "0.75rem",
+                      border: "2px dashed #D1D5DB",
+                      borderRadius: "0.5rem",
+                      cursor: isLocked ? "not-allowed" : "pointer",
+                      marginBottom: "1.5rem",
+                    }}
+                  />
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      תיאור הצל שלך (Describe Your Silhouette)
+                    </label>
+                    <textarea
+                      value={responses.vectorDescription || ""}
+                      onChange={(e) => updateResponse("vectorDescription", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
                         minHeight: "100px",
                         resize: "vertical",
                       }}
-                      placeholder="Describe your logo design... (תאר את עיצוב הלוגו שלך...)"
+                      placeholder="Explain what your silhouette represents and why you chose this design..."
                     />
                   </div>
 
@@ -703,14 +1251,14 @@ export default function ProjectPage() {
                       cursor: isLocked ? "not-allowed" : "pointer",
                     }}
                   >
-                    Save & Continue (שמור והמשך)
+                    Save & Continue
                   </button>
                 </div>
               </div>
 
               <div>
-                <img src={IMAGES.logoTop} alt="Logo" style={{ width: "100%", borderRadius: "0.5rem", marginBottom: "1rem" }} />
-                <img src={IMAGES.logoBottom} alt="Logo" style={{ width: "100%", borderRadius: "0.5rem" }} />
+                <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/icon-vector-top-9KJh7mPqZvR2LkDxN8Qp4m.webp" alt="Vector" style={{ width: "100%", borderRadius: "0.5rem", marginBottom: "1rem" }} />
+                <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/icon-vector-bottom-2Lk9QmRxP5S3NvWyJ6Tz8h.webp" alt="Vector" style={{ width: "100%", borderRadius: "0.5rem" }} />
               </div>
             </div>
           </div>
@@ -719,31 +1267,384 @@ export default function ProjectPage() {
     );
   }
 
-  // Placeholder for remaining tabs
-  return (
-    <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
-      <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
-      <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem", textAlign: "center" }}>
-        <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333" }}>
-          {TABS[currentTab].label} ({TABS[currentTab].labelHe})
-        </h1>
-        <p style={{ color: "#555555", marginBottom: "2rem" }}>Tab {currentTab + 1} - Content coming soon...</p>
-        <button
-          onClick={handleSaveAndContinue}
-          style={{
-            backgroundColor: "#333333",
-            color: "white",
-            padding: "0.75rem 2rem",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            border: "none",
-            borderRadius: "0.5rem",
-            cursor: "pointer",
-          }}
-        >
-          Save & Continue (שמור והמשך)
-        </button>
+  // Tab 6: Fashion Item (Simplified)
+  if (currentTab === 6) {
+    return (
+      <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        
+        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
+          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "2rem", alignItems: "start" }}>
+              <div>
+                <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                  Fashion Item (פריט אופנה)
+                </h1>
+                <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
+                  Describe the fashion item that will send your message.
+                </p>
+
+                {isLocked && (
+                  <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
+                    <Lock size={24} style={{ color: "#D97706" }} />
+                    <p style={{ fontWeight: "bold", color: "#92400E" }}>This tab is locked. Get teacher approval for Tab 5 first!</p>
+                  </div>
+                )}
+
+                <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      What is the item? (Shirt/Hat/Bag/Other) (מה הפריט?)
+                    </label>
+                    <select
+                      value={responses.itemType || ""}
+                      onChange={(e) => updateResponse("itemType", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        marginBottom: "1rem",
+                      }}
+                    >
+                      <option value="">Select an item...</option>
+                      <option value="shirt">T-Shirt / חולצה</option>
+                      <option value="hat">Hat / כובע</option>
+                      <option value="bag">Bag / תיק</option>
+                      <option value="other">Other / אחר</option>
+                    </select>
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      Describe the item (תאר את הפריט)
+                    </label>
+                    <textarea
+                      value={responses.itemDescription || ""}
+                      onChange={(e) => updateResponse("itemDescription", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        minHeight: "100px",
+                        resize: "vertical",
+                      }}
+                      placeholder="Describe colors, design, text, symbols..."
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleSaveAndContinue}
+                    disabled={isLocked}
+                    style={{
+                      width: "100%",
+                      backgroundColor: isLocked ? "#D1D5DB" : "#86EFAC",
+                      color: "#333333",
+                      padding: "0.75rem",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                      border: "none",
+                      borderRadius: "0.5rem",
+                      cursor: isLocked ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    Save & Continue
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <img src={IMAGES.fashionTop} alt="Fashion" style={{ width: "100%", borderRadius: "0.5rem", marginBottom: "1rem" }} />
+                <img src={IMAGES.fashionBottom} alt="Fashion" style={{ width: "100%", borderRadius: "0.5rem" }} />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  // Tab 6: Presentation (Translated to Hebrew)
+  if (currentTab === 6) {
+    return (
+      <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        
+        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
+          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "2rem", alignItems: "start" }}>
+              <div>
+                <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                  Presentation (מצגת)
+                </h1>
+                <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
+                  רשימת בדיקה סופית לפני ההצגה שלכם.
+                </p>
+
+                {isLocked && (
+                  <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
+                    <Lock size={24} style={{ color: "#D97706" }} />
+                    <p style={{ fontWeight: "bold", color: "#92400E" }}>כרטיסייה זו נעולה. קבלו אישור מהמורה לכרטיסייה 6 תחילה!</p>
+                  </div>
+                )}
+
+                <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
+                  <div style={{ marginBottom: "2rem" }}>
+                    <h3 style={{ fontSize: "1.125rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                      רשימת בדיקה (Presentation Checklist)
+                    </h3>
+                    {[
+                      "זיהינו אוכלוסייה שסובלת (We identified a population that is suffering)",
+                      "חקרנו את הבעיות והצרכים שלהם (We researched their problems and needs)",
+                      "בחרנו בצבעים משמעותיים להודעה שלנו (We chose meaningful colors for our message)",
+                      "עיצבנו לוגו פשוט וזכור (We designed a simple, memorable logo)",
+                      "יצרנו פריט אופנה השולח את ההודעה שלנו (We created a fashion item that sends our message)",
+                      "אנחנו יכולים להסביר כיצד הפריט שלנו עוזר ליצור שינוי (We can explain how our item helps create change)",
+                    ].map((item, idx) => (
+                      <div key={idx} style={{ display: "flex", alignItems: "center", marginBottom: "1rem", padding: "0.75rem", backgroundColor: "#F9FAFB", borderRadius: "0.375rem" }}>
+                        <input
+                          type="checkbox"
+                          checked={responses[`check_${idx}`] || false}
+                          onChange={(e) => updateResponse(`check_${idx}`, e.target.checked)}
+                          disabled={isLocked}
+                          style={{ marginRight: "1rem", width: "20px", height: "20px", cursor: "pointer" }}
+                        />
+                        <label style={{ color: "#333333", cursor: "pointer", flex: 1, fontSize: "0.95rem" }}>
+                          {item}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      הערות נוספות? (Any additional notes?)
+                    </label>
+                    <textarea
+                      value={responses.presentationNotes || ""}
+                      onChange={(e) => updateResponse("presentationNotes", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        minHeight: "80px",
+                        resize: "vertical",
+                      }}
+                      placeholder="הוסף מידע נוסף..."
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleSaveAndContinue}
+                    disabled={isLocked}
+                    style={{
+                      width: "100%",
+                      backgroundColor: isLocked ? "#D1D5DB" : "#94A3B8",
+                      color: "white",
+                      padding: "0.75rem",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                      border: "none",
+                      borderRadius: "0.5rem",
+                      cursor: isLocked ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    השלם פרויקט (Complete Project)
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <img src={IMAGES.presentationTop} alt="Presentation" style={{ width: "100%", borderRadius: "0.5rem", marginBottom: "1rem" }} />
+                <img src={IMAGES.presentationBottom} alt="Presentation" style={{ width: "100%", borderRadius: "0.5rem" }} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Tab 7: Reflection
+  if (currentTab === 7) {
+    return (
+      <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        
+        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
+          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+            <div>
+              <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                Reflection (רפלקציה)
+              </h1>
+              <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
+                חשבו על הפרויקט שלכם והשפעתו. (Reflect on your project and its impact.)
+              </p>
+
+              {isLocked && (
+                <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
+                  <Lock size={24} style={{ color: "#D97706" }} />
+                  <p style={{ fontWeight: "bold", color: "#92400E" }}>כרטיסייה זו נעולה. קבלו אישור מהמורה לכרטיסייה 7 תחילה!</p>
+                </div>
+              )}
+
+              <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
+                <div style={{ marginBottom: "2rem" }}>
+                  <h3 style={{ fontSize: "1.125rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                    שאלות רפלקציה (Reflection Questions)
+                  </h3>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      1. מה למדתם על האוכלוסייה שבחרתם? (What did you learn about the population you chose?)
+                    </label>
+                    <textarea
+                      value={responses.reflection1 || ""}
+                      onChange={(e) => updateResponse("reflection1", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        minHeight: "80px",
+                        resize: "vertical",
+                      }}
+                      placeholder="כתוב את התשובה שלך..."
+                    />
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      2. כיצד יכול הפריט האופנה שלכם לעזור ליצור שינוי? (How can your fashion item help create change?)
+                    </label>
+                    <textarea
+                      value={responses.reflection2 || ""}
+                      onChange={(e) => updateResponse("reflection2", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        minHeight: "80px",
+                        resize: "vertical",
+                      }}
+                      placeholder="כתוב את התשובה שלך..."
+                    />
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      3. מה היה הקשה ביותר בפרויקט הזה? (What was the most challenging part of this project?)
+                    </label>
+                    <textarea
+                      value={responses.reflection3 || ""}
+                      onChange={(e) => updateResponse("reflection3", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        minHeight: "80px",
+                        resize: "vertical",
+                      }}
+                      placeholder="כתוב את התשובה שלך..."
+                    />
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      4. מה היה הטוב ביותר בעבודה בקבוצה? (What was the best part of working in a group?)
+                    </label>
+                    <textarea
+                      value={responses.reflection4 || ""}
+                      onChange={(e) => updateResponse("reflection4", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        minHeight: "80px",
+                        resize: "vertical",
+                      }}
+                      placeholder="כתוב את התשובה שלך..."
+                    />
+                  </div>
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      5. הרפלקציה הכללית שלך על הפרויקט (Your overall reflection on the project)
+                    </label>
+                    <textarea
+                      value={responses.reflection || ""}
+                      onChange={(e) => {
+                        updateResponse("reflection", e.target.value);
+                        setValidationErrors([]);
+                      }}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: validationErrors.length > 0 ? "2px solid #DC2626" : "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        minHeight: "120px",
+                        resize: "vertical",
+                      }}
+                      placeholder="כתוב רפלקציה משמעותית על הפרויקט שלך..."
+                    />
+                    {validationErrors.length > 0 && (
+                      <div style={{ backgroundColor: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: "0.375rem", padding: "0.75rem", marginTop: "0.75rem" }}>
+                        {validationErrors.map((error, idx) => (
+                          <div key={idx} style={{ display: "flex", gap: "0.5rem", color: "#DC2626", fontSize: "0.875rem" }}>
+                            <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                            <span>{error}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleSaveAndContinue}
+                  disabled={isLocked}
+                  style={{
+                    width: "100%",
+                    backgroundColor: isLocked ? "#D1D5DB" : "#C7D2FE",
+                    color: "#333333",
+                    padding: "0.75rem",
+                    fontSize: "1rem",
+                    fontWeight: "bold",
+                    border: "none",
+                    borderRadius: "0.5rem",
+                    cursor: isLocked ? "not-allowed" : "pointer",
+                  }}
+                >
+                  השלם את הפרויקט (Complete Project)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
 }
