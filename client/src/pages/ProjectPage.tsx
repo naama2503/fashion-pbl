@@ -113,7 +113,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "Adidas",
     nameHe: "אדידס",
-    logo: "https://www.logo.wine/a/logo/Adidas/Adidas-Logo.wine.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/512px-Adidas_Logo.svg.png",
     principle: "Balance/Symmetry",
     principleHe: "איזון/סימטריה",
     explanation: "Three parallel stripes create perfect visual balance and repetition.",
@@ -122,7 +122,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "Olympics",
     nameHe: "אולימפיאדה",
-    logo: "https://www.logo.wine/a/logo/Olympic_Games/Olympic_Games-Logo.wine.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Olympic_rings_with_white_rims.svg/512px-Olympic_rings_with_white_rims.svg.png",
     principle: "Unity/Proximity",
     principleHe: "אחדות/קרבה",
     explanation: "The five rings are close and connected, forming one unified symbol.",
@@ -131,7 +131,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "Beats by Dre",
     nameHe: "Beats by Dre",
-    logo: "https://www.logo.wine/a/logo/Beats_Electronics/Beats_Electronics-Logo.wine.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Beats_Electronics_logo.svg/512px-Beats_Electronics_logo.svg.png",
     principle: "Figure/Ground",
     principleHe: "דמות ורקע",
     explanation: "The 'b' inside the circle is also a person wearing headphones - two images in one.",
@@ -140,7 +140,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "IBM",
     nameHe: "IBM",
-    logo: "https://www.logo.wine/a/logo/IBM/IBM-Logo.wine.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/512px-IBM_logo.svg.png",
     principle: "Closure",
     principleHe: "סגירה",
     explanation: "Our mind closes the gaps between the horizontal lines to read the letters.",
@@ -198,6 +198,10 @@ export default function ProjectPage() {
     gestalt_1: "",
     gestalt_2: "",
     gestalt_3: "",
+    gestalt_quiz_0: "",
+    gestalt_quiz_1: "",
+    gestalt_quiz_2: "",
+    gestalt_quiz_3: "",
     gestalt_4: "",
   });
   
@@ -551,27 +555,37 @@ export default function ProjectPage() {
 
                             {/* Multiple Choice Options */}
                             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "1rem" }}>
-                              {principles.map((principle) => (
-                                <button
-                                  key={principle}
-                                  onClick={() => updateResponse(`gestalt_quiz_${idx}`, principle)}
-                                  disabled={selectedAnswer !== null}
-                                  style={{
-                                    width: "100%",
-                                    backgroundColor: selectedAnswer === principle ? (isCorrect ? "#22C55E" : "#EF4444") : "#FFFFFF",
-                                    color: selectedAnswer === principle ? "#FFFFFF" : "#333333",
-                                    padding: "0.75rem",
-                                    fontSize: "0.875rem",
-                                    fontWeight: "bold",
-                                    border: `2px solid ${selectedAnswer === principle ? (isCorrect ? "#16A34A" : "#DC2626") : "#FBBF24"}`,
-                                    borderRadius: "0.375rem",
-                                    cursor: selectedAnswer !== null ? "default" : "pointer",
-                                    transition: "all 0.2s ease"
-                                  }}
-                                >
-                                  {principle}
-                                </button>
-                              ))}
+                              {principles.map((principle) => {
+                                const principleHe = {
+                                  "Closure": "סגירה",
+                                  "Figure/Ground": "דמות ורקע",
+                                  "Continuation": "המשכיות",
+                                  "Unity/Proximity": "אחדות/קרבה",
+                                  "Balance/Symmetry": "איזון/סימטריה"
+                                }[principle] || principle;
+                                
+                                return (
+                                  <button
+                                    key={principle}
+                                    onClick={() => setTab3Responses(prev => ({ ...prev, [`gestalt_quiz_${idx}`]: principle }))}
+                                    disabled={selectedAnswer !== null}
+                                    style={{
+                                      width: "100%",
+                                      backgroundColor: selectedAnswer === principle ? (isCorrect ? "#22C55E" : "#EF4444") : "#FFFFFF",
+                                      color: selectedAnswer === principle ? "#FFFFFF" : "#333333",
+                                      padding: "0.75rem",
+                                      fontSize: "0.875rem",
+                                      fontWeight: "bold",
+                                      border: `2px solid ${selectedAnswer === principle ? (isCorrect ? "#16A34A" : "#DC2626") : "#FBBF24"}`,
+                                      borderRadius: "0.375rem",
+                                      cursor: selectedAnswer !== null ? "default" : "pointer",
+                                      transition: "all 0.2s ease"
+                                    }}
+                                  >
+                                    {principle} / {principleHe}
+                                  </button>
+                                );
+                              })}
                             </div>
 
                             {/* Feedback */}
