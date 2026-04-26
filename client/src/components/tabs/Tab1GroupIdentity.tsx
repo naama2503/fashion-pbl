@@ -19,7 +19,8 @@ export default function Tab1GroupIdentity() {
   const [inspiration, setInspiration] = useState("");
 
   const addMember = () => setMembers([...members, ""]);
-  const removeMember = (i: number) => setMembers(members.filter((_, idx) => idx !== i));
+  const removeMember = (i: number) =>
+    setMembers(members.filter((_, idx) => idx !== i));
   const updateMember = (i: number, val: string) => {
     const updated = [...members];
     updated[i] = val;
@@ -42,7 +43,7 @@ export default function Tab1GroupIdentity() {
         </Label>
         <Input
           value={groupName}
-          onChange={(e) => setGroupName(e.target.value)}
+          onChange={e => setGroupName(e.target.value)}
           placeholder={t("tab1.groupNamePlaceholder")}
           className="text-lg border-2 border-border focus:border-primary bg-card"
           dir={isRTL ? "rtl" : "ltr"}
@@ -64,7 +65,7 @@ export default function Tab1GroupIdentity() {
               </span>
               <Input
                 value={member}
-                onChange={(e) => updateMember(i, e.target.value)}
+                onChange={e => updateMember(i, e.target.value)}
                 placeholder={`${t("tab1.member")} ${i + 1}`}
                 className="border-2 border-border focus:border-primary bg-card"
                 dir={isRTL ? "rtl" : "ltr"}
@@ -103,7 +104,7 @@ export default function Tab1GroupIdentity() {
         </Label>
         <Input
           value={theme}
-          onChange={(e) => setTheme(e.target.value)}
+          onChange={e => setTheme(e.target.value)}
           placeholder={t("tab1.themePlaceholder")}
           className="border-2 border-border focus:border-primary bg-card"
           dir={isRTL ? "rtl" : "ltr"}
@@ -117,7 +118,7 @@ export default function Tab1GroupIdentity() {
         </Label>
         <Textarea
           value={inspiration}
-          onChange={(e) => setInspiration(e.target.value)}
+          onChange={e => setInspiration(e.target.value)}
           placeholder={t("tab1.inspirationPlaceholder")}
           rows={5}
           className="border-2 border-border focus:border-primary bg-card resize-none"

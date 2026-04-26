@@ -11,7 +11,14 @@ import { Label } from "@/components/ui/label";
 import { Lightbulb, Triangle, Layers } from "lucide-react";
 import { toast } from "sonner";
 
-const VECTOR_TOOLS = ["Adobe Illustrator", "Inkscape", "Figma", "CorelDRAW", "Canva", "Affinity Designer"];
+const VECTOR_TOOLS = [
+  "Adobe Illustrator",
+  "Inkscape",
+  "Figma",
+  "CorelDRAW",
+  "Canva",
+  "Affinity Designer",
+];
 
 export default function Tab5Vector() {
   const { t, isRTL, language } = useLanguage();
@@ -21,8 +28,8 @@ export default function Tab5Vector() {
   const [elements, setElements] = useState("");
 
   const toggleTool = (tool: string) => {
-    setSelectedTools((prev) =>
-      prev.includes(tool) ? prev.filter((t) => t !== tool) : [...prev, tool]
+    setSelectedTools(prev =>
+      prev.includes(tool) ? prev.filter(t => t !== tool) : [...prev, tool]
     );
   };
 
@@ -38,7 +45,7 @@ export default function Tab5Vector() {
 
       {/* Vector illustration placeholder */}
       <div className="grid grid-cols-3 gap-4">
-        {[1, 2, 3].map((n) => (
+        {[1, 2, 3].map(n => (
           <div
             key={n}
             className="aspect-square border-2 border-dashed border-primary/30 rounded-xl bg-card flex flex-col items-center justify-center gap-2"
@@ -60,7 +67,7 @@ export default function Tab5Vector() {
           {t("tab5.tools")}
         </Label>
         <div className="flex flex-wrap gap-2">
-          {VECTOR_TOOLS.map((tool) => (
+          {VECTOR_TOOLS.map(tool => (
             <button
               key={tool}
               onClick={() => toggleTool(tool)}
@@ -76,7 +83,7 @@ export default function Tab5Vector() {
         </div>
         <Input
           value={tools}
-          onChange={(e) => setTools(e.target.value)}
+          onChange={e => setTools(e.target.value)}
           placeholder={t("tab5.toolsPlaceholder")}
           className="border-2 border-border focus:border-primary bg-card"
           dir={isRTL ? "rtl" : "ltr"}
@@ -90,7 +97,7 @@ export default function Tab5Vector() {
         <Label className="text-base font-semibold">{t("tab5.process")}</Label>
         <Textarea
           value={process}
-          onChange={(e) => setProcess(e.target.value)}
+          onChange={e => setProcess(e.target.value)}
           placeholder={t("tab5.processPlaceholder")}
           rows={7}
           className="border-2 border-border focus:border-primary bg-card resize-none"
@@ -103,7 +110,7 @@ export default function Tab5Vector() {
         <Label className="text-base font-semibold">{t("tab5.elements")}</Label>
         <Textarea
           value={elements}
-          onChange={(e) => setElements(e.target.value)}
+          onChange={e => setElements(e.target.value)}
           placeholder={t("tab5.elementsPlaceholder")}
           rows={5}
           className="border-2 border-border focus:border-primary bg-card resize-none"
@@ -112,7 +119,10 @@ export default function Tab5Vector() {
       </div>
 
       <div className="flex justify-end pt-2">
-        <Button onClick={handleSave} className="bg-primary text-primary-foreground hover:bg-primary/90 px-8">
+        <Button
+          onClick={handleSave}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 px-8"
+        >
           {t("common.save")}
         </Button>
       </div>

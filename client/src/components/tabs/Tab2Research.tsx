@@ -52,7 +52,7 @@ export default function Tab2Research() {
         </Label>
         <Input
           value={topic}
-          onChange={(e) => setTopic(e.target.value)}
+          onChange={e => setTopic(e.target.value)}
           placeholder={t("tab2.topicPlaceholder")}
           className="border-2 border-border focus:border-primary bg-card text-base"
           dir={isRTL ? "rtl" : "ltr"}
@@ -66,14 +66,15 @@ export default function Tab2Research() {
         <Label className="text-base font-semibold">{t("tab2.notes")}</Label>
         <Textarea
           value={notes}
-          onChange={(e) => setNotes(e.target.value)}
+          onChange={e => setNotes(e.target.value)}
           placeholder={t("tab2.notesPlaceholder")}
           rows={10}
           className="border-2 border-border focus:border-primary bg-card resize-none"
           dir={isRTL ? "rtl" : "ltr"}
         />
         <p className="text-xs text-muted-foreground text-right">
-          {notes.split("\n").filter(Boolean).length} {isRTL ? "שורות" : "lines"} · {notes.length} {t("common.characters")}
+          {notes.split("\n").filter(Boolean).length} {isRTL ? "שורות" : "lines"}{" "}
+          · {notes.length} {t("common.characters")}
         </p>
       </div>
 
@@ -82,7 +83,7 @@ export default function Tab2Research() {
         <Label className="text-base font-semibold">{t("tab2.sources")}</Label>
         <Textarea
           value={sources}
-          onChange={(e) => setSources(e.target.value)}
+          onChange={e => setSources(e.target.value)}
           placeholder={t("tab2.sourcesPlaceholder")}
           rows={4}
           className="border-2 border-border focus:border-primary bg-card resize-none"
@@ -91,7 +92,10 @@ export default function Tab2Research() {
       </div>
 
       <div className="flex justify-end pt-2">
-        <Button onClick={handleSave} className="bg-primary text-primary-foreground hover:bg-primary/90 px-8">
+        <Button
+          onClick={handleSave}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 px-8"
+        >
           {t("common.save")}
         </Button>
       </div>

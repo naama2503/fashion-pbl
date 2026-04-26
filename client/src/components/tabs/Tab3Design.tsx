@@ -10,10 +10,34 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 const PALETTE_COLORS = [
-  { key: "primary", label_en: "Primary", label_he: "ראשי", default: "#C9748A", textColor: "#fff" },
-  { key: "secondary", label_en: "Secondary", label_he: "משני", default: "#7A9E7E", textColor: "#fff" },
-  { key: "accent", label_en: "Accent", label_he: "הדגשה", default: "#D4A96A", textColor: "#fff" },
-  { key: "neutral", label_en: "Neutral", label_he: "ניטרלי", default: "#C4B5A0", textColor: "#3a2e28" },
+  {
+    key: "primary",
+    label_en: "Primary",
+    label_he: "ראשי",
+    default: "#C9748A",
+    textColor: "#fff",
+  },
+  {
+    key: "secondary",
+    label_en: "Secondary",
+    label_he: "משני",
+    default: "#7A9E7E",
+    textColor: "#fff",
+  },
+  {
+    key: "accent",
+    label_en: "Accent",
+    label_he: "הדגשה",
+    default: "#D4A96A",
+    textColor: "#fff",
+  },
+  {
+    key: "neutral",
+    label_en: "Neutral",
+    label_he: "ניטרלי",
+    default: "#C4B5A0",
+    textColor: "#3a2e28",
+  },
 ];
 
 const FASHION_COLORS = [
@@ -34,15 +58,15 @@ const FASHION_COLORS = [
 export default function Tab3Design() {
   const { t, isRTL, language } = useLanguage();
   const [palette, setPalette] = useState<Record<string, string>>(
-    Object.fromEntries(PALETTE_COLORS.map((c) => [c.key, c.default]))
+    Object.fromEntries(PALETTE_COLORS.map(c => [c.key, c.default]))
   );
   const [principles, setPrinciples] = useState("");
   const [mood, setMood] = useState("");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
 
   const toggleColor = (hex: string) => {
-    setSelectedColors((prev) =>
-      prev.includes(hex) ? prev.filter((c) => c !== hex) : [...prev, hex]
+    setSelectedColors(prev =>
+      prev.includes(hex) ? prev.filter(c => c !== hex) : [...prev, hex]
     );
   };
 
@@ -71,20 +95,25 @@ export default function Tab3Design() {
       <div className="space-y-3">
         <Label className="text-base font-semibold">{t("tab3.palette")}</Label>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {PALETTE_COLORS.map((c) => (
+          {PALETTE_COLORS.map(c => (
             <div key={c.key} className="space-y-2">
               <div
                 className="h-20 rounded-lg border-2 border-border flex items-end p-2 cursor-pointer color-swatch"
                 style={{ backgroundColor: palette[c.key] }}
               >
-                <span className="text-xs font-semibold" style={{ color: c.textColor }}>
+                <span
+                  className="text-xs font-semibold"
+                  style={{ color: c.textColor }}
+                >
                   {language === "en" ? c.label_en : c.label_he}
                 </span>
               </div>
               <input
                 type="color"
                 value={palette[c.key]}
-                onChange={(e) => setPalette({ ...palette, [c.key]: e.target.value })}
+                onChange={e =>
+                  setPalette({ ...palette, [c.key]: e.target.value })
+                }
                 className="w-full h-8 rounded cursor-pointer border border-border"
                 title={language === "en" ? c.label_en : c.label_he}
               />
@@ -101,12 +130,19 @@ export default function Tab3Design() {
           {isRTL ? "בחר צבעי אופנה" : "Select Fashion Colors"}
         </Label>
         <p className="text-sm text-muted-foreground">
-          {isRTL ? "לחץ על צבעים כדי לבחור אותם לקולקציה שלך" : "Click colors to select them for your collection"}
+          {isRTL
+            ? "לחץ על צבעים כדי לבחור אותם לקולקציה שלך"
+            : "Click colors to select them for your collection"}
         </p>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-          {FASHION_COLORS.map((color) => {
+          {FASHION_COLORS.map(color => {
             const isSelected = selectedColors.includes(color.hex);
-            const isDark = ["#800020", "#1B3A6B", "#228B22", "#36454F"].includes(color.hex);
+            const isDark = [
+              "#800020",
+              "#1B3A6B",
+              "#228B22",
+              "#36454F",
+            ].includes(color.hex);
             return (
               <button
                 key={color.hex}
@@ -118,10 +154,14 @@ export default function Tab3Design() {
                 }`}
                 style={{ backgroundColor: color.hex }}
               >
-                <span className={`text-xs font-semibold ${isDark ? "text-white" : "text-foreground/80"}`}>
+                <span
+                  className={`text-xs font-semibold ${isDark ? "text-white" : "text-foreground/80"}`}
+                >
                   {language === "en" ? color.name_en : color.name_he}
                 </span>
-                <span className={`text-xs font-mono ${isDark ? "text-white/70" : "text-foreground/50"}`}>
+                <span
+                  className={`text-xs font-mono ${isDark ? "text-white/70" : "text-foreground/50"}`}
+                >
                   {color.hex}
                 </span>
               </button>
@@ -133,7 +173,7 @@ export default function Tab3Design() {
             <span className="text-sm text-muted-foreground">
               {isRTL ? "נבחרו:" : "Selected:"}
             </span>
-            {selectedColors.map((hex) => (
+            {selectedColors.map(hex => (
               <div
                 key={hex}
                 className="w-6 h-6 rounded-full border-2 border-white shadow-sm"
@@ -149,10 +189,12 @@ export default function Tab3Design() {
 
       {/* Design Principles */}
       <div className="space-y-2">
-        <Label className="text-base font-semibold">{t("tab3.principles")}</Label>
+        <Label className="text-base font-semibold">
+          {t("tab3.principles")}
+        </Label>
         <Textarea
           value={principles}
-          onChange={(e) => setPrinciples(e.target.value)}
+          onChange={e => setPrinciples(e.target.value)}
           placeholder={t("tab3.principlesPlaceholder")}
           rows={5}
           className="border-2 border-border focus:border-primary bg-card resize-none"
@@ -165,7 +207,7 @@ export default function Tab3Design() {
         <Label className="text-base font-semibold">{t("tab3.mood")}</Label>
         <Textarea
           value={mood}
-          onChange={(e) => setMood(e.target.value)}
+          onChange={e => setMood(e.target.value)}
           placeholder={t("tab3.moodPlaceholder")}
           rows={4}
           className="border-2 border-border focus:border-primary bg-card resize-none"
@@ -174,7 +216,10 @@ export default function Tab3Design() {
       </div>
 
       <div className="flex justify-end pt-2">
-        <Button onClick={handleSave} className="bg-primary text-primary-foreground hover:bg-primary/90 px-8">
+        <Button
+          onClick={handleSave}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 px-8"
+        >
           {t("common.save")}
         </Button>
       </div>

@@ -76,7 +76,7 @@ export default function Tab4Logo() {
           </Label>
           <Textarea
             value={s.value}
-            onChange={(e) => s.onChange(e.target.value)}
+            onChange={e => s.onChange(e.target.value)}
             placeholder={s.placeholder}
             rows={s.rows}
             className="border-2 border-border focus:border-primary bg-card resize-none"
@@ -90,7 +90,10 @@ export default function Tab4Logo() {
       ))}
 
       <div className="flex justify-end pt-2">
-        <Button onClick={handleSave} className="bg-primary text-primary-foreground hover:bg-primary/90 px-8">
+        <Button
+          onClick={handleSave}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 px-8"
+        >
           {t("common.save")}
         </Button>
       </div>

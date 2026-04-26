@@ -9,17 +9,22 @@ interface NavigationProps {
   tabs: { label: string; labelHe: string }[];
 }
 
-export default function Navigation({ currentTab, onTabChange, canAccessTab, tabs }: NavigationProps) {
+export default function Navigation({
+  currentTab,
+  onTabChange,
+  canAccessTab,
+  tabs,
+}: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const tabColors = [
-    "bg-yellow-400",    // 1. Home
-    "bg-orange-400",    // 2. Group Decision
-    "bg-red-400",       // 3. Research
-    "bg-purple-400",    // 4. Design Inquiry
-    "bg-blue-400",      // 5. Creating a Logo
-    "bg-green-400",     // 6. Fashion Item
-    "bg-teal-400",      // 7. Presentation
+    "bg-yellow-400", // 1. Home
+    "bg-orange-400", // 2. Group Decision
+    "bg-red-400", // 3. Research
+    "bg-purple-400", // 4. Design Inquiry
+    "bg-blue-400", // 5. Creating a Logo
+    "bg-green-400", // 6. Fashion Item
+    "bg-teal-400", // 7. Presentation
   ];
 
   return (
@@ -38,11 +43,13 @@ export default function Navigation({ currentTab, onTabChange, canAccessTab, tabs
                   currentTab === idx
                     ? `${tabColors[idx]} text-gray-900 shadow-lg`
                     : canAccessTab(idx)
-                    ? "bg-gray-700 hover:bg-gray-600 text-white"
-                    : "bg-gray-800 text-gray-500 cursor-not-allowed"
+                      ? "bg-gray-700 hover:bg-gray-600 text-white"
+                      : "bg-gray-800 text-gray-500 cursor-not-allowed"
                 }`}
               >
-                <div className="text-sm">{idx + 1}. {tab.label}</div>
+                <div className="text-sm">
+                  {idx + 1}. {tab.label}
+                </div>
                 <div className="text-xs opacity-75">{tab.labelHe}</div>
               </button>
             ))}
@@ -74,11 +81,13 @@ export default function Navigation({ currentTab, onTabChange, canAccessTab, tabs
                   currentTab === idx
                     ? `${tabColors[idx]} text-gray-900 shadow-lg`
                     : canAccessTab(idx)
-                    ? "bg-gray-700 hover:bg-gray-600 text-white"
-                    : "bg-gray-800 text-gray-500 cursor-not-allowed"
+                      ? "bg-gray-700 hover:bg-gray-600 text-white"
+                      : "bg-gray-800 text-gray-500 cursor-not-allowed"
                 }`}
               >
-                <div className="text-sm">{idx + 1}. {tab.label}</div>
+                <div className="text-sm">
+                  {idx + 1}. {tab.label}
+                </div>
                 <div className="text-xs opacity-75">{tab.labelHe}</div>
               </button>
             ))}

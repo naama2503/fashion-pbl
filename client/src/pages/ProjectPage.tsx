@@ -79,7 +79,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "Adidas",
     nameHe: "אדידס",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/512px-Adidas_Logo.svg.png",
     principle: "Balance/Symmetry",
     principleHe: "איזון/סימטריה",
     explanation: "Three parallel stripes create perfect visual balance and repetition.",
@@ -88,7 +88,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "Olympics",
     nameHe: "אולימפיאדה",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Olympic_rings_with_white_rims.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Olympic_rings_with_white_rims.svg/512px-Olympic_rings_with_white_rims.svg.png",
     principle: "Unity/Proximity",
     principleHe: "אחדות/קרבה",
     explanation: "The five rings are close and connected, forming one unified symbol.",
@@ -97,7 +97,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "Beats by Dre",
     nameHe: "Beats by Dre",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/Beats_Electronics_logo.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Beats_Electronics_logo.svg/512px-Beats_Electronics_logo.svg.png",
     principle: "Figure/Ground",
     principleHe: "דמות ורקע",
     explanation: "The 'b' inside the circle is also a person wearing headphones - two images in one.",
@@ -106,7 +106,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "IBM",
     nameHe: "IBM",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/512px-IBM_logo.svg.png",
     principle: "Closure",
     principleHe: "סגירה",
     explanation: "Our mind closes the gaps between the horizontal lines to read the letters.",
@@ -451,6 +451,7 @@ export default function ProjectPage() {
                 </div>
 
                 {/* PART C: Gestalt Gallery with Brand Logos */}
+                <>
                 <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
                   {/* PART A: Learning Phase */}
                   <div style={{ marginBottom: "3rem" }}>
@@ -488,53 +489,79 @@ export default function ProjectPage() {
                       Part C - Practice Quiz: Guess the Principle (חלק ג - תרגול: נחש את העקרון)
                     </h2>
                     <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
-                      Now it's your turn! These are NEW logos. Try to identify which principle each one uses. Click "Check My Answer" to see if you're right. (עכשיו תורך! אלו לוגוים חדשים. נסה לזהות איזה עקרון כל אחד משתמש. לחץ "בדוק את התשובה שלי" כדי לראות אם צדקת.)
+                      Now it's your turn! These are NEW logos. Select the principle you think each one uses. (עכשיו תורך! בחר את העקרון שלדעתך כל לוגו משתמש בו.)
                     </p>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.5rem" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2rem" }}>
                       {GESTALT_PRACTICE_QUIZ.map((logo, idx) => {
-                        const isRevealed = gestaltRevealed[`quiz_${idx}`] || false;
+                        const selectedAnswer = tab3Responses[`gestalt_quiz_${idx}`] || null;
+                        const isCorrect = selectedAnswer === logo.principle;
+                        const showFeedback = selectedAnswer !== null;
+                        const principles = ["Closure", "Figure/Ground", "Continuation", "Unity/Proximity", "Balance/Symmetry"];
+
                         return (
-                          <div key={idx} style={{ backgroundColor: "#FEF3C7", padding: "1.5rem", borderRadius: "0.5rem", border: "2px solid #FBBF24", textAlign: "center" }}>
+                          <div key={idx} style={{ backgroundColor: "#FEF3C7", padding: "1.5rem", borderRadius: "0.5rem", border: "2px solid #FBBF24" }}>
                             {/* Logo Display */}
                             <div style={{ marginBottom: "1rem", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "150px" }}>
                               <img src={logo.logo} alt={logo.name} style={{ height: "150px", maxWidth: "100%", objectFit: "contain" }} />
                             </div>
-                            <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "1rem", fontSize: "0.95rem" }}>{logo.name}</p>
+                            <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "1rem", fontSize: "0.95rem", textAlign: "center" }}>
+                              {logo.name} ({logo.nameHe})
+                            </p>
 
-                            {/* Check Answer Button */}
-                            <button
-                              onClick={() => setGestaltRevealed({ ...gestaltRevealed, [`quiz_${idx}`]: true })}
-                              disabled={isRevealed}
-                              style={{
-                                width: "100%",
-                                backgroundColor: isRevealed ? "#86EFAC" : "#FBBF24",
-                                color: "#333333",
-                                padding: "0.75rem",
-                                fontSize: "0.875rem",
-                                fontWeight: "bold",
-                                border: "none",
+                            {/* Multiple Choice Options */}
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "1rem" }}>
+                              {principles.map((principle) => (
+                                <button
+                                  key={principle}
+                                  onClick={() => updateResponse(`gestalt_quiz_${idx}`, principle)}
+                                  disabled={selectedAnswer !== null}
+                                  style={{
+                                    width: "100%",
+                                    backgroundColor: selectedAnswer === principle ? (isCorrect ? "#22C55E" : "#EF4444") : "#FFFFFF",
+                                    color: selectedAnswer === principle ? "#FFFFFF" : "#333333",
+                                    padding: "0.75rem",
+                                    fontSize: "0.875rem",
+                                    fontWeight: "bold",
+                                    border: `2px solid ${selectedAnswer === principle ? (isCorrect ? "#16A34A" : "#DC2626") : "#FBBF24"}`,
+                                    borderRadius: "0.375rem",
+                                    cursor: selectedAnswer !== null ? "default" : "pointer",
+                                    transition: "all 0.2s ease"
+                                  }}
+                                >
+                                  {principle}
+                                </button>
+                              ))}
+                            </div>
+
+                            {/* Feedback */}
+                            {showFeedback && (
+                              <div style={{
+                                backgroundColor: isCorrect ? "#DCFCE7" : "#FEE2E2",
+                                border: `2px solid ${isCorrect ? "#22C55E" : "#EF4444"}`,
                                 borderRadius: "0.375rem",
-                                cursor: isRevealed ? "default" : "pointer",
-                                marginBottom: "1rem",
-                                transition: "all 0.3s ease"
-                              }}
-                            >
-                              {isRevealed ? "✓ Revealed" : "Check My Answer"}
-                            </button>
-
-                            {/* Answer Box */}
-                            {isRevealed && (
-                              <div style={{ backgroundColor: "#DBEAFE", padding: "1rem", borderRadius: "0.375rem", border: "2px solid #3B82F6", textAlign: "left", direction: "rtl" }}>
-                                <p style={{ fontWeight: "bold", color: "#1E40AF", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
-                                  ✓ {logo.principle}
+                                padding: "1rem",
+                                textAlign: "left",
+                                direction: "rtl"
+                              }}>
+                                <p style={{
+                                  fontWeight: "bold",
+                                  color: isCorrect ? "#15803D" : "#991B1B",
+                                  marginBottom: "0.5rem",
+                                  fontSize: "0.9rem"
+                                }}>
+                                  {isCorrect ? "✓ Correct! (נכון!)" : "✗ Try again! (נסו שוב!)"}
                                 </p>
-                                <p style={{ color: "#1E40AF", fontSize: "0.8rem", lineHeight: "1.5", marginBottom: "0.5rem" }}>
-                                  {logo.explanation}
-                                </p>
-                                <p style={{ color: "#1E40AF", fontSize: "0.8rem", lineHeight: "1.5", fontStyle: "italic" }}>
-                                  {logo.explanationHe}
-                                </p>
+                                {isCorrect && (
+                                  <>
+                                    <p style={{ color: "#15803D", fontSize: "0.8rem", lineHeight: "1.5", marginBottom: "0.5rem" }}>
+                                      {logo.explanation}
+                                    </p>
+                                    <p style={{ color: "#15803D", fontSize: "0.8rem", lineHeight: "1.5", fontStyle: "italic" }}>
+                                      {logo.explanationHe}
+                                    </p>
+                                  </>
+                                )}
                               </div>
                             )}
                           </div>
@@ -576,6 +603,7 @@ export default function ProjectPage() {
                     );
                   })()}
                 </div>
+                </>
               </div>
 
               <div>

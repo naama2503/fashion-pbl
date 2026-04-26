@@ -45,7 +45,7 @@ export default function Tab6Fashion() {
         </Label>
         <Input
           value={collection}
-          onChange={(e) => setCollection(e.target.value)}
+          onChange={e => setCollection(e.target.value)}
           placeholder={t("tab6.collectionPlaceholder")}
           className="text-lg border-2 border-border focus:border-primary bg-card"
           dir={isRTL ? "rtl" : "ltr"}
@@ -62,7 +62,7 @@ export default function Tab6Fashion() {
         </Label>
         <Textarea
           value={garments}
-          onChange={(e) => setGarments(e.target.value)}
+          onChange={e => setGarments(e.target.value)}
           placeholder={t("tab6.garmentsPlaceholder")}
           rows={8}
           className="border-2 border-border focus:border-primary bg-card resize-none"
@@ -80,7 +80,7 @@ export default function Tab6Fashion() {
         <Label className="text-base font-semibold">{t("tab6.styling")}</Label>
         <Textarea
           value={styling}
-          onChange={(e) => setStyling(e.target.value)}
+          onChange={e => setStyling(e.target.value)}
           placeholder={t("tab6.stylingPlaceholder")}
           rows={5}
           className="border-2 border-border focus:border-primary bg-card resize-none"
@@ -96,7 +96,7 @@ export default function Tab6Fashion() {
         </Label>
         <Textarea
           value={story}
-          onChange={(e) => setStory(e.target.value)}
+          onChange={e => setStory(e.target.value)}
           placeholder={t("tab6.storyPlaceholder")}
           rows={5}
           className="border-2 border-border focus:border-primary bg-card resize-none"
@@ -105,7 +105,10 @@ export default function Tab6Fashion() {
       </div>
 
       <div className="flex justify-end pt-2">
-        <Button onClick={handleSave} className="bg-primary text-primary-foreground hover:bg-primary/90 px-8">
+        <Button
+          onClick={handleSave}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 px-8"
+        >
           {t("common.save")}
         </Button>
       </div>

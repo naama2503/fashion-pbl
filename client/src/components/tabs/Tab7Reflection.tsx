@@ -13,7 +13,11 @@ import { toast } from "sonner";
 export default function Tab7Reflection() {
   const { t, isRTL } = useLanguage();
   const [answers, setAnswers] = useState({
-    q1: "", q2: "", q3: "", q4: "", q5: "",
+    q1: "",
+    q2: "",
+    q3: "",
+    q4: "",
+    q5: "",
   });
 
   const questions = [
@@ -24,7 +28,9 @@ export default function Tab7Reflection() {
     { key: "q5", label: t("tab7.q5"), placeholder: t("tab7.q5Placeholder") },
   ];
 
-  const answeredCount = Object.values(answers).filter((a) => a.trim().length > 0).length;
+  const answeredCount = Object.values(answers).filter(
+    a => a.trim().length > 0
+  ).length;
 
   const handleSave = () => {
     toast.success(t("common.save"), {
@@ -44,12 +50,14 @@ export default function Tab7Reflection() {
             {t("tab7.subtitle")}
           </h3>
         </div>
-        <p className="text-sm text-muted-foreground">{t("tab7.instructions")}</p>
+        <p className="text-sm text-muted-foreground">
+          {t("tab7.instructions")}
+        </p>
 
         {/* Progress indicator */}
         <div className="mt-4 flex items-center gap-3">
           <div className="flex gap-1.5">
-            {questions.map((q) => (
+            {questions.map(q => (
               <div
                 key={q.key}
                 className={`w-3 h-3 rounded-full transition-all ${
@@ -68,13 +76,16 @@ export default function Tab7Reflection() {
 
       {/* Questions */}
       {questions.map((q, i) => {
-        const answered = answers[q.key as keyof typeof answers].trim().length > 0;
+        const answered =
+          answers[q.key as keyof typeof answers].trim().length > 0;
         return (
           <div key={q.key} className="space-y-2">
             <Label className="text-base font-semibold flex items-start gap-2">
               <span
                 className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
-                  answered ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                  answered
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground"
                 }`}
               >
                 {answered ? <CheckCircle size={14} /> : i + 1}
@@ -83,7 +94,7 @@ export default function Tab7Reflection() {
             </Label>
             <Textarea
               value={answers[q.key as keyof typeof answers]}
-              onChange={(e) =>
+              onChange={e =>
                 setAnswers({ ...answers, [q.key]: e.target.value })
               }
               placeholder={q.placeholder}
@@ -94,7 +105,8 @@ export default function Tab7Reflection() {
               dir={isRTL ? "rtl" : "ltr"}
             />
             <p className="text-xs text-muted-foreground text-right">
-              {answers[q.key as keyof typeof answers].length} {t("common.characters")}
+              {answers[q.key as keyof typeof answers].length}{" "}
+              {t("common.characters")}
             </p>
             {i < questions.length - 1 && <hr className="stitch-divider" />}
           </div>
@@ -102,7 +114,10 @@ export default function Tab7Reflection() {
       })}
 
       <div className="flex justify-end pt-2">
-        <Button onClick={handleSave} className="bg-primary text-primary-foreground hover:bg-primary/90 px-8">
+        <Button
+          onClick={handleSave}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 px-8"
+        >
           {t("common.save")}
         </Button>
       </div>
