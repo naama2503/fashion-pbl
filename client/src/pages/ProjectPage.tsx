@@ -1013,6 +1013,106 @@ export default function ProjectPage() {
     );
   }
 
+  // Tab 5: Creating a Logo (Logo Lab)
+  if (currentTab === 4) {
+    const canvaLink = (responses as any).canvaLink || "";
+    const isValidCanvaLink = canvaLink.includes("canva.com") && canvaLink.includes("edit");
+    
+    return (
+      <div style={{ backgroundColor: "#DCFCE7", minHeight: "100vh" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        
+        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
+          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+            <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+              Creating a Logo (יצירת לוגו)
+            </h1>
+            <p style={{ color: "#555555", marginBottom: "2rem" }}>
+              Design a logo for your population using Canva. Follow the steps below.
+            </p>
+            
+            <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1.5rem" }}>📋 Logo Design Steps</h2>
+              
+              <div style={{ marginBottom: "2rem", backgroundColor: "#F0FDF4", padding: "1.5rem", borderRadius: "0.375rem", borderLeft: "4px solid #22C55E" }}>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Step 1: Brainstorm Symbols</h3>
+                <p style={{ color: "#555555", marginBottom: "1rem" }}>Think of 3 symbols that represent your population and their needs. These symbols should be simple, recognizable, and meaningful.</p>
+                <textarea
+                  value={(responses as any).symbolIdeas || ""}
+                  onChange={(e) => updateResponse("symbolIdeas", e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    border: "1px solid #D1D5DB",
+                    borderRadius: "0.375rem",
+                    fontFamily: "'Alef', 'Assistant', sans-serif",
+                    minHeight: "100px",
+                    fontSize: "0.95rem",
+                  }}
+                  placeholder="Example: A heart (compassion), a book (education), a hand (support)"
+                />
+              </div>
+              
+              <div style={{ marginBottom: "2rem", backgroundColor: "#F0FDF4", padding: "1.5rem", borderRadius: "0.375rem", borderLeft: "4px solid #22C55E" }}>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Step 2: Design in Canva</h3>
+                <p style={{ color: "#555555", marginBottom: "1rem" }}><strong>Instructions:</strong></p>
+                <ul style={{ color: "#555555", marginBottom: "1rem", marginLeft: "1.5rem", listStyleType: "disc" }}>
+                  <li>Go to <a href="https://www.canva.com" target="_blank" rel="noopener noreferrer" style={{ color: "#2563EB", textDecoration: "underline" }}>Canva.com</a> and create a new design</li>
+                  <li>Use BLACK text/shapes only (no colors)</li>
+                  <li>Replace ONE letter in your population name with a silhouette element (symbol)</li>
+                  <li>Keep it simple and professional</li>
+                  <li>Example: "CH**ILDREN**" where the "I" is replaced with a child silhouette</li>
+                </ul>
+              </div>
+              
+              <div style={{ marginBottom: "2rem", backgroundColor: "#F0FDF4", padding: "1.5rem", borderRadius: "0.375rem", borderLeft: "4px solid #22C55E" }}>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Step 3: Share Your Canva Link</h3>
+                <p style={{ color: "#555555", marginBottom: "1rem" }}>Paste your Canva "Can Edit" link below. Make sure the link allows editing.</p>
+                <input
+                  type="url"
+                  value={canvaLink}
+                  onChange={(e) => updateResponse("canvaLink", e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    border: isValidCanvaLink ? "2px solid #22C55E" : canvaLink.length > 0 ? "2px solid #DC2626" : "1px solid #D1D5DB",
+                    borderRadius: "0.375rem",
+                    fontFamily: "'Alef', 'Assistant', sans-serif",
+                    fontSize: "0.95rem",
+                  }}
+                  placeholder="https://www.canva.com/design/..."
+                />
+                {canvaLink.length > 0 && (
+                  <div style={{ marginTop: "0.5rem", fontSize: "0.875rem", color: isValidCanvaLink ? "#16A34A" : "#DC2626", fontWeight: "bold" }}>
+                    {isValidCanvaLink ? "✓ Valid Canva link" : "✗ Please paste a valid Canva 'Can Edit' link"}
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <button
+              onClick={handleSaveAndContinue}
+              disabled={!isValidCanvaLink}
+              style={{
+                width: "100%",
+                backgroundColor: isValidCanvaLink ? "#86EFAC" : "#D1D5DB",
+                color: "#333333",
+                padding: "0.75rem",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                border: "none",
+                borderRadius: "0.5rem",
+                cursor: isValidCanvaLink ? "pointer" : "not-allowed",
+              }}
+            >
+              Save & Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Placeholder for other tabs
   return (
     <div style={{ backgroundColor: tabColor, minHeight: "100vh", padding: "2rem", textAlign: "center" }}>
