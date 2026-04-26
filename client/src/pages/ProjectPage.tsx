@@ -29,6 +29,40 @@ const FONT_CORRECT_ANSWERS = {
   hospital: "anton", // Strong, trustworthy, bold
 };
 
+
+// Grammar & Punctuation Validation Function
+const validateGrammar = (text: string): { isValid: boolean; errors: string[] } => {
+  const errors: string[] = [];
+  
+  if (!text || text.trim().length === 0) {
+    return { isValid: false, errors: ["Text cannot be empty"] };
+  }
+
+  // Split into sentences
+  const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
+  
+  if (sentences.length === 0) {
+    errors.push("Text must end with a period (.), question mark (?), or exclamation mark (!)");
+    return { isValid: false, errors };
+  }
+
+  sentences.forEach((sentence, idx) => {
+    const trimmed = sentence.trim();
+    
+    // Check if sentence starts with capital letter
+    if (trimmed.length > 0 && !/^[A-Z\u05D0-\u05EA]/.test(trimmed)) {
+      errors.push(`Sentence ${idx + 1} must start with a capital letter`);
+    }
+    
+    // Check for standalone lowercase 'i'
+    if (/\bi\b/.test(trimmed)) {
+      errors.push(`Sentence ${idx + 1} has lowercase 'i' - must be 'I'`);
+    }
+  });
+
+  return { isValid: errors.length === 0, errors };
+};
+
 const IMAGES = {
   groupTop: "https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/icon-group-decision-top-bRGmLFS52tVBmxVuPyKH7h.webp",
   groupBottom: "https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/icon-group-decision-bottom-F2rHCYhXzzEByzunwAExR5.webp",
@@ -79,7 +113,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "Adidas",
     nameHe: "אדידס",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/512px-Adidas_Logo.svg.png",
+    logo: "https://www.logo.wine/a/logo/Adidas/Adidas-Logo.wine.svg",
     principle: "Balance/Symmetry",
     principleHe: "איזון/סימטריה",
     explanation: "Three parallel stripes create perfect visual balance and repetition.",
@@ -88,7 +122,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "Olympics",
     nameHe: "אולימפיאדה",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Olympic_rings_with_white_rims.svg/512px-Olympic_rings_with_white_rims.svg.png",
+    logo: "https://www.logo.wine/a/logo/Olympic_Games/Olympic_Games-Logo.wine.svg",
     principle: "Unity/Proximity",
     principleHe: "אחדות/קרבה",
     explanation: "The five rings are close and connected, forming one unified symbol.",
@@ -97,7 +131,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "Beats by Dre",
     nameHe: "Beats by Dre",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Beats_Electronics_logo.svg/512px-Beats_Electronics_logo.svg.png",
+    logo: "https://www.logo.wine/a/logo/Beats_Electronics/Beats_Electronics-Logo.wine.svg",
     principle: "Figure/Ground",
     principleHe: "דמות ורקע",
     explanation: "The 'b' inside the circle is also a person wearing headphones - two images in one.",
@@ -106,7 +140,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "IBM",
     nameHe: "IBM",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/512px-IBM_logo.svg.png",
+    logo: "https://www.logo.wine/a/logo/IBM/IBM-Logo.wine.svg",
     principle: "Closure",
     principleHe: "סגירה",
     explanation: "Our mind closes the gaps between the horizontal lines to read the letters.",
@@ -173,6 +207,12 @@ export default function ProjectPage() {
   const [gestaltRevealed, setGestaltRevealed] = useState<Record<string, boolean>>({});
   const [selectedWords, setSelectedWords] = useState<Record<string, string>>({});
   const [fontPsychologyRevealed, setFontPsychologyRevealed] = useState(false);
+  
+  // Grammar validation states
+  const [tab2GrammarErrors, setTab2GrammarErrors] = useState<string[]>([]);
+  const [tab3GrammarErrors, setTab3GrammarErrors] = useState<string[]>([]);
+  const [tab2GrammarValid, setTab2GrammarValid] = useState(false);
+  const [tab3GrammarValid, setTab3GrammarValid] = useState(false);
 
   const tabColor = COLORS[currentTab];
 
@@ -503,7 +543,7 @@ export default function ProjectPage() {
                           <div key={idx} style={{ backgroundColor: "#FEF3C7", padding: "1.5rem", borderRadius: "0.5rem", border: "2px solid #FBBF24" }}>
                             {/* Logo Display */}
                             <div style={{ marginBottom: "1rem", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "150px" }}>
-                              <img src={logo.logo} alt={logo.name} style={{ height: "150px", maxWidth: "100%", objectFit: "contain" }} />
+                              <img src={logo.logo} alt={`${logo.name} logo`} crossOrigin="anonymous" style={{ height: "150px", maxWidth: "100%", objectFit: "contain" }} onError={(e) => { e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3E' + logo.name + '%3C/text%3E%3C/svg%3E'; }} />
                             </div>
                             <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "1rem", fontSize: "0.95rem", textAlign: "center" }}>
                               {logo.name} ({logo.nameHe})
