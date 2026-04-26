@@ -41,7 +41,7 @@ const IMAGES = {
 const BRAND_LOGOS = [
   { 
     name: "Nike", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Nike_logo.svg/1024px-Nike_logo.svg.png",
+    logo: "https://www.nike.com/assets/c_limit,w_592,f_auto,q_auto/v1/cee915cb-5dd7-46da-9b0f-3992c534d045/nike-just-do-it.png",
     principle: "Continuity",
     principleHe: "המשכיות",
     explanation: "The swoosh creates a continuous curved line that our eye follows.",
@@ -49,7 +49,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Adidas", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_logo.svg/1024px-Adidas_logo.svg.png",
+    logo: "https://www.adidas.com/on/demandware.static/-/Sites-adidas-master-catalog/default/dw8c4c8c8c/images/large/IB5755_00_plp_standard.jpg",
     principle: "Similarity",
     principleHe: "דמיון",
     explanation: "Three parallel stripes create unity through repetition and similarity.",
@@ -57,7 +57,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Apple", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1024px-Apple_logo_black.svg.png",
+    logo: "https://www.apple.com/ac/structured-data/images/open_graph_logo.png",
     principle: "Closure",
     principleHe: "סגירה",
     explanation: "The missing bite is completed by our mind, creating the whole apple.",
@@ -73,7 +73,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Shell", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Shell_logo.svg/1024px-Shell_logo.svg.png",
+    logo: "https://www.shell.com/images/shell-logo.png",
     principle: "Proximity",
     principleHe: "קרבה",
     explanation: "Segments grouped closely together form the shell shape.",
@@ -93,10 +93,10 @@ const COLOR_MEANINGS = [
 
 // Font examples for "Yahav Bank"
 const FONT_EXAMPLES = [
-  { name: "Bold", nameHe: "בולד", style: { fontWeight: "bold", fontSize: "2rem" } },
-  { name: "Cursive", nameHe: "כתב יד", style: { fontStyle: "italic", fontSize: "2rem" } },
-  { name: "Minimalist", nameHe: "מינימליסט", style: { fontWeight: 300, fontSize: "2rem", letterSpacing: "0.1em" } },
-  { name: "Sharp-Edged", nameHe: "חד", style: { fontWeight: 900, fontSize: "2rem", letterSpacing: "-0.05em" } },
+  { name: "Anton (Strong)", nameHe: "אנטון (חזק)", style: { fontFamily: "'Anton', sans-serif", fontSize: "2.5rem", fontWeight: 400, letterSpacing: "0.05em" } },
+  { name: "Fredoka (Fun)", nameHe: "פרדוקה (כיף)", style: { fontFamily: "'Fredoka', sans-serif", fontSize: "2.5rem", fontWeight: 400 } },
+  { name: "Cinzel (Serious)", nameHe: "סינזל (רציני)", style: { fontFamily: "'Cinzel', serif", fontSize: "2.5rem", fontWeight: 400, letterSpacing: "0.1em" } },
+  { name: "Orbitron (Tech)", nameHe: "אורביטרון (טכנולוגי)", style: { fontFamily: "'Orbitron', sans-serif", fontSize: "2.5rem", fontWeight: 400, letterSpacing: "0.15em" } },
 ];
 
 // Word categorization for visual associations
@@ -231,6 +231,13 @@ export default function ProjectPage() {
                         <img src={IMAGES.smilingChild} alt="Smiling Child" style={{ width: "100%", borderRadius: "0.5rem", maxHeight: "200px", objectFit: "cover" }} />
                         <p style={{ color: "#555555", fontSize: "0.875rem", marginTop: "0.5rem" }}>This image feels: Fun, Childish, Friendly (התמונה הזו מרגישה: כיף, ילדותית, ידידותית)</p>
                       </div>
+                    </div>
+                    
+                    <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem" }}>
+                      <p style={{ fontWeight: "bold", color: "#92400E", marginBottom: "0.5rem" }}>Question (שאלה):</p>
+                      <p style={{ color: "#92400E", fontSize: "0.95rem", lineHeight: "1.6" }}>
+                        Which of the fonts below reminds you of sharp thorns with pointed edges? Which one reminds you of smooth flow and a rounded smile like the child's? (איזה מהפונטים למטה מזכיר לכם קוצים חדים? איזה מזכיר לכם זרימה חלקה וחיוך עגול כמו של הילד?)
+                      </p>
                     </div>
                   </div>
 
