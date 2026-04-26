@@ -732,67 +732,47 @@ export default function ProjectPage() {
                   <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
                     Design Exercises (תרגילי עיצוב)
                   </h2>
-                  <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
-                    Choose the best design option for each word. Think about which design communicates the message most effectively. (בחרו את אפשרות העיצוב הטובה ביותר לכל מילה. חשבו איזה עיצוב מעביר את ההודעה בצורה יעילה ביותר.)
-                  </p>
-
-                  {DESIGN_EXERCISES.map((exercise, exIdx) => (
-                    <div key={exIdx} style={{ marginBottom: "2rem", backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
-                      <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-                        {exercise.title}
-                      </h3>
-                      <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "1rem" }}>
-                        {exercise.description} ({exercise.descriptionHe})
-                      </p>
-                      <img src={exercise.image} alt={exercise.title} style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "300px", objectFit: "contain" }} />
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1rem" }}>
-                        {exercise.options.map((option, optIdx) => (
-                          <button
-                            key={optIdx}
-                            onClick={() => handleExerciseAnswer(exIdx, optIdx)}
-                            disabled={isLocked}
-                            style={{
-                              padding: "1rem",
-                              border: exerciseAnswers[exIdx] === optIdx ? "3px solid #333333" : "1px solid #D1D5DB",
-                              borderRadius: "0.375rem",
-                              backgroundColor: exerciseAnswers[exIdx] === optIdx ? "#F0F9FF" : "white",
-                              cursor: isLocked ? "not-allowed" : "pointer",
-                              transition: "all 0.2s",
-                            }}
-                          >
-                            <p style={{ fontSize: "0.875rem", color: "#333333", fontWeight: "bold" }}>
-                              {option.shape}
-                            </p>
-                          </button>
-                        ))}
-                      </div>
-
-                      {exerciseAnswers[exIdx] !== undefined && (
-                        <div style={{
-                          padding: "1rem",
-                          borderRadius: "0.375rem",
-                          backgroundColor: exerciseFeedback[exIdx] ? "#DCFCE7" : "#FEE2E2",
-                          border: `1px solid ${exerciseFeedback[exIdx] ? "#86EFAC" : "#FCA5A5"}`,
-                          display: "flex",
-                          gap: "0.75rem",
-                        }}>
-                          {exerciseFeedback[exIdx] ? (
-                            <CheckCircle size={20} style={{ color: "#16A34A", flexShrink: 0 }} />
-                          ) : (
-                            <XCircle size={20} style={{ color: "#DC2626", flexShrink: 0 }} />
-                          )}
-                          <div>
-                            <p style={{ fontWeight: "bold", color: exerciseFeedback[exIdx] ? "#16A34A" : "#DC2626", marginBottom: "0.25rem" }}>
-                              {exerciseFeedback[exIdx] ? "Correct!" : "Try again"}
-                            </p>
-                            <p style={{ fontSize: "0.875rem", color: "#555555" }}>
-                              {exerciseFeedback[exIdx] ? exercise.feedback : exercise.wrongFeedback}
-                            </p>
-                          </div>
-                        </div>
-                      )}
+                  {/* Bank Logo Exercise */}
+                  <div style={{ marginBottom: "2rem", backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
+                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Exercise 1: Bank Logos (תרגיל 1: לוגו בנקים)</h3>
+                    <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "1rem" }}>Which logo represents a serious bank? Which represents growth? Which represents an unserious bank? (איזה לוגו מייצג בנק רציני? איזה מייצג צמיחה? איזה מייצג בנק שאינו רציני?)</p>
+                    <img src="/manus-storage/image12.jpg" alt="Bank Logos" style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "400px", objectFit: "contain" }} />
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1rem" }}>
+                      {["Serious Bank (בנק רציני)", "Growth Bank (בנק צמיחה)", "Unserious Bank (בנק לא רציני)"].map((label, idx) => (
+                        <button key={idx} onClick={() => updateResponse(`bankExercise_${idx}`, label)} disabled={isLocked} style={{ padding: "1rem", border: responses[`bankExercise_${idx}`] ? "3px solid #333333" : "1px solid #D1D5DB", borderRadius: "0.375rem", backgroundColor: responses[`bankExercise_${idx}`] ? "#F0F9FF" : "white", cursor: isLocked ? "not-allowed" : "pointer", transition: "all 0.2s" }}>
+                          <p style={{ fontSize: "0.875rem", color: "#333333", fontWeight: "bold" }}>{label}</p>
+                        </button>
+                      ))}
                     </div>
-                  ))}
+                    <div style={{ backgroundColor: "#DCFCE7", border: "1px solid #86EFAC", borderRadius: "0.375rem", padding: "1rem" }}>
+                      <p style={{ fontWeight: "bold", color: "#16A34A", marginBottom: "0.25rem" }}>Explanation (הסבר):</p>
+                      <p style={{ fontSize: "0.875rem", color: "#555555" }}>Black represents seriousness and trust. Green represents growth and money. Pink represents playfulness and fun. Each color choice sends a message about the bank's personality. (שחור מייצג רציניות ואמון. ירוק מייצג צמיחה וכסף. ורוד מייצג משחק וכיף. כל בחירת צבע משדרת הודעה על אישיות הבנק.)</p>
+                    </div>
+                  </div>
+
+                  {/* Font Exercise */}
+                  <div style={{ marginBottom: "2rem", backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
+                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Exercise 2: Font Shapes (תרגיל 2: צורות פונט)</h3>
+                    <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "1rem" }}>Which font represents childlike innocence? Which represents seriousness? Which represents a religious organization? (איזה פונט מייצג תמימות ילדותית? איזה מייצג רציניות? איזה מייצג ארגון דתי?)</p>
+                    <img src="/manus-storage/image1.jpg" alt="Font Examples" style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "400px", objectFit: "contain" }} />
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1rem" }}>
+                      {["Childlike (ילדותי)", "Serious (רציני)", "Religious (דתי)"].map((label, idx) => (
+                        <button key={idx} onClick={() => updateResponse(`fontExercise_${idx}`, label)} disabled={isLocked} style={{ padding: "1rem", border: responses[`fontExercise_${idx}`] ? "3px solid #333333" : "1px solid #D1D5DB", borderRadius: "0.375rem", backgroundColor: responses[`fontExercise_${idx}`] ? "#F0F9FF" : "white", cursor: isLocked ? "not-allowed" : "pointer", transition: "all 0.2s" }}>
+                          <p style={{ fontSize: "0.875rem", color: "#333333", fontWeight: "bold" }}>{label}</p>
+                        </button>
+                      ))}
+                    </div>
+                    <div style={{ backgroundColor: "#DCFCE7", border: "1px solid #86EFAC", borderRadius: "0.375rem", padding: "1rem" }}>
+                      <p style={{ fontWeight: "bold", color: "#16A34A", marginBottom: "0.25rem" }}>Explanation (הסבר):</p>
+                      <p style={{ fontSize: "0.875rem", color: "#555555" }}>Round fonts with soft curves feel friendly and childlike. Sharp, angular fonts feel serious and strong. Fonts with specific geometric patterns can feel religious or formal. Every choice of font sends a message about your brand's personality. (פונטים עגולים עם עקומות רכות מרגישים חברותיים וילדותיים. פונטים חדים וזוויתיים מרגישים רציניים וחזקים. פונטים עם דפוסים גיאומטריים ספציפיים יכולים להרגיש דתיים או רשמיים.)</p>
+                    </div>
+                  </div>
+
+                  {/* Summary */}
+                  <div style={{ marginBottom: "2rem", backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1.5rem" }}>
+                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#92400E", marginBottom: "0.75rem" }}>Key Takeaway (עיקרון חשוב)</h3>
+                    <p style={{ fontSize: "0.95rem", color: "#92400E" }}>Every design choice sends a message about your organization. Color, font, and shape are strategic tools for social change. (כל בחירה עיצובית משדרת הודעה על הארגון שלך. צבע, פונט וצורה הם כלים אסטרטגיים לשינוי חברתי.)</p>
+                  </div>
 
                   <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
                     Gestalt Principles (עקרונות גשטלט)
