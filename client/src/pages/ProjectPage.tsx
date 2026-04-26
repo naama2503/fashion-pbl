@@ -46,98 +46,75 @@ const IMAGES = {
   smilingChild: "/manus-storage/smiling-child_3e376a8c.jpg",
 };
 
-// Brand logos for Gestalt Gallery
-const BRAND_LOGOS = [
+// PART A: Learning Phase - Classic Gestalt Examples (Show & Tell)
+const GESTALT_LEARNING_EXAMPLES = [
   { 
-    name: "Nike", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg",
-    principle: "Continuity",
-    principleHe: "המשכיות",
-    explanation: "The swoosh creates a continuous curved line that our eye follows.",
-    explanationHe: "הסווש יוצר קו עקום רציף שהעין שלנו עוקבת אחריו."
-  },
-  { 
-    name: "Adidas", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg",
-    principle: "Similarity",
-    principleHe: "דמיון",
-    explanation: "Three parallel stripes create unity through repetition and similarity.",
-    explanationHe: "שלושה פסים מקבילים יוצרים אחדות דרך חזרה ודמיון."
-  },
-  { 
-    name: "Apple", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
-    principle: "Closure",
-    principleHe: "סגירה",
-    explanation: "The missing bite is completed by our mind, creating the whole apple.",
-    explanationHe: "הנשיכה החסרה משלימה בנו, יוצרת את התפוח השלם."
-  },
-  { 
-    name: "Gucci", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/7/79/1960s_Gucci_Logo.svg",
-    principle: "Balance",
-    principleHe: "איזון",
-    explanation: "Symmetrical interlocking Gs create perfect visual balance and harmony.",
-    explanationHe: "ג'ים משולבים סימטריים יוצרים איזון ויוניטי ויזואליים מושלמים."
-  },
-  { 
-    name: "Shell", 
-    logo: "https://upload.wikimedia.org/wikipedia/en/e/e8/Shell_logo.svg",
-    principle: "Proximity",
-    principleHe: "קרבה",
-    explanation: "Segments grouped closely together form the shell shape.",
-    explanationHe: "קטעים מקובצים קרוב זה לזה יוצרים את צורת הקליפה."
-  },
-];
-
-// Gestalt Practice Exercise logos - Different from explanation section
-const GESTALT_PRACTICE_LOGOS = [
-  {
-    name: "WWF Panda",
+    name: "WWF Panda", 
     nameHe: "פנדה WWF",
     logo: "https://upload.wikimedia.org/wikipedia/en/2/24/WWF_logo.svg",
-    principle: "Closure",
-    principleHe: "סגירה",
+    principle: "Closure (סגירה)",
     explanation: "The missing lines are completed by our mind to create the whole panda.",
     explanationHe: "הקווים החסרים מושלמים על ידי המוח שלנו כדי ליצור את הפנדה השלמה."
   },
-  {
-    name: "FedEx Arrow",
+  { 
+    name: "FedEx Arrow", 
     nameHe: "חץ FedEx",
     logo: "https://upload.wikimedia.org/wikipedia/commons/b/b9/FedEx_Corporation_logo.svg",
-    principle: "Figure/Ground",
-    principleHe: "דמות ורקע",
+    principle: "Figure/Ground (דמות ורקע)",
     explanation: "The white space between 'E' and 'x' creates a hidden arrow.",
     explanationHe: "הרווח הלבן בין האותיות E ל-x יוצר חץ נסתר."
   },
-  {
-    name: "Amazon",
+  { 
+    name: "Amazon", 
     nameHe: "אמזון",
     logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
-    principle: "Continuation",
-    principleHe: "המשכיות",
+    principle: "Continuation (המשכיות)",
     explanation: "The yellow arrow leads our eye from A to Z in a smooth movement.",
     explanationHe: "החץ הצהוב מוליך את העין שלנו מ-A ל-Z בתנועה חלקה."
   },
+];
+
+// PART B: Practice Quiz - New Logos (Students must guess)
+const GESTALT_PRACTICE_QUIZ = [
   {
-    name: "Unilever",
-    nameHe: "יוניליוור",
-    logo: "https://upload.wikimedia.org/wikipedia/en/b/b1/Unilever.svg",
-    principle: "Unity/Proximity",
-    principleHe: "אחדות/קרבה",
-    explanation: "Many small, different icons are placed close together to form one large 'U'.",
-    explanationHe: "סמלים קטנים ושונים רבים ממוקמים קרוב זה לזה כדי ליצור צורה אחת של U גדולה."
-  },
-  {
-    name: "Chanel",
-    nameHe: "שאנל",
-    logo: "https://upload.wikimedia.org/wikipedia/en/9/92/Chanel_logo_interlocking_cs.svg",
+    name: "Adidas",
+    nameHe: "אדידס",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg",
     principle: "Balance/Symmetry",
     principleHe: "איזון/סימטריה",
-    explanation: "Two identical shapes perfectly mirrored create a sense of stability and luxury.",
-    explanationHe: "שתי צורות זהות המשתקפות זו מול זו יוצרות תחושת יציבות ויוקרה."
+    explanation: "Three parallel stripes create perfect visual balance and repetition.",
+    explanationHe: "שלושה פסים מקבילים יוצרים איזון ויחזור מושלמים."
+  },
+  {
+    name: "Olympics",
+    nameHe: "אולימפיאדה",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Olympic_rings_with_white_rims.svg",
+    principle: "Unity/Proximity",
+    principleHe: "אחדות/קרבה",
+    explanation: "The five rings are close and connected, forming one unified symbol.",
+    explanationHe: "חמשת הטבעות קרובות ומחוברות, יוצרות סמל אחד מאוחד."
+  },
+  {
+    name: "Beats by Dre",
+    nameHe: "Beats by Dre",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/Beats_Electronics_logo.svg",
+    principle: "Figure/Ground",
+    principleHe: "דמות ורקע",
+    explanation: "The 'b' inside the circle is also a person wearing headphones - two images in one.",
+    explanationHe: "ה-'b' בתוך העיגול הוא גם אדם עם אוזניות - שתי תמונות באחת."
+  },
+  {
+    name: "IBM",
+    nameHe: "IBM",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg",
+    principle: "Closure",
+    principleHe: "סגירה",
+    explanation: "Our mind closes the gaps between the horizontal lines to read the letters.",
+    explanationHe: "המוח שלנו סוגר את הפערים בין הקווים האופקיים כדי לקרוא את האותיות."
   },
 ];
+
+
 
 // Color meanings
 const COLOR_MEANINGS = [
@@ -467,101 +444,87 @@ export default function ProjectPage() {
 
                 {/* PART C: Gestalt Gallery with Brand Logos */}
                 <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
-                  <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
-                    Part C: Gestalt Gallery (חלק ג: גלריית גשטלט)
-                  </h2>
-                  <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
-                    Famous brands use Gestalt principles. Click "Reveal Principle" to see which principle each uses. (מותגים מפורסמים משתמשים בעקרונות גשטלט. לחצו "גלה עקרון" כדי לראות איזה עקרון כל אחד משתמש.)
-                  </p>
-
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.5rem", marginBottom: "2rem" }}>
-                    {BRAND_LOGOS.map((brand, idx) => (
-                      <div key={idx} style={{ backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
-                        <div style={{ textAlign: "center", marginBottom: "1rem" }}>
-                          <img src={brand.logo} alt={brand.name} style={{ height: "80px", objectFit: "contain" }} />
-                          <p style={{ fontWeight: "bold", color: "#333333", marginTop: "0.5rem" }}>{brand.name}</p>
-                        </div>
-                        
-                        {gestaltRevealed[idx] ? (
-                          <div style={{ backgroundColor: "#E0E7FF", padding: "1rem", borderRadius: "0.375rem" }}>
-                            <p style={{ fontWeight: "bold", color: "#1E40AF", marginBottom: "0.5rem" }}>
-                              {brand.principle} ({brand.principleHe})
-                            </p>
-                            <p style={{ fontSize: "0.875rem", color: "#333333", lineHeight: "1.5" }}>{brand.explanation}</p>
-                            <p style={{ fontSize: "0.75rem", color: "#555555", marginTop: "0.5rem" }}>{brand.explanationHe}</p>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => setGestaltRevealed({ ...gestaltRevealed, [idx]: true })}
-                            disabled={isLocked}
-                            style={{
-                              width: "100%",
-                              backgroundColor: "#D8B4FE",
-                              color: "#333333",
-                              padding: "0.5rem",
-                              borderRadius: "0.375rem",
-                              border: "none",
-                              fontWeight: "bold",
-                              fontSize: "0.875rem",
-                              cursor: isLocked ? "not-allowed" : "pointer",
-                            }}
-                          >
-                            Reveal Principle
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Gestalt Practice Section */}
-                  <div style={{ backgroundColor: "#F3E8FF", border: "2px solid #D8B4FE", borderRadius: "0.5rem", padding: "1.5rem", marginBottom: "2rem" }}>
-                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#6B21A8", marginBottom: "1rem", direction: "rtl", textAlign: "right" }}>
-                      Gestalt Practice (תרגול גשטלט)
-                    </h3>
-                    <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.875rem", direction: "rtl", textAlign: "right" }}>
-                      Identify which Gestalt principle each logo uses. Click "Reveal Principle & Explanation" to check your answer. (זהה איזה עקרון גשטלט כל לוגו משתמש. לחץ על "גלה עקרון והסבר" כדי לבדוק את התשובה שלך.)
+                  {/* PART A: Learning Phase */}
+                  <div style={{ marginBottom: "3rem" }}>
+                    <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                      Part C - Learning: Gestalt Principles (חלק ג - למידה: עקרונות גשטלט)
+                    </h2>
+                    <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
+                      Study these 3 classic examples. The principle and explanation are shown immediately. (למד את 3 הדוגמאות הקלאסיות. העקרון וההסבר מוצגים מיד.)
                     </p>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.5rem" }}>
-                      {GESTALT_PRACTICE_LOGOS.map((logo, idx) => {
-                        const isRevealed = gestaltRevealed[`practice_${idx}`] || false;
-                        return (
-                          <div key={idx} style={{ backgroundColor: "#FFFFFF", padding: "1.5rem", borderRadius: "0.5rem", border: "2px solid #D8B4FE", textAlign: "center" }}>
-                            {/* Logo Display */}
-                            <div style={{ marginBottom: "1rem", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100px" }}>
-                              <img src={logo.logo} alt={logo.name} style={{ maxHeight: "100px", maxWidth: "100%", objectFit: "contain" }} />
-                            </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
+                      {GESTALT_LEARNING_EXAMPLES.map((example, idx) => (
+                        <div key={idx} style={{ backgroundColor: "#F0FDF4", padding: "1.5rem", borderRadius: "0.5rem", border: "2px solid #86EFAC", textAlign: "center" }}>
+                          <div style={{ marginBottom: "1rem", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "150px" }}>
+                            <img src={example.logo} alt={example.name} style={{ height: "150px", maxWidth: "100%", objectFit: "contain" }} />
+                          </div>
+                          <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem", fontSize: "0.95rem" }}>{example.name}</p>
+                          <p style={{ fontWeight: "bold", color: "#16A34A", marginBottom: "0.75rem", fontSize: "0.9rem" }}>
+                            {example.principle}
+                          </p>
+                          <p style={{ color: "#333333", fontSize: "0.85rem", lineHeight: "1.5", marginBottom: "0.5rem" }}>
+                            {example.explanation}
+                          </p>
+                          <p style={{ color: "#555555", fontSize: "0.8rem", lineHeight: "1.5", fontStyle: "italic" }}>
+                            {example.explanationHe}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-                            {/* Reveal Button */}
+                  {/* PART B: Practice Quiz */}
+                  <div>
+                    <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                      Part C - Practice Quiz: Guess the Principle (חלק ג - תרגול: נחש את העקרון)
+                    </h2>
+                    <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
+                      Now it's your turn! These are NEW logos. Try to identify which principle each one uses. Click "Check My Answer" to see if you're right. (עכשיו תורך! אלו לוגוים חדשים. נסה לזהות איזה עקרון כל אחד משתמש. לחץ "בדוק את התשובה שלי" כדי לראות אם צדקת.)
+                    </p>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.5rem" }}>
+                      {GESTALT_PRACTICE_QUIZ.map((logo, idx) => {
+                        const isRevealed = gestaltRevealed[`quiz_${idx}`] || false;
+                        return (
+                          <div key={idx} style={{ backgroundColor: "#FEF3C7", padding: "1.5rem", borderRadius: "0.5rem", border: "2px solid #FBBF24", textAlign: "center" }}>
+                            {/* Logo Display */}
+                            <div style={{ marginBottom: "1rem", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "150px" }}>
+                              <img src={logo.logo} alt={logo.name} style={{ height: "150px", maxWidth: "100%", objectFit: "contain" }} />
+                            </div>
+                            <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "1rem", fontSize: "0.95rem" }}>{logo.name}</p>
+
+                            {/* Check Answer Button */}
                             <button
-                              onClick={() => setGestaltRevealed({ ...gestaltRevealed, [`practice_${idx}`]: !isRevealed })}
+                              onClick={() => setGestaltRevealed({ ...gestaltRevealed, [`quiz_${idx}`]: true })}
+                              disabled={isRevealed}
                               style={{
                                 width: "100%",
-                                backgroundColor: isRevealed ? "#86EFAC" : "#D8B4FE",
+                                backgroundColor: isRevealed ? "#86EFAC" : "#FBBF24",
                                 color: "#333333",
                                 padding: "0.75rem",
                                 fontSize: "0.875rem",
                                 fontWeight: "bold",
                                 border: "none",
                                 borderRadius: "0.375rem",
-                                cursor: "pointer",
+                                cursor: isRevealed ? "default" : "pointer",
                                 marginBottom: "1rem",
                                 transition: "all 0.3s ease"
                               }}
                             >
-                              {isRevealed ? "Hide" : "Reveal Principle & Explanation"}
+                              {isRevealed ? "✓ Revealed" : "Check My Answer"}
                             </button>
 
-                            {/* Revealed Content */}
+                            {/* Answer Box */}
                             {isRevealed && (
-                              <div style={{ backgroundColor: "#FEF3C7", padding: "1rem", borderRadius: "0.375rem", textAlign: "right", direction: "rtl" }}>
-                                <p style={{ fontWeight: "bold", color: "#92400E", marginBottom: "0.5rem", fontSize: "0.875rem" }}>
-                                  {logo.principle} ({logo.principleHe})
+                              <div style={{ backgroundColor: "#DBEAFE", padding: "1rem", borderRadius: "0.375rem", border: "2px solid #3B82F6", textAlign: "left", direction: "rtl" }}>
+                                <p style={{ fontWeight: "bold", color: "#1E40AF", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
+                                  ✓ {logo.principle}
                                 </p>
-                                <p style={{ color: "#78350F", fontSize: "0.8125rem", lineHeight: "1.5" }}>
+                                <p style={{ color: "#1E40AF", fontSize: "0.8rem", lineHeight: "1.5", marginBottom: "0.5rem" }}>
                                   {logo.explanation}
                                 </p>
-                                <p style={{ color: "#78350F", fontSize: "0.8125rem", lineHeight: "1.5", marginTop: "0.5rem" }}>
+                                <p style={{ color: "#1E40AF", fontSize: "0.8rem", lineHeight: "1.5", fontStyle: "italic" }}>
                                   {logo.explanationHe}
                                 </p>
                               </div>
@@ -572,80 +535,12 @@ export default function ProjectPage() {
                     </div>
                   </div>
 
-                  {/* Gestalt Principle Questions */}
-                  <div style={{ backgroundColor: "#F0F9FF", border: "2px solid #93C5FD", borderRadius: "0.5rem", padding: "1.5rem", marginBottom: "2rem" }}>
-                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#1E40AF", marginBottom: "1rem" }}>
-                      Identify the Gestalt Principles (זהה את עקרונות הגשטלט)
-                    </h3>
-                    <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.875rem" }}>
-                      Now that you've learned about Gestalt principles, match each brand logo to its principle. (עכשיו שלמדת על עקרונות גשטלט, התאם כל לוגו לעקרון שלו.)
-                    </p>
-
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.5rem" }}>
-                      {BRAND_LOGOS.map((brand, idx) => (
-                        <div key={idx} style={{ backgroundColor: "#FFFFFF", padding: "1rem", borderRadius: "0.375rem", border: "1px solid #93C5FD" }}>
-                          <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem", gap: "0.75rem" }}>
-                            <img src={brand.logo} alt={brand.name} style={{ height: "50px", objectFit: "contain" }} />
-                            <p style={{ fontWeight: "bold", color: "#333333" }}>{brand.name}</p>
-                          </div>
-                          
-                          <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem", fontSize: "0.875rem" }}>
-                            Which principle? (איזה עקרון?)
-                          </label>
-                          <select
-                            value={tab3Responses[`gestalt_${idx}`] || ""}
-                            onChange={(e) => setTab3Responses({ ...tab3Responses, [`gestalt_${idx}`]: e.target.value })}
-                            style={{
-                              width: "100%",
-                              padding: "0.5rem",
-                              borderRadius: "0.375rem",
-                              border: "1px solid #93C5FD",
-                              fontSize: "0.875rem",
-                              cursor: "pointer",
-                              backgroundColor: "#FFFFFF"
-                            }}
-                          >
-                            <option value="">-- Select an option --</option>
-                            <option value="Continuity">Continuity (המשכיות)</option>
-                            <option value="Similarity">Similarity (דמיון)</option>
-                            <option value="Closure">Closure (סגירה)</option>
-                            <option value="Balance">Balance (איזון)</option>
-                            <option value="Proximity">Proximity (קרבה)</option>
-                          </select>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
                   <button
-                    onClick={() => {
-                      // Verify font answers
-                      const thornAnswer = tab3Responses.thornVsSmile.toLowerCase();
-                      const toyAnswer = tab3Responses.toyStore.toLowerCase();
-                      const gamingAnswer = tab3Responses.gamingSpace.toLowerCase();
-                      const restaurantAnswer = tab3Responses.restaurant.toLowerCase();
-                      const hospitalAnswer = tab3Responses.hospital.toLowerCase();
-
-                      // Check if answers contain correct keywords
-                      const thornCorrect = (thornAnswer.includes("cinzel") || thornAnswer.includes("sharp") || thornAnswer.includes("serious")) &&
-                                         (thornAnswer.includes("fredoka") || thornAnswer.includes("smile") || thornAnswer.includes("fun"));
-                      const toyCorrect = toyAnswer.includes("fredoka") || toyAnswer.includes("fun") || toyAnswer.includes("playful");
-                      const gamingCorrect = gamingAnswer.includes("orbitron") || gamingAnswer.includes("tech") || gamingAnswer.includes("futuristic");
-                      const restaurantCorrect = restaurantAnswer.includes("cinzel") || restaurantAnswer.includes("elegant") || restaurantAnswer.includes("formal");
-                      const hospitalCorrect = hospitalAnswer.includes("anton") || hospitalAnswer.includes("strong") || hospitalAnswer.includes("trust");
-
-                      if (!thornCorrect || !toyCorrect || !gamingCorrect || !restaurantCorrect || !hospitalCorrect) {
-                        toast.error("Some answers are not quite right. Please review the font psychology and try again. (חלק מהתשובות לא נכונות. אנא בדוק שוב.)");
-                        return;
-                      }
-
-                      toast.success("Excellent! All answers are correct! (מעולה! כל התשובות נכונות!)");
-                      handleSaveAndContinue();
-                    }}
+                    onClick={handleSaveAndContinue}
                     disabled={isLocked}
                     style={{
                       width: "100%",
-                      backgroundColor: isLocked ? "#D1D5DB" : "#D8B4FE",
+                      backgroundColor: isLocked ? "#D1D5DB" : "#86EFAC",
                       color: "#333333",
                       padding: "0.75rem",
                       fontSize: "1rem",
@@ -653,6 +548,7 @@ export default function ProjectPage() {
                       border: "none",
                       borderRadius: "0.5rem",
                       cursor: isLocked ? "not-allowed" : "pointer",
+                      marginTop: "2rem"
                     }}
                   >
                     Save & Continue (שמור והמשך)
