@@ -128,12 +128,17 @@ export default function ProjectPage() {
   const [studentNames, setStudentNames] = useState(["Student 1", "Student 2", "Student 3"]);
   
   // Tab 3 specific states
-  const [tab3Responses, setTab3Responses] = useState({
+  const [tab3Responses, setTab3Responses] = useState<Record<string, string>>({
     thornVsSmile: "",
     toyStore: "",
     gamingSpace: "",
     restaurant: "",
     hospital: "",
+    gestalt_0: "",
+    gestalt_1: "",
+    gestalt_2: "",
+    gestalt_3: "",
+    gestalt_4: "",
   });
   
   // Tab 4 specific states
@@ -320,54 +325,90 @@ export default function ProjectPage() {
                         </ul>
                         
                         <div style={{ backgroundColor: "#FFFFFF", padding: "1rem", borderRadius: "0.375rem", marginTop: "1rem" }}>
-                          <p style={{ fontWeight: "bold", color: "#1E40AF", marginBottom: "0.5rem", fontSize: "0.95rem" }}>Answer the questions below:</p>
+                          <p style={{ fontWeight: "bold", color: "#1E40AF", marginBottom: "1rem", fontSize: "0.95rem" }}>Answer the questions below (בחר את התשובה הנכונה):</p>
                           
-                          <div style={{ marginBottom: "1rem" }}>
-                            <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem", fontSize: "0.875rem" }}>
+                          <div style={{ marginBottom: "1.5rem" }}>
+                            <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem", fontSize: "0.875rem" }}>
                               Which font would you use for a toy store? (איזה פונט הייתם משתמשים לחנות צעצועים?)
                             </label>
-                            <textarea
-                              placeholder="Your answer... (התשובה שלך...)"
-                              value={tab3Responses.toyStore}
-                              onChange={(e) => setTab3Responses({ ...tab3Responses, toyStore: e.target.value })}
-                              style={{ width: "100%", padding: "0.5rem", borderRadius: "0.375rem", border: "1px solid #93C5FD", fontSize: "0.875rem", minHeight: "60px" }}
-                            />
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                              {["Anton", "Fredoka", "Cinzel", "Orbitron"].map((font) => (
+                                <label key={font} style={{ display: "flex", alignItems: "center", cursor: "pointer", fontSize: "0.875rem" }}>
+                                  <input
+                                    type="radio"
+                                    name="toyStore"
+                                    value={font}
+                                    checked={tab3Responses.toyStore === font}
+                                    onChange={(e) => setTab3Responses({ ...tab3Responses, toyStore: e.target.value })}
+                                    style={{ marginRight: "0.5rem", cursor: "pointer" }}
+                                  />
+                                  {font}
+                                </label>
+                              ))}
+                            </div>
                           </div>
                           
-                          <div style={{ marginBottom: "1rem" }}>
-                            <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem", fontSize: "0.875rem" }}>
+                          <div style={{ marginBottom: "1.5rem" }}>
+                            <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem", fontSize: "0.875rem" }}>
                               Which font would you use for a gaming space? (איזה פונט הייתם משתמשים למרחב גיימיג?)
                             </label>
-                            <textarea
-                              placeholder="Your answer... (התשובה שלך...)"
-                              value={tab3Responses.gamingSpace}
-                              onChange={(e) => setTab3Responses({ ...tab3Responses, gamingSpace: e.target.value })}
-                              style={{ width: "100%", padding: "0.5rem", borderRadius: "0.375rem", border: "1px solid #93C5FD", fontSize: "0.875rem", minHeight: "60px" }}
-                            />
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                              {["Anton", "Fredoka", "Cinzel", "Orbitron"].map((font) => (
+                                <label key={font} style={{ display: "flex", alignItems: "center", cursor: "pointer", fontSize: "0.875rem" }}>
+                                  <input
+                                    type="radio"
+                                    name="gamingSpace"
+                                    value={font}
+                                    checked={tab3Responses.gamingSpace === font}
+                                    onChange={(e) => setTab3Responses({ ...tab3Responses, gamingSpace: e.target.value })}
+                                    style={{ marginRight: "0.5rem", cursor: "pointer" }}
+                                  />
+                                  {font}
+                                </label>
+                              ))}
+                            </div>
                           </div>
                           
-                          <div style={{ marginBottom: "1rem" }}>
-                            <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem", fontSize: "0.875rem" }}>
+                          <div style={{ marginBottom: "1.5rem" }}>
+                            <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem", fontSize: "0.875rem" }}>
                               Which font would you use for a restaurant? (איזה פונט הייתם משתמשים למסעדה?)
                             </label>
-                            <textarea
-                              placeholder="Your answer... (התשובה שלך...)"
-                              value={tab3Responses.restaurant}
-                              onChange={(e) => setTab3Responses({ ...tab3Responses, restaurant: e.target.value })}
-                              style={{ width: "100%", padding: "0.5rem", borderRadius: "0.375rem", border: "1px solid #93C5FD", fontSize: "0.875rem", minHeight: "60px" }}
-                            />
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                              {["Anton", "Fredoka", "Cinzel", "Orbitron"].map((font) => (
+                                <label key={font} style={{ display: "flex", alignItems: "center", cursor: "pointer", fontSize: "0.875rem" }}>
+                                  <input
+                                    type="radio"
+                                    name="restaurant"
+                                    value={font}
+                                    checked={tab3Responses.restaurant === font}
+                                    onChange={(e) => setTab3Responses({ ...tab3Responses, restaurant: e.target.value })}
+                                    style={{ marginRight: "0.5rem", cursor: "pointer" }}
+                                  />
+                                  {font}
+                                </label>
+                              ))}
+                            </div>
                           </div>
                           
                           <div>
-                            <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem", fontSize: "0.875rem" }}>
+                            <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem", fontSize: "0.875rem" }}>
                               Which font would you use for a hospital? (איזה פונט הייתם משתמשים לבית חולים?)
                             </label>
-                            <textarea
-                              placeholder="Your answer... (התשובה שלך...)"
-                              value={tab3Responses.hospital}
-                              onChange={(e) => setTab3Responses({ ...tab3Responses, hospital: e.target.value })}
-                              style={{ width: "100%", padding: "0.5rem", borderRadius: "0.375rem", border: "1px solid #93C5FD", fontSize: "0.875rem", minHeight: "60px" }}
-                            />
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                              {["Anton", "Fredoka", "Cinzel", "Orbitron"].map((font) => (
+                                <label key={font} style={{ display: "flex", alignItems: "center", cursor: "pointer", fontSize: "0.875rem" }}>
+                                  <input
+                                    type="radio"
+                                    name="hospital"
+                                    value={font}
+                                    checked={tab3Responses.hospital === font}
+                                    onChange={(e) => setTab3Responses({ ...tab3Responses, hospital: e.target.value })}
+                                    style={{ marginRight: "0.5rem", cursor: "pointer" }}
+                                  />
+                                  {font}
+                                </label>
+                              ))}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -421,6 +462,51 @@ export default function ProjectPage() {
                         )}
                       </div>
                     ))}
+                  </div>
+
+                  {/* Gestalt Principle Questions */}
+                  <div style={{ backgroundColor: "#F0F9FF", border: "2px solid #93C5FD", borderRadius: "0.5rem", padding: "1.5rem", marginBottom: "2rem" }}>
+                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#1E40AF", marginBottom: "1rem" }}>
+                      Identify the Gestalt Principles (זהה את עקרונות הגשטלט)
+                    </h3>
+                    <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.875rem" }}>
+                      Now that you've learned about Gestalt principles, match each brand logo to its principle. (עכשיו שלמדת על עקרונות גשטלט, התאם כל לוגו לעקרון שלו.)
+                    </p>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.5rem" }}>
+                      {BRAND_LOGOS.map((brand, idx) => (
+                        <div key={idx} style={{ backgroundColor: "#FFFFFF", padding: "1rem", borderRadius: "0.375rem", border: "1px solid #93C5FD" }}>
+                          <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem", gap: "0.75rem" }}>
+                            <img src={brand.logo} alt={brand.name} style={{ height: "50px", objectFit: "contain" }} />
+                            <p style={{ fontWeight: "bold", color: "#333333" }}>{brand.name}</p>
+                          </div>
+                          
+                          <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem", fontSize: "0.875rem" }}>
+                            Which principle? (איזה עקרון?)
+                          </label>
+                          <select
+                            value={tab3Responses[`gestalt_${idx}`] || ""}
+                            onChange={(e) => setTab3Responses({ ...tab3Responses, [`gestalt_${idx}`]: e.target.value })}
+                            style={{
+                              width: "100%",
+                              padding: "0.5rem",
+                              borderRadius: "0.375rem",
+                              border: "1px solid #93C5FD",
+                              fontSize: "0.875rem",
+                              cursor: "pointer",
+                              backgroundColor: "#FFFFFF"
+                            }}
+                          >
+                            <option value="">-- Select an option --</option>
+                            <option value="Continuity">Continuity (המשכיות)</option>
+                            <option value="Similarity">Similarity (דמיון)</option>
+                            <option value="Closure">Closure (סגירה)</option>
+                            <option value="Balance">Balance (איזון)</option>
+                            <option value="Proximity">Proximity (קרבה)</option>
+                          </select>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   <button
