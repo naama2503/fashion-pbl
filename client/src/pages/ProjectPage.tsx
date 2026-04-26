@@ -205,9 +205,17 @@ export default function ProjectPage() {
                 <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
                   Design Inquiry (חוקי עיצוב)
                 </h1>
-                <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
+                <p style={{ color: "#555555", marginBottom: "1rem" }}>
                   Learn how colors, fonts, and design principles communicate messages. (למדו כיצד צבעים, פונטים ועקרונות עיצוב מעבירים הודעות.)
                 </p>
+                <div style={{ backgroundColor: "#F0F9FF", border: "2px solid #93C5FD", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", fontSize: "0.9rem", color: "#1E40AF", lineHeight: "1.6" }}>
+                  <p style={{ marginBottom: "0.5rem" }}>
+                    <strong>What is Gestalt?</strong> Gestalt principles explain how our brain naturally organizes visual elements into groups or a whole, instead of seeing them as separate parts.
+                  </p>
+                  <p style={{ fontStyle: "italic", fontSize: "0.85rem", direction: "rtl", textAlign: "right" }}>
+                    עקרונות הגשטלט מסבירים כיצד המוח שלנו מארגן באופן טבעי אלמנטים חזותיים לקבוצות או ליחידה אחת שלמה, במקום לראות אותם כחלקים נפרדים.
+                  </p>
+                </div>
 
                 {isLocked && (
                   <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
@@ -535,24 +543,38 @@ export default function ProjectPage() {
                     </div>
                   </div>
 
-                  <button
-                    onClick={handleSaveAndContinue}
-                    disabled={isLocked}
-                    style={{
-                      width: "100%",
-                      backgroundColor: isLocked ? "#D1D5DB" : "#86EFAC",
-                      color: "#333333",
-                      padding: "0.75rem",
-                      fontSize: "1rem",
-                      fontWeight: "bold",
-                      border: "none",
-                      borderRadius: "0.5rem",
-                      cursor: isLocked ? "not-allowed" : "pointer",
-                      marginTop: "2rem"
-                    }}
-                  >
-                    Save & Continue (שמור והמשך)
-                  </button>
+                  {(() => {
+                    const allQuizAnswered = GESTALT_PRACTICE_QUIZ.every((_, idx) => tab3Responses[`gestalt_quiz_${idx}`]);
+                    const allQuizCorrect = GESTALT_PRACTICE_QUIZ.every((logo, idx) => tab3Responses[`gestalt_quiz_${idx}`] === logo.principle);
+                    const canContinue = !isLocked && allQuizAnswered && allQuizCorrect;
+                    return (
+                      <>
+                        {!allQuizCorrect && allQuizAnswered && (
+                          <div style={{ backgroundColor: "#FEE2E2", border: "2px solid #EF4444", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem", color: "#991B1B", fontSize: "0.9rem" }}>
+                            ⚠️ Not all answers are correct. Please review and try again! (לא כל התשובות נכונות. אנא בדוק שוב!)
+                          </div>
+                        )}
+                        <button
+                          onClick={handleSaveAndContinue}
+                          disabled={!canContinue}
+                          style={{
+                            width: "100%",
+                            backgroundColor: !canContinue ? "#D1D5DB" : "#86EFAC",
+                            color: "#333333",
+                            padding: "0.75rem",
+                            fontSize: "1rem",
+                            fontWeight: "bold",
+                            border: "none",
+                            borderRadius: "0.5rem",
+                            cursor: !canContinue ? "not-allowed" : "pointer",
+                            marginTop: "2rem"
+                          }}
+                        >
+                          {!allQuizAnswered ? "Answer all 4 questions to continue (ענה על כל 4 השאלות כדי להמשיך)" : !allQuizCorrect ? "Fix incorrect answers (תקן תשובות שגויות)" : "Save & Continue (שמור והמשך)"}
+                        </button>
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
 
