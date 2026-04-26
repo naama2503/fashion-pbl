@@ -707,8 +707,13 @@ export default function ProjectPage() {
     );
   }
 
-  // Tab 3: Design Inquiry (Color Meanings + Gestalt + Exercises)
+  // Tab 3: Design Inquiry - 3 Parts (Color, Font/Shape, Gestalt)
   if (currentTab === 3) {
+    const [colorAnswers, setColorAnswers] = useState<Record<number, string>>({});
+    const [showColorMeanings, setShowColorMeanings] = useState(false);
+    const [fontShapeAnswers, setFontShapeAnswers] = useState<{strong?: string; kind?: string}>({});
+    const [showFontMeanings, setShowFontMeanings] = useState(false);
+
     return (
       <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
         <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
@@ -721,144 +726,178 @@ export default function ProjectPage() {
                   Design Inquiry (חוקי עיצוב)
                 </h1>
                 <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
-                  Learn about color meanings and design principles to create powerful messages. (למדו על משמעויות צבע ועקרונות עיצוב כדי ליצור הודעות חזקות.)
+                  Learn how colors, fonts, and design principles communicate messages. (למדו כיצד צבעים, פונטים ועקרונות עיצוב מעבירים הודעות.)
                 </p>
 
                 {isLocked && (
                   <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
                     <Lock size={24} style={{ color: "#D97706" }} />
-                    <p style={{ fontWeight: "bold", color: "#92400E" }}>This tab is locked. Get teacher approval for Tab 3 first!</p>
+                    <p style={{ fontWeight: "bold", color: "#92400E" }}>This tab is locked. Get teacher approval for Tab 2 first! (הטאב הזה נעול. קבל אישור מורה עבור טאב 2 תחילה!)</p>
                   </div>
                 )}
 
-                <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
-                  <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>
-                    Color Meaning Chart (תרשים משמעויות צבע)
+                {/* PART A: Color Exercise */}
+                <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
+                  <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                    Part A: Color Psychology (חלק א: פסיכולוגיה של צבע)
                   </h2>
                   <p style={{ color: "#555555", marginBottom: "1rem", fontSize: "0.95rem" }}>
-                    Different colors communicate different emotions and meanings. Choose colors that match your message for social change. (צבעים שונים מעבירים רגשות ומשמעויות שונות. בחרו צבעים שתואמים את ההודעה שלכם לשינוי חברתי.)
+                    What does each color make you feel? Type your feelings for each color. (איזה רגש מעלה אצלכם כל צבע? כתבו את הרגשות שלכם לכל צבע.)
                   </p>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem", marginBottom: "2rem" }}>
-                    {COLOR_MEANINGS.map((item, idx) => (
-                      <div key={idx} style={{ padding: "1.5rem", borderRadius: "0.5rem", backgroundColor: item.color, opacity: 0.9, textAlign: "center", border: "2px solid #333333" }}>
-                        <h3 style={{ fontSize: "1.125rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-                          {item.name} ({item.nameHe})
-                        </h3>
-                        <p style={{ fontSize: "1rem", color: "#333333", fontWeight: "bold" }}>
-                          {item.meaning}
-                        </p>
-                        <p style={{ fontSize: "0.875rem", color: "#333333" }}>
-                          ({item.meaningHe})
-                        </p>
+                  
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1.5rem" }}>
+                    {[
+                      { name: "Yellow", nameHe: "צהוב", color: "#FDE68A" },
+                      { name: "Orange", nameHe: "כתום", color: "#FDBA74" },
+                      { name: "Red", nameHe: "אדום", color: "#FCA5A5" },
+                      { name: "Purple", nameHe: "סגול", color: "#D8B4FE" },
+                      { name: "Blue", nameHe: "כחול", color: "#93C5FD" },
+                      { name: "Green", nameHe: "ירוק", color: "#86EFAC" }
+                    ].map((color, idx) => (
+                      <div key={idx} style={{ padding: "1rem", backgroundColor: color.color, borderRadius: "0.5rem", border: "2px solid #333333", textAlign: "center" }}>
+                        <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>{color.name} ({color.nameHe})</p>
+                        <input
+                          type="text"
+                          placeholder="Your feeling..."
+                          value={colorAnswers[idx] || ""}
+                          onChange={(e) => setColorAnswers({...colorAnswers, [idx]: e.target.value})}
+                          disabled={isLocked}
+                          style={{ width: "100%", padding: "0.5rem", borderRadius: "0.25rem", border: "1px solid #333333", fontSize: "0.875rem" }}
+                        />
                       </div>
                     ))}
                   </div>
 
+                  <button
+                    onClick={() => setShowColorMeanings(true)}
+                    disabled={isLocked}
+                    style={{ backgroundColor: "#D8B4FE", color: "#333333", padding: "0.75rem 1.5rem", borderRadius: "0.5rem", border: "none", fontWeight: "bold", cursor: "pointer", marginBottom: "1rem" }}
+                  >
+                    Submit & Reveal Professional Meanings (שלח וגלה משמעויות מקצועיות)
+                  </button>
+
+                  {showColorMeanings && (
+                    <div style={{ backgroundColor: "#F0F9FF", border: "2px solid #93C5FD", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem" }}>
+                      <p style={{ fontWeight: "bold", color: "#1E40AF", marginBottom: "0.5rem" }}>Professional Color Meanings (משמעויות צבע מקצועיות):</p>
+                      <ul style={{ fontSize: "0.875rem", color: "#333333", marginLeft: "1.5rem" }}>
+                        <li><strong>Yellow:</strong> Optimistic, hopeful (אופטימי, מלא תקווה)</li>
+                        <li><strong>Orange:</strong> Friendly, approachable (חברותי, נגיש)</li>
+                        <li><strong>Red:</strong> Excitement, urgency (התרגשות, דחיפות)</li>
+                        <li><strong>Purple:</strong> Creative, imaginative (יצירתי, דמיוני)</li>
+                        <li><strong>Blue:</strong> Trust, calm (אמון, שקט)</li>
+                        <li><strong>Green:</strong> Growth, peace (צמיחה, שלום)</li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                {/* PART B: Font & Shape Exercise */}
+                <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
                   <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
-                    Design Exercises (תרגילי עיצוב)
+                    Part B: Font & Shape Psychology (חלק ב: פסיכולוגיה של פונט וצורה)
                   </h2>
-                  {/* Bank Logo Exercise */}
-                  <div style={{ marginBottom: "2rem", backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
-                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Exercise 1: Bank Logos (תרגיל 1: לוגו בנקים)</h3>
-                    <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "1rem" }}>Which logo represents a serious bank? Which represents growth? Which represents an unserious bank? (איזה לוגו מייצג בנק רציני? איזה מייצג צמיחה? איזה מייצג בנק שאינו רציני?)</p>
-                    <img src="/manus-storage/image11_ef7a8c4a.png" alt="Bank Logos" style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "400px", objectFit: "contain" }} />
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1rem" }}>
-                      {["Serious Bank (בנק רציני)", "Growth Bank (בנק צמיחה)", "Unserious Bank (בנק לא רציני)"].map((label, idx) => (
-                        <button key={idx} onClick={() => updateResponse(`bankExercise_${idx}`, label)} disabled={isLocked} style={{ padding: "1rem", border: responses[`bankExercise_${idx}`] ? "3px solid #333333" : "1px solid #D1D5DB", borderRadius: "0.375rem", backgroundColor: responses[`bankExercise_${idx}`] ? "#F0F9FF" : "white", cursor: isLocked ? "not-allowed" : "pointer", transition: "all 0.2s" }}>
-                          <p style={{ fontSize: "0.875rem", color: "#333333", fontWeight: "bold" }}>{label}</p>
+                  <p style={{ color: "#555555", marginBottom: "1rem", fontSize: "0.95rem" }}>
+                    Fonts have shapes. Rounded fonts feel soft. Angular fonts feel strong. Which feels "Strong" and which feels "Kind"? (לפונטים יש צורות. פונטים עגולים מרגישים רכים. פונטים זוויתיים מרגישים חזקים. איזה מרגיש "חזק" ואיזה מרגיש "טוב לב"?)
+                  </p>
+                  
+                  <img src="/manus-storage/image2_91aa3bdf.png" alt="Font Examples" style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.5rem", maxHeight: "300px", objectFit: "contain" }} />
+                  
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem", marginBottom: "1.5rem" }}>
+                    <div>
+                      <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Which feels "Strong"? (איזה מרגיש "חזק"?)</p>
+                      {["Font A", "Font B", "Font C"].map((font, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setFontShapeAnswers({...fontShapeAnswers, strong: font})}
+                          disabled={isLocked}
+                          style={{ display: "block", width: "100%", padding: "0.75rem", marginBottom: "0.5rem", backgroundColor: fontShapeAnswers.strong === font ? "#FCA5A5" : "white", border: "1px solid #D1D5DB", borderRadius: "0.375rem", cursor: "pointer", fontWeight: fontShapeAnswers.strong === font ? "bold" : "normal" }}
+                        >
+                          {font}
                         </button>
                       ))}
                     </div>
-                    <div style={{ backgroundColor: "#DCFCE7", border: "1px solid #86EFAC", borderRadius: "0.375rem", padding: "1rem" }}>
-                      <p style={{ fontWeight: "bold", color: "#16A34A", marginBottom: "0.25rem" }}>Explanation (הסבר):</p>
-                      <p style={{ fontSize: "0.875rem", color: "#555555" }}>Black represents seriousness and trust. Green represents growth and money. Pink represents playfulness and fun. Each color choice sends a message about the bank's personality. (שחור מייצג רציניות ואמון. ירוק מייצג צמיחה וכסף. ורוד מייצג משחק וכיף. כל בחירת צבע משדרת הודעה על אישיות הבנק.)</p>
-                    </div>
-                  </div>
-
-                  {/* Font Exercise */}
-                  <div style={{ marginBottom: "2rem", backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
-                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Exercise 2: Font Shapes (תרגיל 2: צורות פונט)</h3>
-                    <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "1rem" }}>Which font represents childlike innocence? Which represents seriousness? Which represents a religious organization? (איזה פונט מייצג תמימות ילדותית? איזה מייצג רציניות? איזה מייצג ארגון דתי?)</p>
-                    <img src="/manus-storage/image2_91aa3bdf.png" alt="Font Examples" style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "400px", objectFit: "contain" }} />
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1rem" }}>
-                      {["Childlike (ילדותי)", "Serious (רציני)", "Religious (דתי)"].map((label, idx) => (
-                        <button key={idx} onClick={() => updateResponse(`fontExercise_${idx}`, label)} disabled={isLocked} style={{ padding: "1rem", border: responses[`fontExercise_${idx}`] ? "3px solid #333333" : "1px solid #D1D5DB", borderRadius: "0.375rem", backgroundColor: responses[`fontExercise_${idx}`] ? "#F0F9FF" : "white", cursor: isLocked ? "not-allowed" : "pointer", transition: "all 0.2s" }}>
-                          <p style={{ fontSize: "0.875rem", color: "#333333", fontWeight: "bold" }}>{label}</p>
+                    <div>
+                      <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Which feels "Kind"? (איזה מרגיש "טוב לב"?)</p>
+                      {["Font A", "Font B", "Font C"].map((font, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setFontShapeAnswers({...fontShapeAnswers, kind: font})}
+                          disabled={isLocked}
+                          style={{ display: "block", width: "100%", padding: "0.75rem", marginBottom: "0.5rem", backgroundColor: fontShapeAnswers.kind === font ? "#86EFAC" : "white", border: "1px solid #D1D5DB", borderRadius: "0.375rem", cursor: "pointer", fontWeight: fontShapeAnswers.kind === font ? "bold" : "normal" }}
+                        >
+                          {font}
                         </button>
                       ))}
                     </div>
-                    <div style={{ backgroundColor: "#DCFCE7", border: "1px solid #86EFAC", borderRadius: "0.375rem", padding: "1rem" }}>
-                      <p style={{ fontWeight: "bold", color: "#16A34A", marginBottom: "0.25rem" }}>Explanation (הסבר):</p>
-                      <p style={{ fontSize: "0.875rem", color: "#555555" }}>Round fonts with soft curves feel friendly and childlike. Sharp, angular fonts feel serious and strong. Fonts with specific geometric patterns can feel religious or formal. Every choice of font sends a message about your brand's personality. (פונטים עגולים עם עקומות רכות מרגישים חברותיים וילדותיים. פונטים חדים וזוויתיים מרגישים רציניים וחזקים. פונטים עם דפוסים גיאומטריים ספציפיים יכולים להרגיש דתיים או רשמיים.)</p>
+                  </div>
+
+                  <button
+                    onClick={() => setShowFontMeanings(true)}
+                    disabled={isLocked}
+                    style={{ backgroundColor: "#D8B4FE", color: "#333333", padding: "0.75rem 1.5rem", borderRadius: "0.5rem", border: "none", fontWeight: "bold", cursor: "pointer", marginBottom: "1rem" }}
+                  >
+                    Submit & Reveal Meanings (שלח וגלה משמעויות)
+                  </button>
+
+                  {showFontMeanings && (
+                    <div style={{ backgroundColor: "#F0F9FF", border: "2px solid #93C5FD", borderRadius: "0.5rem", padding: "1rem" }}>
+                      <p style={{ fontWeight: "bold", color: "#1E40AF", marginBottom: "0.5rem" }}>Psychological Meanings (משמעויות פסיכולוגיות):</p>
+                      <ul style={{ fontSize: "0.875rem", color: "#333333", marginLeft: "1.5rem" }}>
+                        <li><strong>Rounded Fonts:</strong> Feel soft, friendly, approachable (מרגישים רכים, ידידותיים, נגישים)</li>
+                        <li><strong>Angular Fonts:</strong> Feel strong, serious, powerful (מרגישים חזקים, רציניים, חזקים)</li>
+                        <li><strong>Traditional Fonts:</strong> Feel elegant, trustworthy, established (מרגישים אלגנטיים, אמינים, מבוססים)</li>
+                      </ul>
                     </div>
-                  </div>
+                  )}
+                </div>
 
-                  {/* Summary */}
-                  <div style={{ marginBottom: "2rem", backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1.5rem" }}>
-                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#92400E", marginBottom: "0.75rem" }}>Key Takeaway (עיקרון חשוב)</h3>
-                    <p style={{ fontSize: "0.95rem", color: "#92400E" }}>Every design choice sends a message about your organization. Color, font, and shape are strategic tools for social change. (כל בחירה עיצובית משדרת הודעה על הארגון שלך. צבע, פונט וצורה הם כלים אסטרטגיים לשינוי חברתי.)</p>
-                  </div>
-
+                {/* PART C: Gestalt Principles */}
+                <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
                   <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
-                    Gestalt Principles (עקרונות גשטלט)
+                    Part C: Gestalt Principles (חלק ג: עקרונות גשטלט)
                   </h2>
-                  <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
-                    Gestalt principles describe how our eyes and brain perceive visual elements. Use these principles to create a strong logo that communicates your message clearly. (עקרונות גשטלט מתארים כיצד עיננו והמוח שלנו תופסים אלמנטים ויזואליים. השתמשו בעקרונות אלה כדי ליצור לוגו חזק שמעביר את ההודעה שלכם בבירור.)
+                  <p style={{ color: "#555555", marginBottom: "1rem", fontSize: "0.95rem" }}>
+                    Gestalt principles describe how we perceive visual elements as unified wholes. (עקרונות גשטלט מתארים כיצד אנו תופסים אלמנטים ויזואליים כשלמים מאוחדים.)
                   </p>
 
-                  <div style={{ marginBottom: "2rem", backgroundColor: "#F3F4F6", padding: "1rem", borderRadius: "0.375rem", borderLeft: "4px solid #333333" }}>
-                    <h4 style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Gestalt Principles Reference (עקרונות גשטלט):</h4>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem" }}>
-                      {GESTALT_PRINCIPLES.map((principle, idx) => (
-                        <div key={idx} style={{ fontSize: "0.875rem" }}>
-                          <p style={{ fontWeight: "bold", color: "#333333" }}>{principle.name} ({principle.nameHe})</p>
-                          <p style={{ color: "#555555" }}>{principle.desc}</p>
-                        </div>
-                      ))}
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.5rem", marginBottom: "2rem" }}>
+                    <div style={{ backgroundColor: "#F9FAFB", padding: "1rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
+                      <h3 style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Proximity (קרבה)</h3>
+                      <p style={{ fontSize: "0.875rem", color: "#555555" }}>Elements close together are perceived as a group. (אלמנטים קרובים זה לזה נתפסים כקבוצה.)</p>
+                    </div>
+                    <div style={{ backgroundColor: "#F9FAFB", padding: "1rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
+                      <h3 style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Similarity (דמיון)</h3>
+                      <p style={{ fontSize: "0.875rem", color: "#555555" }}>Elements that look similar are perceived as related. (אלמנטים שנראים דומים נתפסים כקשורים.)</p>
+                    </div>
+                    <div style={{ backgroundColor: "#F9FAFB", padding: "1rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
+                      <h3 style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Continuity (המשכיות)</h3>
+                      <p style={{ fontSize: "0.875rem", color: "#555555" }}>Our eyes follow lines and curves. (העיניים שלנו עוקבות אחרי קווים ועקומות.)</p>
+                    </div>
+                    <div style={{ backgroundColor: "#F9FAFB", padding: "1rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
+                      <h3 style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Closure (סגירה)</h3>
+                      <p style={{ fontSize: "0.875rem", color: "#555555" }}>We complete incomplete shapes mentally. (אנו משלימים צורות לא שלמות בנפשנו.)</p>
                     </div>
                   </div>
 
-                  <div style={{ marginBottom: "2rem" }}>
-                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
-                      Gestalt Logo Examples - Which principles are used? (דוגמאות לוגו בגשטלט - אילו עקרונות בשימוש?)
-                    </h3>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
-                      {GESTALT_LOGOS.map((logo, idx) => (
-                        <div key={idx} style={{ backgroundColor: "#F9FAFB", padding: "1rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
-                          <img src={logo.url} alt={logo.principle} style={{ width: "100%", height: "200px", objectFit: "contain", marginBottom: "1rem" }} />
-                          <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "0.75rem" }}>
-                            <strong>Example {idx + 1}:</strong> Which principle is used here?
-                          </p>
-                          <p style={{ fontSize: "0.875rem", color: "#555555" }}>
-                            <em>Answer will appear after you select</em>
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-
-
-                  <div style={{ marginBottom: "2rem" }}>
-                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      Which colors will you use for your fashion item? (אילו צבעים תשתמשו?)
-                    </label>
-                    <textarea
-                      value={responses.selectedColors || ""}
-                      onChange={(e) => updateResponse("selectedColors", e.target.value)}
-                      disabled={isLocked}
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        border: "1px solid #D1D5DB",
-                        borderRadius: "0.375rem",
-                        fontFamily: "'Alef', 'Assistant', sans-serif",
-                        minHeight: "80px",
-                        resize: "vertical",
-                      }}
-                      placeholder="Describe your color choices and why..."
-                    />
-                  </div>
+                  <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                    Which Gestalt principles will you use in your logo? (אילו עקרונות גשטלט תשתמשו בלוגו שלכם?)
+                  </label>
+                  <textarea
+                    value={responses.gestaltPrinciples || ""}
+                    onChange={(e) => updateResponse("gestaltPrinciples", e.target.value)}
+                    disabled={isLocked}
+                    style={{
+                      width: "100%",
+                      padding: "0.75rem",
+                      border: "1px solid #D1D5DB",
+                      borderRadius: "0.375rem",
+                      fontFamily: "'Alef', 'Assistant', sans-serif",
+                      minHeight: "80px",
+                      resize: "vertical",
+                      marginBottom: "1rem"
+                    }}
+                    placeholder="Describe which principles you'll use..."
+                  />
 
                   <button
                     onClick={handleSaveAndContinue}
@@ -875,7 +914,7 @@ export default function ProjectPage() {
                       cursor: isLocked ? "not-allowed" : "pointer",
                     }}
                   >
-                    Save & Continue
+                    Save & Continue (שמור והמשך)
                   </button>
                 </div>
               </div>
