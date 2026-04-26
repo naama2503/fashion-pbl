@@ -881,7 +881,7 @@ export default function ProjectPage() {
                       cursor: isLocked ? "not-allowed" : "pointer",
                     }}
                   >
-                    Save & Continue
+                    Save & Continue / שמור והמשך
                   </button>
                 </div>
               </div>
@@ -999,7 +999,7 @@ export default function ProjectPage() {
                       cursor: isLocked || !meetsMinimum || !gemVisited ? "not-allowed" : "pointer",
                     }}
                   >
-                    Save & Continue
+                    Save & Continue / שמור והמשך
                   </button>
                 </div>
               </div>
@@ -1066,15 +1066,15 @@ export default function ProjectPage() {
               Creating a Logo (יצירת לוגו)
             </h1>
             <p style={{ color: "#555555", marginBottom: "2rem" }}>
-              Design a logo for your population using Canva. Follow the steps below.
+              Design a logo for your population using Canva. Follow the steps below. (עצבו לוגו עבור אוכלוסיה שלכם בעזרת Canva. עקבו את השלבים בהמשך.)
             </p>
             
             <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1.5rem" }}>📋 Logo Design Steps</h2>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1.5rem" }}>📋 Logo Design Steps / שלבי עיצוב לוגו</h2>
               
               <div style={{ marginBottom: "2rem", backgroundColor: "#F0FDF4", padding: "1.5rem", borderRadius: "0.375rem", borderLeft: "4px solid #22C55E" }}>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Step 1: Brainstorm Symbols</h3>
-                <p style={{ color: "#555555", marginBottom: "1rem" }}>Think of 3 symbols that represent your population and their needs. These symbols should be simple, recognizable, and meaningful.</p>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Step 1: Brainstorm Symbols / שלב 1: חישוב סמלים</h3>
+                <p style={{ color: "#555555", marginBottom: "1rem" }}>Think of 3 symbols that represent your population and their needs. These symbols should be simple, recognizable, and meaningful. (חשבו על 3 סמלים שמייצגים את אוכלוסיה ואת הצרכים שלהם. הסמלים צריכים להיות פשוטים, דרישים ומטעמים.)</p>
                 <textarea
                   value={(responses as any).symbolIdeas || ""}
                   onChange={(e) => updateResponse("symbolIdeas", e.target.value)}
@@ -1087,25 +1087,25 @@ export default function ProjectPage() {
                     minHeight: "100px",
                     fontSize: "0.95rem",
                   }}
-                  placeholder="Example: A heart (compassion), a book (education), a hand (support)"
+                  placeholder="Example: A heart (compassion), a book (education), a hand (support) / דוגמה: לב (חמלה), ספר (חינוך), יד (עזרה)"
                 />
               </div>
               
               <div style={{ marginBottom: "2rem", backgroundColor: "#F0FDF4", padding: "1.5rem", borderRadius: "0.375rem", borderLeft: "4px solid #22C55E" }}>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Step 2: Design in Canva</h3>
-                <p style={{ color: "#555555", marginBottom: "1rem" }}><strong>Instructions:</strong></p>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Step 2: Design in Canva / שלב 2: עיצוב ב-Canva</h3>
+                <p style={{ color: "#555555", marginBottom: "1rem" }}><strong>Instructions / הוראות:</strong></p>
                 <ul style={{ color: "#555555", marginBottom: "1rem", marginLeft: "1.5rem", listStyleType: "disc" }}>
-                  <li>Go to <a href="https://www.canva.com" target="_blank" rel="noopener noreferrer" style={{ color: "#2563EB", textDecoration: "underline" }}>Canva.com</a> and create a new design</li>
-                  <li>Use BLACK text/shapes only (no colors)</li>
-                  <li>Replace ONE letter in your population name with a silhouette element (symbol)</li>
-                  <li>Keep it simple and professional</li>
-                  <li>Example: "CH**ILDREN**" where the "I" is replaced with a child silhouette</li>
+                  <li>Go to <a href="https://www.canva.com" target="_blank" rel="noopener noreferrer" style={{ color: "#2563EB", textDecoration: "underline" }}>Canva.com</a> and create a new design / לך ל-Canva.com וצור עיצוב חדש</li>
+                  <li>Use BLACK text/shapes only (no colors) / השתמש בטקסט וצורות שחורים בלבד בלבד (בלי צבעים)</li>
+                  <li>Replace ONE letter in your population name with a silhouette element (symbol) / החלף אות אחד בשם אוכלוסיה בסמל סילוהט (סמל)</li>
+                  <li>Keep it simple and professional / שמור על זה פשוט ומקצועי</li>
+                  <li>Example: "CH**ILDREN**" where the "I" is replaced with a child silhouette / דוגמה: "ילדים" כאשר ה-"I" הוחלף בסילוהט של ילד</li>
                 </ul>
               </div>
               
               <div style={{ marginBottom: "2rem", backgroundColor: "#F0FDF4", padding: "1.5rem", borderRadius: "0.375rem", borderLeft: "4px solid #22C55E" }}>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Step 3: Share Your Canva Link</h3>
-                <p style={{ color: "#555555", marginBottom: "1rem" }}>Paste your Canva "Can Edit" link below. Make sure the link allows editing.</p>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Step 3: Share Your Canva Link / שלב 3: שיתוף הקישור שלך ב-Canva</h3>
+                <p style={{ color: "#555555", marginBottom: "1rem" }}>Paste your Canva "Can Edit" link below. Make sure the link allows editing. (הדבק את הקישור "Can Edit" שלך מ-Canva במטה. טא וודא שהקישור מאפשר עריכה.)</p>
                 <input
                   type="url"
                   value={canvaLink}
@@ -1118,11 +1118,11 @@ export default function ProjectPage() {
                     fontFamily: "'Alef', 'Assistant', sans-serif",
                     fontSize: "0.95rem",
                   }}
-                  placeholder="https://www.canva.com/design/..."
+                  placeholder="https://www.canva.com/design/... / הדבק קישור Canva"
                 />
                 {canvaLink.length > 0 && (
                   <div style={{ marginTop: "0.5rem", fontSize: "0.875rem", color: isValidCanvaLink ? "#16A34A" : "#DC2626", fontWeight: "bold" }}>
-                    {isValidCanvaLink ? "✓ Valid Canva link" : "✗ Please paste a valid Canva 'Can Edit' link"}
+                    {isValidCanvaLink ? "✓ Valid Canva link / קישור Canva תקין" : "✗ Please paste a valid Canva 'Can Edit' link / הדבק קישור 'Can Edit' תקין"}
                   </div>
                 )}
               </div>
@@ -1143,7 +1143,7 @@ export default function ProjectPage() {
                 cursor: isValidCanvaLink ? "pointer" : "not-allowed",
               }}
             >
-              Save & Continue
+              Save & Continue / שמור והמשך
             </button>
           </div>
         </div>

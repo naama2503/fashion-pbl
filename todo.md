@@ -14,8 +14,13 @@
 - [x] Review Tab 3 (Design Inquiry Parts A-B) - add missing Hebrew translations
 - [x] Review Tab 4 (Design Inquiry Part C) - add missing Hebrew translations
 
+## Tab 5 - Creating a Logo (יצירת לוגו)
+- [x] Step 1: Brainstorm Symbols - with bilingual translations
+- [x] Step 2: Design in Canva - with bilingual instructions
+- [x] Step 3: Share Canva Link - with validation and bilingual messages
+- [x] Add complete Hebrew translations to all Tab 5 text
+
 ## Future Features
-- [ ] Tab 5 (Logo Lab) - Finalize and test
 - [ ] Tab 6 (Fashion Item Design) - Build with file upload/drawing
 - [ ] Tab 7 (Presentation) - Build with file upload/drawing
 - [ ] Teacher Admin Dashboard - Review and approve submissions
