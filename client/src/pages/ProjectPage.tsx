@@ -761,7 +761,7 @@ export default function ProjectPage() {
                   <div style={{ marginBottom: "2rem", backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
                     <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Exercise 1: Bank Logos (תרגיל 1: לוגו בנקים)</h3>
                     <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "1rem" }}>Which logo represents a serious bank? Which represents growth? Which represents an unserious bank? (איזה לוגו מייצג בנק רציני? איזה מייצג צמיחה? איזה מייצג בנק שאינו רציני?)</p>
-                    <img src="/manus-storage/image12_2c596f38.jpg" alt="Bank Logos" style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "400px", objectFit: "contain" }} />
+                    <img src="/manus-storage/image11_ef7a8c4a.png" alt="Bank Logos" style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "400px", objectFit: "contain" }} />
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1rem" }}>
                       {["Serious Bank (בנק רציני)", "Growth Bank (בנק צמיחה)", "Unserious Bank (בנק לא רציני)"].map((label, idx) => (
                         <button key={idx} onClick={() => updateResponse(`bankExercise_${idx}`, label)} disabled={isLocked} style={{ padding: "1rem", border: responses[`bankExercise_${idx}`] ? "3px solid #333333" : "1px solid #D1D5DB", borderRadius: "0.375rem", backgroundColor: responses[`bankExercise_${idx}`] ? "#F0F9FF" : "white", cursor: isLocked ? "not-allowed" : "pointer", transition: "all 0.2s" }}>
@@ -779,7 +779,7 @@ export default function ProjectPage() {
                   <div style={{ marginBottom: "2rem", backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB" }}>
                     <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Exercise 2: Font Shapes (תרגיל 2: צורות פונט)</h3>
                     <p style={{ fontSize: "0.875rem", color: "#555555", marginBottom: "1rem" }}>Which font represents childlike innocence? Which represents seriousness? Which represents a religious organization? (איזה פונט מייצג תמימות ילדותית? איזה מייצג רציניות? איזה מייצג ארגון דתי?)</p>
-                    <img src="/manus-storage/image1_c556ed59.jpg" alt="Font Examples" style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "400px", objectFit: "contain" }} />
+                    <img src="/manus-storage/image2_91aa3bdf.png" alt="Font Examples" style={{ width: "100%", marginBottom: "1rem", borderRadius: "0.375rem", maxHeight: "400px", objectFit: "contain" }} />
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1rem" }}>
                       {["Childlike (ילדותי)", "Serious (רציני)", "Religious (דתי)"].map((label, idx) => (
                         <button key={idx} onClick={() => updateResponse(`fontExercise_${idx}`, label)} disabled={isLocked} style={{ padding: "1rem", border: responses[`fontExercise_${idx}`] ? "3px solid #333333" : "1px solid #D1D5DB", borderRadius: "0.375rem", backgroundColor: responses[`fontExercise_${idx}`] ? "#F0F9FF" : "white", cursor: isLocked ? "not-allowed" : "pointer", transition: "all 0.2s" }}>
