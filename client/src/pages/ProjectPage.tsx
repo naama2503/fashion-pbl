@@ -90,6 +90,55 @@ const BRAND_LOGOS = [
   },
 ];
 
+// Gestalt Practice Exercise logos - Different from explanation section
+const GESTALT_PRACTICE_LOGOS = [
+  {
+    name: "WWF Panda",
+    nameHe: "פנדה WWF",
+    logo: "https://upload.wikimedia.org/wikipedia/en/2/24/WWF_logo.svg",
+    principle: "Closure",
+    principleHe: "סגירה",
+    explanation: "The missing lines are completed by our mind to create the whole panda.",
+    explanationHe: "הקווים החסרים מושלמים על ידי המוח שלנו כדי ליצור את הפנדה השלמה."
+  },
+  {
+    name: "FedEx Arrow",
+    nameHe: "חץ FedEx",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/b/b9/FedEx_Corporation_logo.svg",
+    principle: "Figure/Ground",
+    principleHe: "דמות ורקע",
+    explanation: "The white space between 'E' and 'x' creates a hidden arrow.",
+    explanationHe: "הרווח הלבן בין האותיות E ל-x יוצר חץ נסתר."
+  },
+  {
+    name: "Amazon",
+    nameHe: "אמזון",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+    principle: "Continuation",
+    principleHe: "המשכיות",
+    explanation: "The yellow arrow leads our eye from A to Z in a smooth movement.",
+    explanationHe: "החץ הצהוב מוליך את העין שלנו מ-A ל-Z בתנועה חלקה."
+  },
+  {
+    name: "Unilever",
+    nameHe: "יוניליוור",
+    logo: "https://upload.wikimedia.org/wikipedia/en/b/b1/Unilever.svg",
+    principle: "Unity/Proximity",
+    principleHe: "אחדות/קרבה",
+    explanation: "Many small, different icons are placed close together to form one large 'U'.",
+    explanationHe: "סמלים קטנים ושונים רבים ממוקמים קרוב זה לזה כדי ליצור צורה אחת של U גדולה."
+  },
+  {
+    name: "Chanel",
+    nameHe: "שאנל",
+    logo: "https://upload.wikimedia.org/wikipedia/en/9/92/Chanel_logo_interlocking_cs.svg",
+    principle: "Balance/Symmetry",
+    principleHe: "איזון/סימטריה",
+    explanation: "Two identical shapes perfectly mirrored create a sense of stability and luxury.",
+    explanationHe: "שתי צורות זהות המשתקפות זו מול זו יוצרות תחושת יציבות ויוקרה."
+  },
+];
+
 // Color meanings
 const COLOR_MEANINGS = [
   { color: "#FDE68A", name: "Yellow", nameHe: "צהוב", meaning: "Optimistic", meaningHe: "אופטימי" },
@@ -144,7 +193,7 @@ export default function ProjectPage() {
   // Tab 4 specific states
   const [colorRevealed, setColorRevealed] = useState<Record<number, boolean>>({});
   const [fontRevealed, setFontRevealed] = useState<Record<string, boolean>>({});
-  const [gestaltRevealed, setGestaltRevealed] = useState<Record<number, boolean>>({});
+  const [gestaltRevealed, setGestaltRevealed] = useState<Record<string, boolean>>({});
   const [selectedWords, setSelectedWords] = useState<Record<string, string>>({});
   const [fontPsychologyRevealed, setFontPsychologyRevealed] = useState(false);
 
@@ -464,6 +513,65 @@ export default function ProjectPage() {
                     ))}
                   </div>
 
+                  {/* Gestalt Practice Section */}
+                  <div style={{ backgroundColor: "#F3E8FF", border: "2px solid #D8B4FE", borderRadius: "0.5rem", padding: "1.5rem", marginBottom: "2rem" }}>
+                    <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#6B21A8", marginBottom: "1rem", direction: "rtl", textAlign: "right" }}>
+                      Gestalt Practice (תרגול גשטלט)
+                    </h3>
+                    <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.875rem", direction: "rtl", textAlign: "right" }}>
+                      Identify which Gestalt principle each logo uses. Click "Reveal Principle & Explanation" to check your answer. (זהה איזה עקרון גשטלט כל לוגו משתמש. לחץ על "גלה עקרון והסבר" כדי לבדוק את התשובה שלך.)
+                    </p>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.5rem" }}>
+                      {GESTALT_PRACTICE_LOGOS.map((logo, idx) => {
+                        const isRevealed = gestaltRevealed[`practice_${idx}`] || false;
+                        return (
+                          <div key={idx} style={{ backgroundColor: "#FFFFFF", padding: "1.5rem", borderRadius: "0.5rem", border: "2px solid #D8B4FE", textAlign: "center" }}>
+                            {/* Logo Display */}
+                            <div style={{ marginBottom: "1rem", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100px" }}>
+                              <img src={logo.logo} alt={logo.name} style={{ maxHeight: "100px", maxWidth: "100%", objectFit: "contain" }} />
+                            </div>
+
+                            {/* Reveal Button */}
+                            <button
+                              onClick={() => setGestaltRevealed({ ...gestaltRevealed, [`practice_${idx}`]: !isRevealed })}
+                              style={{
+                                width: "100%",
+                                backgroundColor: isRevealed ? "#86EFAC" : "#D8B4FE",
+                                color: "#333333",
+                                padding: "0.75rem",
+                                fontSize: "0.875rem",
+                                fontWeight: "bold",
+                                border: "none",
+                                borderRadius: "0.375rem",
+                                cursor: "pointer",
+                                marginBottom: "1rem",
+                                transition: "all 0.3s ease"
+                              }}
+                            >
+                              {isRevealed ? "Hide" : "Reveal Principle & Explanation"}
+                            </button>
+
+                            {/* Revealed Content */}
+                            {isRevealed && (
+                              <div style={{ backgroundColor: "#FEF3C7", padding: "1rem", borderRadius: "0.375rem", textAlign: "right", direction: "rtl" }}>
+                                <p style={{ fontWeight: "bold", color: "#92400E", marginBottom: "0.5rem", fontSize: "0.875rem" }}>
+                                  {logo.principle} ({logo.principleHe})
+                                </p>
+                                <p style={{ color: "#78350F", fontSize: "0.8125rem", lineHeight: "1.5" }}>
+                                  {logo.explanation}
+                                </p>
+                                <p style={{ color: "#78350F", fontSize: "0.8125rem", lineHeight: "1.5", marginTop: "0.5rem" }}>
+                                  {logo.explanationHe}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   {/* Gestalt Principle Questions */}
                   <div style={{ backgroundColor: "#F0F9FF", border: "2px solid #93C5FD", borderRadius: "0.5rem", padding: "1.5rem", marginBottom: "2rem" }}>
                     <h3 style={{ fontSize: "1rem", fontWeight: "bold", color: "#1E40AF", marginBottom: "1rem" }}>
@@ -754,6 +862,7 @@ export default function ProjectPage() {
     const researchText = (responses as any).researchText || "";
     const wordCount = researchText.trim().split(/\s+/).filter((w: string) => w.length > 0).length;
     const meetsMinimum = wordCount >= 100;
+    const gemVisited = (responses as any).gemVisited || false;
     
     return (
       <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
@@ -784,7 +893,7 @@ export default function ProjectPage() {
                       <strong>Example (דוגמה):</strong> "According to UNICEF, 160 million children worldwide are engaged in child labor. In developing countries, children often work instead of attending school, limiting their future opportunities. This population needs awareness and support."
                     </p>
                     <p style={{ fontSize: "0.9rem", color: "#555555" }}>
-                      <strong>💡 Tip:</strong> Use Google Gemini to help with your research and writing. <a href="https://gemini.google.com/gem/1AnFJbpYQ-hsXjJDhota5pIkU3Qt9h6Vy?usp=sharing" target="_blank" rel="noopener noreferrer" style={{ color: "#2563EB", textDecoration: "underline" }}>Open Gem Helper →</a>
+                      <strong>💡 Tip:</strong> Use Google Gemini to help with your research and writing. <a href="https://gemini.google.com/gem/1AnFJbpYQ-hsXjJDhota5pIkU3Qt9h6Vy?usp=sharing" target="_blank" rel="noopener noreferrer" onClick={() => updateResponse("gemVisited", true)} style={{ color: "#2563EB", textDecoration: "underline" }}>Open Gem Helper →</a>
                     </p>
                   </div>
                   
@@ -827,19 +936,29 @@ export default function ProjectPage() {
                     </div>
                   )}
                   
+                  {!gemVisited && (
+                    <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.375rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
+                      <HelpCircle size={24} style={{ color: "#D97706" }} />
+                      <div>
+                        <p style={{ fontWeight: "bold", color: "#92400E", marginBottom: "0.5rem" }}>📌 Gem Helper is Mandatory!</p>
+                        <p style={{ color: "#92400E", fontSize: "0.9rem" }}>You must visit the Google Gemini helper to complete your research. Click the link above to open the Gem Helper.</p>
+                      </div>
+                    </div>
+                  )}
+                  
                   <button
                     onClick={handleSaveAndContinue}
-                    disabled={isLocked || !meetsMinimum}
+                    disabled={isLocked || !meetsMinimum || !gemVisited}
                     style={{
                       width: "100%",
-                      backgroundColor: isLocked || !meetsMinimum ? "#D1D5DB" : "#FCA5A5",
+                      backgroundColor: isLocked || !meetsMinimum || !gemVisited ? "#D1D5DB" : "#FCA5A5",
                       color: "#333333",
                       padding: "0.75rem",
                       fontSize: "1rem",
                       fontWeight: "bold",
                       border: "none",
                       borderRadius: "0.5rem",
-                      cursor: isLocked || !meetsMinimum ? "not-allowed" : "pointer",
+                      cursor: isLocked || !meetsMinimum || !gemVisited ? "not-allowed" : "pointer",
                     }}
                   >
                     Save & Continue
