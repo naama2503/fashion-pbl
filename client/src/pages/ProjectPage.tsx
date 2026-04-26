@@ -41,7 +41,7 @@ const IMAGES = {
 const BRAND_LOGOS = [
   { 
     name: "Nike", 
-    logo: "https://www.nike.com/assets/c_limit,w_592,f_auto,q_auto/v1/cee915cb-5dd7-46da-9b0f-3992c534d045/nike-just-do-it.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Nike_logo.svg/1024px-Nike_logo.svg.png",
     principle: "Continuity",
     principleHe: "המשכיות",
     explanation: "The swoosh creates a continuous curved line that our eye follows.",
@@ -49,7 +49,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Adidas", 
-    logo: "https://www.adidas.com/on/demandware.static/-/Sites-adidas-master-catalog/default/dw8c4c8c8c/images/large/IB5755_00_plp_standard.jpg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_logo.svg/1024px-Adidas_logo.svg.png",
     principle: "Similarity",
     principleHe: "דמיון",
     explanation: "Three parallel stripes create unity through repetition and similarity.",
@@ -57,7 +57,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Apple", 
-    logo: "https://www.apple.com/ac/structured-data/images/open_graph_logo.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1024px-Apple_logo_black.svg.png",
     principle: "Closure",
     principleHe: "סגירה",
     explanation: "The missing bite is completed by our mind, creating the whole apple.",
@@ -73,7 +73,7 @@ const BRAND_LOGOS = [
   },
   { 
     name: "Shell", 
-    logo: "https://www.shell.com/images/shell-logo.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Shell_logo.svg/1024px-Shell_logo.svg.png",
     principle: "Proximity",
     principleHe: "קרבה",
     explanation: "Segments grouped closely together form the shell shape.",
@@ -118,11 +118,21 @@ export default function ProjectPage() {
   const [validationErrors, setValidationErrors] = useState([]);
   const [studentNames, setStudentNames] = useState(["Student 1", "Student 2", "Student 3"]);
   
+  // Tab 3 specific states
+  const [tab3Responses, setTab3Responses] = useState({
+    thornVsSmile: "",
+    toyStore: "",
+    gamingSpace: "",
+    restaurant: "",
+    hospital: "",
+  });
+  
   // Tab 4 specific states
   const [colorRevealed, setColorRevealed] = useState<Record<number, boolean>>({});
   const [fontRevealed, setFontRevealed] = useState<Record<string, boolean>>({});
   const [gestaltRevealed, setGestaltRevealed] = useState<Record<number, boolean>>({});
   const [selectedWords, setSelectedWords] = useState<Record<string, string>>({});
+  const [fontPsychologyRevealed, setFontPsychologyRevealed] = useState(false);
 
   const tabColor = COLORS[currentTab];
 
@@ -235,9 +245,24 @@ export default function ProjectPage() {
                     
                     <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem" }}>
                       <p style={{ fontWeight: "bold", color: "#92400E", marginBottom: "0.5rem" }}>Question (שאלה):</p>
-                      <p style={{ color: "#92400E", fontSize: "0.95rem", lineHeight: "1.6" }}>
+                      <p style={{ color: "#92400E", fontSize: "0.95rem", lineHeight: "1.6", marginBottom: "1rem" }}>
                         Which of the fonts below reminds you of sharp thorns with pointed edges? Which one reminds you of smooth flow and a rounded smile like the child's? (איזה מהפונטים למטה מזכיר לכם קוצים חדים? איזה מזכיר לכם זרימה חלקה וחיוך עגול כמו של הילד?)
                       </p>
+                      <textarea
+                        placeholder="Write your answer here... (כתוב את התשובה שלך כאן...)"
+                        value={tab3Responses.thornVsSmile}
+                        onChange={(e) => setTab3Responses({ ...tab3Responses, thornVsSmile: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "0.75rem",
+                          borderRadius: "0.375rem",
+                          border: "1px solid #92400E",
+                          fontFamily: "inherit",
+                          fontSize: "0.875rem",
+                          minHeight: "80px",
+                          resize: "vertical"
+                        }}
+                      />
                     </div>
                   </div>
 
@@ -276,14 +301,66 @@ export default function ProjectPage() {
                         Reveal Font Psychology (גלה פסיכולוגיה של פונטים)
                       </button>
                     ) : (
-                      <div style={{ backgroundColor: "#F0F9FF", border: "2px solid #93C5FD", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem" }}>
+                      <div style={{ backgroundColor: "#F0F9FF", border: "2px solid #93C5FD", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem" }}>
                         <p style={{ fontWeight: "bold", color: "#1E40AF", marginBottom: "0.5rem" }}>Font Psychology (פסיכולוגיה של פונטים):</p>
-                        <ul style={{ fontSize: "0.875rem", color: "#333333", marginLeft: "1.5rem" }}>
-                          <li><strong>Bold:</strong> Strength, power, confidence (חוזק, כוח, ביטחון)</li>
-                          <li><strong>Cursive:</strong> Elegance, femininity, creativity (אלגנציה, נשיות, יצירתיות)</li>
-                          <li><strong>Minimalist:</strong> Modern, clean, trustworthy (מודרני, נקי, אמין)</li>
-                          <li><strong>Sharp-Edged:</strong> Aggressive, dynamic, edgy (אגרסיבי, דינמי, חד)</li>
+                        <ul style={{ fontSize: "0.875rem", color: "#333333", marginLeft: "1.5rem", marginBottom: "1rem" }}>
+                          <li><strong>Anton (Strong):</strong> Bold, powerful, confidence (בולד, חזק, ביטחון)</li>
+                          <li><strong>Fredoka (Fun):</strong> Friendly, playful, approachable (ידידותי, משחקי, נגיש)</li>
+                          <li><strong>Cinzel (Serious):</strong> Elegant, formal, professional (אלגנטי, רשמי, מקצועי)</li>
+                          <li><strong>Orbitron (Tech):</strong> Modern, futuristic, innovative (מודרני, עתידני, חדשני)</li>
                         </ul>
+                        
+                        <div style={{ backgroundColor: "#FFFFFF", padding: "1rem", borderRadius: "0.375rem", marginTop: "1rem" }}>
+                          <p style={{ fontWeight: "bold", color: "#1E40AF", marginBottom: "0.5rem", fontSize: "0.95rem" }}>Answer the questions below:</p>
+                          
+                          <div style={{ marginBottom: "1rem" }}>
+                            <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem", fontSize: "0.875rem" }}>
+                              Which font would you use for a toy store? (איזה פונט הייתם משתמשים לחנות צעצועים?)
+                            </label>
+                            <textarea
+                              placeholder="Your answer... (התשובה שלך...)"
+                              value={tab3Responses.toyStore}
+                              onChange={(e) => setTab3Responses({ ...tab3Responses, toyStore: e.target.value })}
+                              style={{ width: "100%", padding: "0.5rem", borderRadius: "0.375rem", border: "1px solid #93C5FD", fontSize: "0.875rem", minHeight: "60px" }}
+                            />
+                          </div>
+                          
+                          <div style={{ marginBottom: "1rem" }}>
+                            <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem", fontSize: "0.875rem" }}>
+                              Which font would you use for a gaming space? (איזה פונט הייתם משתמשים למרחב גיימיג?)
+                            </label>
+                            <textarea
+                              placeholder="Your answer... (התשובה שלך...)"
+                              value={tab3Responses.gamingSpace}
+                              onChange={(e) => setTab3Responses({ ...tab3Responses, gamingSpace: e.target.value })}
+                              style={{ width: "100%", padding: "0.5rem", borderRadius: "0.375rem", border: "1px solid #93C5FD", fontSize: "0.875rem", minHeight: "60px" }}
+                            />
+                          </div>
+                          
+                          <div style={{ marginBottom: "1rem" }}>
+                            <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem", fontSize: "0.875rem" }}>
+                              Which font would you use for a restaurant? (איזה פונט הייתם משתמשים למסעדה?)
+                            </label>
+                            <textarea
+                              placeholder="Your answer... (התשובה שלך...)"
+                              value={tab3Responses.restaurant}
+                              onChange={(e) => setTab3Responses({ ...tab3Responses, restaurant: e.target.value })}
+                              style={{ width: "100%", padding: "0.5rem", borderRadius: "0.375rem", border: "1px solid #93C5FD", fontSize: "0.875rem", minHeight: "60px" }}
+                            />
+                          </div>
+                          
+                          <div>
+                            <label style={{ display: "block", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem", fontSize: "0.875rem" }}>
+                              Which font would you use for a hospital? (איזה פונט הייתם משתמשים לבית חולים?)
+                            </label>
+                            <textarea
+                              placeholder="Your answer... (התשובה שלך...)"
+                              value={tab3Responses.hospital}
+                              onChange={(e) => setTab3Responses({ ...tab3Responses, hospital: e.target.value })}
+                              style={{ width: "100%", padding: "0.5rem", borderRadius: "0.375rem", border: "1px solid #93C5FD", fontSize: "0.875rem", minHeight: "60px" }}
+                            />
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
