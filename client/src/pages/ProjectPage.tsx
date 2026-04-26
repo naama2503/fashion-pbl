@@ -10,6 +10,7 @@ const TABS = [
   { label: "Research", labelHe: "מחקר" },
   { label: "Design Inquiry", labelHe: "חוקי עיצוב" },
   { label: "Creating a Logo", labelHe: "יצירת לוגו" },
+  { label: "Vector Art", labelHe: "וקטור אמנות" },
   { label: "Fashion Item", labelHe: "פריט אופנה" },
   { label: "Presentation", labelHe: "מצגת" },
   { label: "Reflection", labelHe: "רפלקציה" },
@@ -206,20 +207,34 @@ export default function ProjectPage() {
         return;
       }
     } else if (currentTab === 5) {
+      // Vector art validation
+      const vectorDesc = responses.vectorDescription || "";
+      if (vectorDesc.trim().length < 20) {
+        toast.error("Please describe your silhouette vector (at least 20 characters)!");
+        return;
+      }
+    } else if (currentTab === 6) {
       // Fashion item validation
       const itemDesc = responses.itemDescription || "";
       if (itemDesc.trim().length < 20) {
         toast.error("Please describe the fashion item (at least 20 characters)!");
         return;
       }
-    } else if (currentTab === 6) {
+    } else if (currentTab === 7) {
       // Presentation validation
       const checkCount = Object.values(responses).filter((v, k) => k.toString().startsWith("check_") && v).length;
       if (checkCount < 4) {
         toast.error("Please check at least 4 items before continuing!");
         return;
       }
-    } else if (currentTab === 7) {
+    } else if (currentTab === 8) {
+      // Presentation validation
+      const checkCount = Object.values(responses).filter((v, k) => k.toString().startsWith("check_") && v).length;
+      if (checkCount < 4) {
+        toast.error("Please check at least 4 items before continuing!");
+        return;
+      }
+    } else if (currentTab === 9) {
       // Reflection validation
       const reflection = responses.reflection || "";
       if (reflection.trim().length < 50) {
@@ -268,6 +283,18 @@ export default function ProjectPage() {
       reader.onload = (event) => {
         updateResponse("logoUploadedFile", event.target?.result);
         toast.success("Logo file uploaded!");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleVectorUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        updateResponse("vectorUploadedFile", event.target?.result);
+        toast.success("Silhouette file uploaded!");
       };
       reader.readAsDataURL(file);
     }
@@ -1070,8 +1097,178 @@ export default function ProjectPage() {
     );
   }
 
-  // Tab 5: Fashion Item (Simplified)
+  // Tab 5: Vector Art - Silhouette
   if (currentTab === 5) {
+    return (
+      <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        
+        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "2rem", alignItems: "start" }}>
+              <div>
+                <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                  וקטור אמנות - צל (Vector Art - Silhouette)
+                </h1>
+                <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
+                  עכשיו תעצבו וקטור של צל המייצג את האוכלוסייה שלכם. הצל צריך להיות פשוט, ברור, וקל להכרה. (Now design a silhouette vector that represents your population. The silhouette should be simple, clear, and easy to recognize.)
+                </p>
+
+                {isLocked && (
+                  <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
+                    <Lock size={24} style={{ color: "#D97706" }} />
+                    <p style={{ fontWeight: "bold", color: "#92400E" }}>This tab is locked. Get teacher approval for Tab 5 first!</p>
+                  </div>
+                )}
+
+                <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
+                  <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                    הוראות (Instructions)
+                  </h2>
+                  <div style={{ backgroundColor: "#F9FAFB", padding: "1.5rem", borderRadius: "0.5rem", marginBottom: "2rem", border: "1px solid #E5E7EB" }}>
+                    <ul style={{ color: "#555555", lineHeight: "1.8", margin: 0, paddingLeft: "1.5rem" }}>
+                      <li style={{ marginBottom: "0.75rem" }}>צייר צל של אדם, חפץ, או סמל המייצג את האוכלוסייה שלך (Draw a silhouette of a person, object, or symbol that represents your population)</li>
+                      <li style={{ marginBottom: "0.75rem" }}>השתמש בצבע שחור או בצל אחיד (Use black color or a solid shadow)</li>
+                      <li style={{ marginBottom: "0.75rem" }}>הצל צריך להיות קל להכרה וללא פרטים מיותרים (The silhouette should be recognizable and without unnecessary details)</li>
+                      <li style={{ marginBottom: "0.75rem" }}>אתה יכול להשתמש בכלי הציור או להעלות קובץ (You can use the drawing tool or upload a file)</li>
+                      <li>וודא שהצל מייצג את ההודעה החברתית שלך (Make sure the silhouette represents your social message)</li>
+                    </ul>
+                  </div>
+
+                  <h3 style={{ fontSize: "1.125rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                    צייר את הצל שלך (Draw Your Silhouette)
+                  </h3>
+                  <div style={{ marginBottom: "2rem", border: "2px solid #D1D5DB", borderRadius: "0.5rem", overflow: "hidden" }}>
+                    <CanvasDraw
+                      ref={(canvasRef) => { if (canvasRef) (window as any).vectorCanvas = canvasRef; }}
+                      canvasWidth={600}
+                      canvasHeight={400}
+                      brushColor="#000000"
+                      brushRadius={3}
+                      lazyRadius={0}
+                      hideGrid
+                      disabled={isLocked}
+                    />
+                  </div>
+
+                  <div style={{ marginBottom: "2rem", display: "flex", gap: "1rem" }}>
+                    <button
+                      onClick={() => {
+                        if ((window as any).vectorCanvas) (window as any).vectorCanvas.clear();
+                        toast.success("Canvas cleared!");
+                      }}
+                      disabled={isLocked}
+                      style={{
+                        flex: 1,
+                        backgroundColor: isLocked ? "#D1D5DB" : "#FCA5A5",
+                        color: "#333333",
+                        padding: "0.75rem",
+                        fontSize: "0.95rem",
+                        fontWeight: "bold",
+                        border: "none",
+                        borderRadius: "0.5rem",
+                        cursor: isLocked ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      Clear Canvas (נקה קנבס)
+                    </button>
+                    <button
+                      onClick={() => {
+                        if ((window as any).vectorCanvas) {
+                          const image = (window as any).vectorCanvas.canvasRef.current.toDataURL();
+                          updateResponse("vectorDrawing", image);
+                          toast.success("Silhouette saved!");
+                        }
+                      }}
+                      disabled={isLocked}
+                      style={{
+                        flex: 1,
+                        backgroundColor: isLocked ? "#D1D5DB" : "#86EFAC",
+                        color: "#333333",
+                        padding: "0.75rem",
+                        fontSize: "0.95rem",
+                        fontWeight: "bold",
+                        border: "none",
+                        borderRadius: "0.5rem",
+                        cursor: isLocked ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      Save Drawing (שמור ציור)
+                    </button>
+                  </div>
+
+                  <h3 style={{ fontSize: "1.125rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                    או העלה קובץ (Or Upload a File)
+                  </h3>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleVectorUpload}
+                    disabled={isLocked}
+                    style={{
+                      width: "100%",
+                      padding: "0.75rem",
+                      border: "2px dashed #D1D5DB",
+                      borderRadius: "0.5rem",
+                      cursor: isLocked ? "not-allowed" : "pointer",
+                      marginBottom: "1.5rem",
+                    }}
+                  />
+
+                  <div style={{ marginBottom: "2rem" }}>
+                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
+                      תיאור הצל שלך (Describe Your Silhouette)
+                    </label>
+                    <textarea
+                      value={responses.vectorDescription || ""}
+                      onChange={(e) => updateResponse("vectorDescription", e.target.value)}
+                      disabled={isLocked}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "0.375rem",
+                        fontFamily: "'Alef', 'Assistant', sans-serif",
+                        minHeight: "100px",
+                        resize: "vertical",
+                      }}
+                      placeholder="Explain what your silhouette represents and why you chose this design..."
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleSaveAndContinue}
+                    disabled={isLocked}
+                    style={{
+                      width: "100%",
+                      backgroundColor: isLocked ? "#D1D5DB" : "#86EFAC",
+                      color: "#333333",
+                      padding: "0.75rem",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                      border: "none",
+                      borderRadius: "0.5rem",
+                      cursor: isLocked ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    Save & Continue
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/icon-vector-top-9KJh7mPqZvR2LkDxN8Qp4m.webp" alt="Vector" style={{ width: "100%", borderRadius: "0.5rem", marginBottom: "1rem" }} />
+                <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/icon-vector-bottom-2Lk9QmRxP5S3NvWyJ6Tz8h.webp" alt="Vector" style={{ width: "100%", borderRadius: "0.5rem" }} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Tab 6: Fashion Item (Simplified)
+  if (currentTab === 6) {
     return (
       <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
         <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
