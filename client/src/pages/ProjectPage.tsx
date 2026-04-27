@@ -319,7 +319,7 @@ export default function ProjectPage() {
       return true;
     };
 
-    if (validationErrors.length === 0 && checkTabValidation()) {
+    if (checkTabValidation()) {
       try {
         let studentId = localStorage.getItem('studentId');
         if (!studentId) {
