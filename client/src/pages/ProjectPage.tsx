@@ -295,7 +295,7 @@ export default function ProjectPage() {
     const checkTabValidation = () => {
       if (currentTab === 1) {
         // Tab 1: Group Decision - check population and why
-        const population = (responses as any).chosenPopulation || '';
+        const population = (responses as any).population || '';
         const whyChosen = (responses as any).whyChosen || '';
         if (!population.trim() || !whyChosen.trim()) {
           toast.error('Please fill in all answers! (אנא מלאו את כל התשובות!)');
