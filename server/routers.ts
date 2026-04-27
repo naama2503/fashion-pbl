@@ -107,12 +107,12 @@ export const appRouter = router({
             try {
               console.log(`[saveResponse] Inserting new record (10 values)...`);
               
-              // Use raw SQL with camelCase column names
+              // Use raw SQL with snake_case column names matching the database schema
               await db.execute(sql`
                 INSERT INTO student_responses (
-                  studentId, tabNumber, responseData, colorFeelings, 
-                  fontShapeAnswers, gestaltAnswers, canvaLink, 
-                  vectorFileUrl, presentationFileUrl, updatedAt
+                  student_id, tab_number, response_data, color_feelings, 
+                  font_shape_answers, gestalt_answers, canva_link, 
+                  vector_file_url, presentation_file_url, updated_at
                 ) VALUES (
                   ${student_id}, ${tab_number}, ${response_data}, ${color_feelings},
                   ${font_shape_answers}, ${gestalt_answers}, ${canva_link},
