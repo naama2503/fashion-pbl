@@ -918,13 +918,19 @@ export default function ProjectPage() {
                       style={{
                         width: "100%",
                         padding: "0.75rem",
-                        border: "1px solid #D1D5DB",
+                        border: !(responses as any).chosenPopulation?.trim() ? "2px solid #DC2626" : "1px solid #D1D5DB",
                         borderRadius: "0.375rem",
                         fontFamily: "'Alef', 'Assistant', sans-serif",
-                        marginBottom: "1rem",
+                        marginBottom: "0.5rem",
+                        backgroundColor: !(responses as any).chosenPopulation?.trim() ? "#FEE2E2" : "#FFFFFF",
                       }}
                       placeholder="Enter population name... / הזן שם אוכלוסיה..."
                     />
+                    {!(responses as any).chosenPopulation?.trim() && (
+                      <p style={{ color: "#DC2626", fontSize: "0.875rem", marginBottom: "1rem", fontWeight: "bold" }}>
+                        ⚠️ This field is required! (שדה זה נדרש!)
+                      </p>
+                    )}
                     <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
                       Why? (at least 2 sentences) / למה? (לפחות 2 משפטים)
                     </label>
@@ -938,14 +944,20 @@ export default function ProjectPage() {
                       style={{
                         width: "100%",
                         padding: "0.75rem",
-                        border: validationErrors.length > 0 ? "2px solid #DC2626" : "1px solid #D1D5DB",
+                        border: !(responses as any).whyChosen?.trim() ? "2px solid #DC2626" : "1px solid #D1D5DB",
                         borderRadius: "0.375rem",
                         fontFamily: "'Alef', 'Assistant', sans-serif",
                         minHeight: "100px",
                         resize: "vertical",
+                        backgroundColor: !(responses as any).whyChosen?.trim() ? "#FEE2E2" : "#FFFFFF",
                       }}
                       placeholder="Explain your choice..."
                     />
+                    {!(responses as any).whyChosen?.trim() && (
+                      <p style={{ color: "#DC2626", fontSize: "0.875rem", marginBottom: "1rem", fontWeight: "bold" }}>
+                        ⚠️ This field is required! (שדה זה נדרש!)
+                      </p>
+                    )}
                     
                     {validationErrors.length > 0 && (
                       <div style={{ backgroundColor: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: "0.375rem", padding: "0.75rem", marginTop: "0.75rem" }}>

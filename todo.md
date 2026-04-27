@@ -45,3 +45,10 @@
 - [x] Update fetchResponse query to use snake_case column names
 - [x] Add validation - disable Continue button until all fields filled
 - [x] Add "Please fill in all answers" message in Hebrew/English
+
+## Visual Error Highlighting (UX Improvement)
+- [x] Add red border/background to empty required fields (Tab 1)
+- [x] Show error message in red text next to incomplete fields (Tab 1)
+- [x] Real-time validation as user types/selects (Tab 1)
+- [x] Clear red highlighting when field is filled (Tab 1)
+- [ ] Apply to remaining tabs with required fields (Tab 2, 3, 4, 5, 6, 7)
