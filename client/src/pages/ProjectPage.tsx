@@ -319,7 +319,7 @@ export default function ProjectPage() {
       return true;
     };
 
-    if (checkTabValidation()) {
+    if (validationErrors.length === 0 && checkTabValidation()) {
       try {
         let studentId = localStorage.getItem('studentId');
         if (!studentId) {
@@ -995,7 +995,7 @@ export default function ProjectPage() {
                     </button>
                     <button
                       onClick={handleSaveAndContinue}
-                      disabled={false}
+                      disabled={isLocked}
                       style={{
                         backgroundColor: isLocked ? "#D1D5DB" : "#FDBA74",
                         color: "#333333",
@@ -1119,7 +1119,7 @@ export default function ProjectPage() {
                   
                   <button
                     onClick={handleSaveAndContinue}
-                    disabled={!meetsMinimum || !gemVisited}
+                    disabled={isLocked || !meetsMinimum || !gemVisited}
                     style={{
                       width: "100%",
                       backgroundColor: isLocked || !meetsMinimum || !gemVisited ? "#D1D5DB" : "#FCA5A5",
