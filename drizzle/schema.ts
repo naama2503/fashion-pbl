@@ -31,14 +31,14 @@ export type InsertStudent = typeof students.$inferInsert;
 // Student Responses for each tab
 export const studentResponses = mysqlTable("student_responses", {
   id: int("id").autoincrement().primaryKey(),
-  studentId: int("studentId").notNull(),
-  tabNumber: int("tabNumber").notNull(), // 1-7
-  responseData: text("responseData").notNull(), // JSON stringified
-  colorFeelings: text("colorFeelings"), // JSON stringified
-  fontShapeAnswers: text("fontShapeAnswers"), // JSON stringified
-  gestaltAnswers: text("gestaltAnswers"), // JSON stringified
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  studentId: int("student_id").notNull(),
+  tabNumber: int("tab_number").notNull(), // 1-7
+  responseData: text("response_data").notNull(), // JSON stringified
+  colorFeelings: text("color_feelings"), // JSON stringified
+  fontShapeAnswers: text("font_shape_answers"), // JSON stringified
+  gestaltAnswers: text("gestalt_answers"), // JSON stringified
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 
 export type StudentResponse = typeof studentResponses.$inferSelect;
@@ -47,14 +47,14 @@ export type InsertStudentResponse = typeof studentResponses.$inferInsert;
 // Teacher Approvals
 export const approvalLog = mysqlTable("approval_log", {
   id: int("id").autoincrement().primaryKey(),
-  studentId: int("studentId").notNull(),
-  tabNumber: int("tabNumber").notNull(), // 1-7
-  isApproved: boolean("isApproved").default(false).notNull(),
-  approvedBy: varchar("approvedBy", { length: 255 }), // Teacher name
-  approvedAt: timestamp("approvedAt"),
+  studentId: int("student_id").notNull(),
+  tabNumber: int("tab_number").notNull(), // 1-7
+  isApproved: boolean("is_approved").default(false).notNull(),
+  approvedBy: varchar("approved_by", { length: 255 }), // Teacher name
+  approvedAt: timestamp("approved_at"),
   feedback: text("feedback"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 
 export type ApprovalLog = typeof approvalLog.$inferSelect;
