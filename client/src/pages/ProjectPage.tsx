@@ -230,6 +230,12 @@ export default function ProjectPage() {
   const [previousWorkData, setPreviousWorkData] = useState<any>(null);
   const [isLoadingPreviousWork, setIsLoadingPreviousWork] = useState(false);
 
+  // Error state management for visual feedback
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [showGlobalAlert, setShowGlobalAlert] = useState(false);
+  const [globalAlertMessage, setGlobalAlertMessage] = useState('');
+  const [disabledButtonAttempt, setDisabledButtonAttempt] = useState(false);
+
   const tabColor = COLORS[currentTab];
 
   const fetchResponseQuery = trpc.pbl.fetchResponse.useQuery(
@@ -295,7 +301,7 @@ export default function ProjectPage() {
     const checkTabValidation = () => {
       if (currentTab === 1) {
         // Tab 1: Group Decision - check population and why
-        const population = (responses as any).population || '';
+        const population = (responses as any).chosenPopulation || '';
         const whyChosen = (responses as any).whyChosen || '';
         if (!population.trim() || !whyChosen.trim()) {
           toast.error('Please fill in all answers! (אנא מלאו את כל התשובות!)');
