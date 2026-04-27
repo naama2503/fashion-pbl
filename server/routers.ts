@@ -5,7 +5,7 @@ import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { getDb } from "./db";
 import { students, studentResponses, approvalLog } from "../drizzle/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 
 export const appRouter = router({
   system: systemRouter,
@@ -52,7 +52,7 @@ export const appRouter = router({
         try {
           console.log(`[saveResponse] Saving response for student ${input.studentId}, tab ${input.tabNumber}`);
           
-          // EXACT PARAMETER MATCHING: Prepare all 10 values in order
+          // Prepare all 10 values with exact types - using camelCase as that's what exists in DB
           const studentId = input.studentId;
           const tabNumber = input.tabNumber;
           const responseData = JSON.stringify(input.responseData || {});
@@ -62,7 +62,7 @@ export const appRouter = router({
           const canvaLink = input.canvaLink || "";
           const vectorFileUrl = input.vectorFileUrl || "";
           const presentationFileUrl = input.presentationFileUrl || "";
-          const now = new Date();
+          const now = new Date().toISOString();
 
           console.log(`[saveResponse] All 10 values prepared:`, {
             studentId, tabNumber, responseData, colorFeelings, fontShapeAnswers, 
@@ -93,7 +93,7 @@ export const appRouter = router({
                   canvaLink,
                   vectorFileUrl,
                   presentationFileUrl,
-                  updatedAt: now,
+                  updatedAt: new Date(),
                 })
                 .where(eq(studentResponses.id, existing.id));
               console.log(`[saveResponse] ✓ Successfully updated record ID ${existing.id}`);
@@ -103,23 +103,37 @@ export const appRouter = router({
               throw new Error(`Failed to update response: ${errorMsg}`);
             }
           } else {
-            // Insert new record with all 10 values
+            // Insert new record with all 10 values using raw SQL for exact control
+            // Using camelCase column names as that's what exists in the actual database
             try {
-              console.log(`[saveResponse] Inserting new record with 10 values...`);
-              const insertPayload = {
-                studentId,
-                tabNumber,
-                responseData,
-                colorFeelings,
-                fontShapeAnswers,
-                gestaltAnswers,
-                canvaLink,
-                vectorFileUrl,
-                presentationFileUrl,
-              };
-              console.log(`[saveResponse] Insert payload:`, insertPayload);
+              console.log(`[saveResponse] Inserting new record with raw SQL (10 values)...`);
               
-              await db.insert(studentResponses).values([insertPayload]);
+              // Use raw SQL to have exact control over parameters - using ACTUAL camelCase column names
+              await db.execute(
+                sql`INSERT INTO student_responses (
+                  studentId, 
+                  tabNumber, 
+                  responseData, 
+                  colorFeelings, 
+                  fontShapeAnswers, 
+                  gestaltAnswers, 
+                  canvaLink, 
+                  vectorFileUrl, 
+                  presentationFileUrl, 
+                  updatedAt
+                ) VALUES (
+                  ${studentId},
+                  ${tabNumber},
+                  ${responseData},
+                  ${colorFeelings},
+                  ${fontShapeAnswers},
+                  ${gestaltAnswers},
+                  ${canvaLink},
+                  ${vectorFileUrl},
+                  ${presentationFileUrl},
+                  ${now}
+                )`
+              );
               console.log(`[saveResponse] ✓ Successfully inserted new record for student ${studentId}, tab ${tabNumber}`);
             } catch (insertError) {
               console.error("[saveResponse] ✗ Error inserting record:", insertError);
