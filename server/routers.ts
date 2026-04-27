@@ -107,19 +107,18 @@ export const appRouter = router({
             try {
               console.log(`[saveResponse] Inserting new record (10 values)...`);
               
-              // Use Drizzle ORM insert method
-              await db.insert(studentResponses).values({
-                studentId: student_id,
-                tabNumber: tab_number,
-                responseData: response_data,
-                colorFeelings: color_feelings,
-                fontShapeAnswers: font_shape_answers,
-                gestaltAnswers: gestalt_answers,
-                canvaLink: canva_link,
-                vectorFileUrl: vector_file_url,
-                presentationFileUrl: presentation_file_url,
-                updatedAt: new Date(),
-              });
+              // Use raw SQL with camelCase column names
+              await db.execute(sql`
+                INSERT INTO student_responses (
+                  studentId, tabNumber, responseData, colorFeelings, 
+                  fontShapeAnswers, gestaltAnswers, canvaLink, 
+                  vectorFileUrl, presentationFileUrl, updatedAt
+                ) VALUES (
+                  ${student_id}, ${tab_number}, ${response_data}, ${color_feelings},
+                  ${font_shape_answers}, ${gestalt_answers}, ${canva_link},
+                  ${vector_file_url}, ${presentation_file_url}, ${now}
+                )
+              `);
               console.log(`[saveResponse] ✓ Successfully inserted new record for student ${student_id}, tab ${tab_number}`);
             } catch (insertError) {
               console.error("[saveResponse] ✗ Error inserting record:", insertError);
