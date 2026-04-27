@@ -38,41 +38,73 @@ export const appRouter = router({
         colorFeelings: z.record(z.string(), z.string()).optional(),
         fontShapeAnswers: z.record(z.string(), z.string()).optional(),
         gestaltAnswers: z.record(z.string(), z.string()).optional(),
+        canvaLink: z.string().optional(),
+        vectorFileUrl: z.string().optional(),
+        presentationFileUrl: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         const db = await getDb();
-        if (!db) throw new Error("Database not available");
-        
+        if (!db) {
+          console.warn("[saveResponse] Database not available");
+          return { success: false, error: "Database not available" };
+        }
+
         try {
-          // Check if record exists
-          const existing = await db.select().from(studentResponses)
-            .where(and(eq(studentResponses.studentId, input.studentId), eq(studentResponses.tabNumber, input.tabNumber)));
+          console.log(`[saveResponse] Saving response for student ${input.studentId}, tab ${input.tabNumber}`);
           
-          if (existing && existing.length > 0) {
+          // Prepare the data to save
+          const dataToSave = {
+            responseData: JSON.stringify(input.responseData),
+            colorFeelings: input.colorFeelings ? JSON.stringify(input.colorFeelings) : null,
+            fontShapeAnswers: input.fontShapeAnswers ? JSON.stringify(input.fontShapeAnswers) : null,
+            gestaltAnswers: input.gestaltAnswers ? JSON.stringify(input.gestaltAnswers) : null,
+            canvaLink: input.canvaLink || null,
+            vectorFileUrl: input.vectorFileUrl || null,
+            presentationFileUrl: input.presentationFileUrl || null,
+          };
+
+          // Try to find existing record
+          let existing = null;
+          try {
+            const result = await db.select().from(studentResponses)
+              .where(and(eq(studentResponses.studentId, input.studentId), eq(studentResponses.tabNumber, input.tabNumber)));
+            existing = result && result.length > 0 ? result[0] : null;
+          } catch (queryError) {
+            console.error("[saveResponse] Error querying existing record:", queryError);
+            // Continue anyway - we'll try to insert
+          }
+
+          if (existing) {
             // Update existing record
-            await db.update(studentResponses).set({
-              responseData: JSON.stringify(input.responseData),
-              colorFeelings: input.colorFeelings ? JSON.stringify(input.colorFeelings) : null,
-              fontShapeAnswers: input.fontShapeAnswers ? JSON.stringify(input.fontShapeAnswers) : null,
-              gestaltAnswers: input.gestaltAnswers ? JSON.stringify(input.gestaltAnswers) : null,
-            }).where(eq(studentResponses.id, existing[0].id));
+            try {
+              await db.update(studentResponses).set(dataToSave).where(eq(studentResponses.id, existing.id));
+              console.log(`[saveResponse] Updated record ID ${existing.id}`);
+            } catch (updateError) {
+              console.error("[saveResponse] Error updating record:", updateError);
+              throw new Error(`Failed to update response: ${updateError instanceof Error ? updateError.message : 'Unknown error'}`);
+            }
           } else {
             // Insert new record
-            await db.insert(studentResponses).values([
-              {
-                studentId: input.studentId,
-                tabNumber: input.tabNumber,
-                responseData: JSON.stringify(input.responseData),
-                colorFeelings: input.colorFeelings ? JSON.stringify(input.colorFeelings) : null,
-                fontShapeAnswers: input.fontShapeAnswers ? JSON.stringify(input.fontShapeAnswers) : null,
-                gestaltAnswers: input.gestaltAnswers ? JSON.stringify(input.gestaltAnswers) : null,
-              }
-            ]);
+            try {
+              await db.insert(studentResponses).values([
+                {
+                  studentId: input.studentId,
+                  tabNumber: input.tabNumber,
+                  ...dataToSave,
+                }
+              ]);
+              console.log(`[saveResponse] Inserted new record for student ${input.studentId}, tab ${input.tabNumber}`);
+            } catch (insertError) {
+              console.error("[saveResponse] Error inserting record:", insertError);
+              throw new Error(`Failed to insert response: ${insertError instanceof Error ? insertError.message : 'Unknown error'}`);
+            }
           }
+
           return { success: true };
         } catch (error) {
-          console.error('Error saving response:', error);
-          throw new Error(`Failed to save response: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          console.error('[saveResponse] Error saving response:', error);
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+          throw new Error(`Failed to save response: ${errorMessage}`);
         }
       }),
 
@@ -81,15 +113,25 @@ export const appRouter = router({
       .query(async ({ input }) => {
         const db = await getDb();
         if (!db) return { isApproved: false };
-        const result = await db.select().from(approvalLog)
-          .where(and(eq(approvalLog.studentId, input.studentId), eq(approvalLog.tabNumber, input.tabNumber)));
-        return result.length > 0 ? result[0] : { isApproved: false };
+        try {
+          const result = await db.select().from(approvalLog)
+            .where(and(eq(approvalLog.studentId, input.studentId), eq(approvalLog.tabNumber, input.tabNumber)));
+          return result.length > 0 ? result[0] : { isApproved: false };
+        } catch (error) {
+          console.error('[getApprovalStatus] Error:', error);
+          return { isApproved: false };
+        }
       }),
 
     getAllStudents: publicProcedure.query(async () => {
       const db = await getDb();
       if (!db) return [];
-      return await db.select().from(students);
+      try {
+        return await db.select().from(students);
+      } catch (error) {
+        console.error('[getAllStudents] Error:', error);
+        return [];
+      }
     }),
 
     getStudentResponses: publicProcedure
@@ -97,7 +139,12 @@ export const appRouter = router({
       .query(async ({ input }) => {
         const db = await getDb();
         if (!db) return [];
-        return await db.select().from(studentResponses).where(eq(studentResponses.studentId, input.studentId));
+        try {
+          return await db.select().from(studentResponses).where(eq(studentResponses.studentId, input.studentId));
+        } catch (error) {
+          console.error('[getStudentResponses] Error:', error);
+          return [];
+        }
       }),
 
     updateApproval: publicProcedure
@@ -110,26 +157,31 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         const db = await getDb();
         if (!db) throw new Error("Database not available");
-        const existing = await db.select().from(approvalLog)
-          .where(and(eq(approvalLog.studentId, input.studentId), eq(approvalLog.tabNumber, input.tabNumber)));
-        if (existing.length > 0) {
-          await db.update(approvalLog).set({
-            isApproved: input.isApproved,
-            feedback: input.feedback,
-            approvedAt: input.isApproved ? new Date() : null,
-          }).where(eq(approvalLog.id, existing[0].id));
-        } else {
-          await db.insert(approvalLog).values([
-            {
-              studentId: input.studentId,
-              tabNumber: input.tabNumber,
+        try {
+          const existing = await db.select().from(approvalLog)
+            .where(and(eq(approvalLog.studentId, input.studentId), eq(approvalLog.tabNumber, input.tabNumber)));
+          if (existing.length > 0) {
+            await db.update(approvalLog).set({
               isApproved: input.isApproved,
               feedback: input.feedback,
               approvedAt: input.isApproved ? new Date() : null,
-            }
-          ]);
+            }).where(eq(approvalLog.id, existing[0].id));
+          } else {
+            await db.insert(approvalLog).values([
+              {
+                studentId: input.studentId,
+                tabNumber: input.tabNumber,
+                isApproved: input.isApproved,
+                feedback: input.feedback,
+                approvedAt: input.isApproved ? new Date() : null,
+              }
+            ]);
+          }
+          return { success: true };
+        } catch (error) {
+          console.error('[updateApproval] Error:', error);
+          throw new Error(`Failed to update approval: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
-        return { success: true };
       }),
   }),
 });
