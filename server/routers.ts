@@ -107,19 +107,19 @@ export const appRouter = router({
             try {
               console.log(`[saveResponse] Inserting new record with raw SQL (10 values)...`);
               
-              // Use raw SQL with snake_case column names to match actual database table
+              // Use raw SQL with camelCase column names to match actual database table
               await db.execute(
                 sql`INSERT INTO student_responses (
-                  student_id, 
-                  tab_number, 
-                  response_data, 
-                  color_feelings, 
-                  font_shape_answers, 
-                  gestalt_answers, 
-                  canva_link, 
-                  vector_file_url, 
-                  presentation_file_url, 
-                  updated_at
+                  studentId, 
+                  tabNumber, 
+                  responseData, 
+                  colorFeelings, 
+                  fontShapeAnswers, 
+                  gestaltAnswers, 
+                  canvaLink, 
+                  vectorFileUrl, 
+                  presentationFileUrl, 
+                  updatedAt
                 ) VALUES (
                   ${student_id},
                   ${tab_number},
