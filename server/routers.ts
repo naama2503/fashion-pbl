@@ -42,28 +42,38 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         const db = await getDb();
         if (!db) throw new Error("Database not available");
-        const existing = await db.select().from(studentResponses)
-          .where(and(eq(studentResponses.studentId, input.studentId), eq(studentResponses.tabNumber, input.tabNumber)));
-        if (existing.length > 0) {
-          await db.update(studentResponses).set({
-            responseData: JSON.stringify(input.responseData),
-            colorFeelings: input.colorFeelings ? JSON.stringify(input.colorFeelings) : null,
-            fontShapeAnswers: input.fontShapeAnswers ? JSON.stringify(input.fontShapeAnswers) : null,
-            gestaltAnswers: input.gestaltAnswers ? JSON.stringify(input.gestaltAnswers) : null,
-          }).where(eq(studentResponses.id, existing[0].id));
-        } else {
-          await db.insert(studentResponses).values([
-            {
-              studentId: input.studentId,
-              tabNumber: input.tabNumber,
+        
+        try {
+          // Check if record exists
+          const existing = await db.select().from(studentResponses)
+            .where(and(eq(studentResponses.studentId, input.studentId), eq(studentResponses.tabNumber, input.tabNumber)));
+          
+          if (existing && existing.length > 0) {
+            // Update existing record
+            await db.update(studentResponses).set({
               responseData: JSON.stringify(input.responseData),
               colorFeelings: input.colorFeelings ? JSON.stringify(input.colorFeelings) : null,
               fontShapeAnswers: input.fontShapeAnswers ? JSON.stringify(input.fontShapeAnswers) : null,
               gestaltAnswers: input.gestaltAnswers ? JSON.stringify(input.gestaltAnswers) : null,
-            }
-          ]);
+            }).where(eq(studentResponses.id, existing[0].id));
+          } else {
+            // Insert new record
+            await db.insert(studentResponses).values([
+              {
+                studentId: input.studentId,
+                tabNumber: input.tabNumber,
+                responseData: JSON.stringify(input.responseData),
+                colorFeelings: input.colorFeelings ? JSON.stringify(input.colorFeelings) : null,
+                fontShapeAnswers: input.fontShapeAnswers ? JSON.stringify(input.fontShapeAnswers) : null,
+                gestaltAnswers: input.gestaltAnswers ? JSON.stringify(input.gestaltAnswers) : null,
+              }
+            ]);
+          }
+          return { success: true };
+        } catch (error) {
+          console.error('Error saving response:', error);
+          throw new Error(`Failed to save response: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
-        return { success: true };
       }),
 
     getApprovalStatus: publicProcedure
