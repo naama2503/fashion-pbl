@@ -52,80 +52,86 @@ export const appRouter = router({
         try {
           console.log(`[saveResponse] Saving response for student ${input.studentId}, tab ${input.tabNumber}`);
           
-          // SAFE SAVE PROTOCOL: Manual field mapping with snake_case
-          // Force all fields to have values - no null/undefined
-          const safeData = {
-            studentId: input.studentId,
-            tabNumber: input.tabNumber,
-            responseData: JSON.stringify(input.responseData || {}),
-            colorFeelings: JSON.stringify(input.colorFeelings || {}),
-            fontShapeAnswers: JSON.stringify(input.fontShapeAnswers || {}),
-            gestaltAnswers: JSON.stringify(input.gestaltAnswers || {}),
-            canvaLink: input.canvaLink || "",
-            vectorFileUrl: input.vectorFileUrl || "",
-            presentationFileUrl: input.presentationFileUrl || "",
-          };
+          // EXACT PARAMETER MATCHING: Prepare all 10 values in order
+          const studentId = input.studentId;
+          const tabNumber = input.tabNumber;
+          const responseData = JSON.stringify(input.responseData || {});
+          const colorFeelings = JSON.stringify(input.colorFeelings || {});
+          const fontShapeAnswers = JSON.stringify(input.fontShapeAnswers || {});
+          const gestaltAnswers = JSON.stringify(input.gestaltAnswers || {});
+          const canvaLink = input.canvaLink || "";
+          const vectorFileUrl = input.vectorFileUrl || "";
+          const presentationFileUrl = input.presentationFileUrl || "";
+          const now = new Date();
 
-          console.log(`[saveResponse] Safe data prepared:`, safeData);
+          console.log(`[saveResponse] All 10 values prepared:`, {
+            studentId, tabNumber, responseData, colorFeelings, fontShapeAnswers, 
+            gestaltAnswers, canvaLink, vectorFileUrl, presentationFileUrl, updatedAt: now
+          });
 
           // Try to find existing record
           let existing = null;
           try {
             const result = await db.select().from(studentResponses)
-              .where(and(eq(studentResponses.studentId, input.studentId), eq(studentResponses.tabNumber, input.tabNumber)));
+              .where(and(eq(studentResponses.studentId, studentId), eq(studentResponses.tabNumber, tabNumber)));
             existing = result && result.length > 0 ? result[0] : null;
             console.log(`[saveResponse] Found existing record: ${existing ? 'yes' : 'no'}`);
           } catch (queryError) {
             console.error("[saveResponse] Error querying existing record:", queryError);
-            // Continue anyway - we'll try to insert
           }
 
           if (existing) {
-            // Update existing record
+            // Update existing record with all 9 updateable fields
             try {
+              console.log(`[saveResponse] Updating record ID ${existing.id}...`);
               await db.update(studentResponses)
                 .set({
-                  responseData: safeData.responseData,
-                  colorFeelings: safeData.colorFeelings,
-                  fontShapeAnswers: safeData.fontShapeAnswers,
-                  gestaltAnswers: safeData.gestaltAnswers,
-                  canvaLink: safeData.canvaLink,
-                  vectorFileUrl: safeData.vectorFileUrl,
-                  presentationFileUrl: safeData.presentationFileUrl,
+                  responseData,
+                  colorFeelings,
+                  fontShapeAnswers,
+                  gestaltAnswers,
+                  canvaLink,
+                  vectorFileUrl,
+                  presentationFileUrl,
+                  updatedAt: now,
                 })
                 .where(eq(studentResponses.id, existing.id));
-              console.log(`[saveResponse] Updated record ID ${existing.id}`);
+              console.log(`[saveResponse] ✓ Successfully updated record ID ${existing.id}`);
             } catch (updateError) {
-              console.error("[saveResponse] Error updating record:", updateError);
-              throw new Error(`Failed to update response: ${updateError instanceof Error ? updateError.message : 'Unknown error'}`);
+              console.error("[saveResponse] ✗ Error updating record:", updateError);
+              const errorMsg = updateError instanceof Error ? updateError.message : 'Unknown error';
+              throw new Error(`Failed to update response: ${errorMsg}`);
             }
           } else {
-            // Insert new record - SAFE SAVE PROTOCOL
+            // Insert new record with all 10 values
             try {
-              console.log(`[saveResponse] Attempting INSERT with safe data...`);
-              await db.insert(studentResponses).values([{
-                studentId: safeData.studentId,
-                tabNumber: safeData.tabNumber,
-                responseData: safeData.responseData,
-                colorFeelings: safeData.colorFeelings,
-                fontShapeAnswers: safeData.fontShapeAnswers,
-                gestaltAnswers: safeData.gestaltAnswers,
-                canvaLink: safeData.canvaLink,
-                vectorFileUrl: safeData.vectorFileUrl,
-                presentationFileUrl: safeData.presentationFileUrl,
-              }]);
-              console.log(`[saveResponse] Inserted new record for student ${input.studentId}, tab ${input.tabNumber}`);
+              console.log(`[saveResponse] Inserting new record with 10 values...`);
+              const insertPayload = {
+                studentId,
+                tabNumber,
+                responseData,
+                colorFeelings,
+                fontShapeAnswers,
+                gestaltAnswers,
+                canvaLink,
+                vectorFileUrl,
+                presentationFileUrl,
+              };
+              console.log(`[saveResponse] Insert payload:`, insertPayload);
+              
+              await db.insert(studentResponses).values([insertPayload]);
+              console.log(`[saveResponse] ✓ Successfully inserted new record for student ${studentId}, tab ${tabNumber}`);
             } catch (insertError) {
-              console.error("[saveResponse] Error inserting record:", insertError);
+              console.error("[saveResponse] ✗ Error inserting record:", insertError);
               const errorMsg = insertError instanceof Error ? insertError.message : 'Unknown error';
-              console.error("[saveResponse] EXACT ERROR:", errorMsg);
+              console.error("[saveResponse] EXACT DATABASE ERROR:", errorMsg);
               throw new Error(`Failed to insert response: ${errorMsg}`);
             }
           }
 
           return { success: true };
         } catch (error) {
-          console.error('[saveResponse] Error saving response:', error);
+          console.error('[saveResponse] ✗ Final error:', error);
           const errorMessage = error instanceof Error ? error.message : 'Unknown error';
           throw new Error(`Failed to save response: ${errorMessage}`);
         }
