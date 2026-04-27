@@ -36,4 +36,4 @@
 ## Backend & Admin
 - [x] Teacher Admin Dashboard - Review and approve submissions (connected to tRPC)
 - [x] tRPC backend wiring - Connect all tabs to database
-- [ ] Translate all remaining UI strings
+- [x] Translate all remaining UI strings (AdminDashboard + all tabs)

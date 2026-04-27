@@ -170,7 +170,7 @@ export default function AdminDashboard() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-4">
         <Card className="w-full max-w-md p-8 border-2 border-gray-900">
           <h1 className="text-3xl font-black mb-2 text-center">{translations.admin.title}</h1>
-          <p className="text-center text-gray-600 mb-6">Teachers only</p>
+          <p className="text-center text-gray-600 mb-6">Teachers only / רק מורים</p>
 
           <div className="space-y-4">
             <div className="relative">
@@ -195,7 +195,7 @@ export default function AdminDashboard() {
             </Button>
           </div>
 
-          <p className="text-xs text-gray-500 text-center mt-4">Demo password: teacher123</p>
+          <p className="text-xs text-gray-500 text-center mt-4">Demo password: teacher123 / סיסמה: teacher123</p>
         </Card>
       </div>
     );
@@ -206,12 +206,12 @@ export default function AdminDashboard() {
       <div className="min-h-screen bg-amber-50 p-4">
         <div className="container">
           <Button onClick={() => setSelectedStudent(null)} variant="outline" className="mb-6">
-            ← Back to Students
+            ← Back to Students / חזור לתלמידים
           </Button>
 
           <Card className="p-8 border-2 border-gray-300">
             <h2 className="text-3xl font-black mb-2">{selectedStudent.name}</h2>
-            <p className="text-gray-600 mb-6">{selectedStudent.group}</p>
+            <p className="text-gray-600 mb-6">{selectedStudent.group} / קבוצה</p>
 
             <div className="space-y-8">
               {[
