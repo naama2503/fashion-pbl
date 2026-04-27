@@ -226,7 +226,49 @@ export default function ProjectPage() {
   const [tab2GrammarValid, setTab2GrammarValid] = useState(false);
   const [tab3GrammarValid, setTab3GrammarValid] = useState(false);
 
+  const [showPreviousWork, setShowPreviousWork] = useState(false);
+  const [previousWorkData, setPreviousWorkData] = useState<any>(null);
+  const [isLoadingPreviousWork, setIsLoadingPreviousWork] = useState(false);
+
   const tabColor = COLORS[currentTab];
+
+  const fetchResponseQuery = trpc.pbl.fetchResponse.useQuery(
+    { studentId: parseInt(localStorage.getItem('studentId') || '1'), tabNumber: currentTab + 1 },
+    { enabled: false }
+  );
+
+  const handleViewPreviousWork = async () => {
+    setIsLoadingPreviousWork(true);
+    try {
+      let studentId = localStorage.getItem('studentId');
+      if (!studentId) {
+        studentId = '1';
+        localStorage.setItem('studentId', studentId);
+      }
+      
+      const data = await fetchResponseQuery.refetch();
+      if (data.data) {
+        setPreviousWorkData(data.data);
+        setShowPreviousWork(true);
+      } else {
+        toast.info('No previous work found for this tab.');
+      }
+    } catch (error) {
+      console.error('Error fetching previous work:', error);
+      toast.error('Failed to load previous work.');
+    } finally {
+      setIsLoadingPreviousWork(false);
+    }
+  };
+
+  const handleLoadPreviousWork = () => {
+    if (previousWorkData) {
+      setResponses(previousWorkData.responseData || {});
+      setTab3Responses(previousWorkData.responseData || {});
+      setShowPreviousWork(false);
+      toast.success('Previous work loaded!');
+    }
+  };
 
   const canAccessTab = (tabIndex: number) => {
     if (tabIndex === 0) return true;
@@ -894,23 +936,40 @@ export default function ProjectPage() {
                       </div>
                     )}
                   </div>
-                  <button
-                    onClick={handleSaveAndContinue}
-                    disabled={isLocked}
-                    style={{
-                      width: "100%",
-                      backgroundColor: isLocked ? "#D1D5DB" : "#FDBA74",
-                      color: "#333333",
-                      padding: "0.75rem",
-                      fontSize: "1rem",
-                      fontWeight: "bold",
-                      border: "none",
-                      borderRadius: "0.5rem",
-                      cursor: isLocked ? "not-allowed" : "pointer",
-                    }}
-                  >
-                    Save & Continue / שמור והמשך
-                  </button>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                    <button
+                      onClick={handleViewPreviousWork}
+                      disabled={isLoadingPreviousWork}
+                      style={{
+                        backgroundColor: "#E0E7FF",
+                        color: "#333333",
+                        padding: "0.75rem",
+                        fontSize: "0.9rem",
+                        fontWeight: "bold",
+                        border: "2px solid #818CF8",
+                        borderRadius: "0.5rem",
+                        cursor: isLoadingPreviousWork ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      {isLoadingPreviousWork ? "Loading..." : "📋 View Previous Work"}
+                    </button>
+                    <button
+                      onClick={handleSaveAndContinue}
+                      disabled={isLocked}
+                      style={{
+                        backgroundColor: isLocked ? "#D1D5DB" : "#FDBA74",
+                        color: "#333333",
+                        padding: "0.75rem",
+                        fontSize: "1rem",
+                        fontWeight: "bold",
+                        border: "none",
+                        borderRadius: "0.5rem",
+                        cursor: isLocked ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      Save & Continue / שמור והמשך
+                    </button>
+                  </div>
                 </div>
               </div>
               <div>

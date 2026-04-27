@@ -151,6 +151,41 @@ export const appRouter = router({
         }
       }),
 
+    fetchResponse: publicProcedure
+      .input(z.object({ studentId: z.number(), tabNumber: z.number() }))
+      .query(async ({ input }) => {
+        const db = await getDb();
+        if (!db) {
+          console.warn('[fetchResponse] Database not available');
+          return null;
+        }
+        try {
+          console.log(`[fetchResponse] Fetching response for student ${input.studentId}, tab ${input.tabNumber}`);
+          const result = await db.select().from(studentResponses)
+            .where(and(eq(studentResponses.studentId, input.studentId), eq(studentResponses.tabNumber, input.tabNumber)));
+          
+          if (result.length === 0) {
+            console.log(`[fetchResponse] No response found for student ${input.studentId}, tab ${input.tabNumber}`);
+            return null;
+          }
+          
+          const response = result[0];
+          console.log(`[fetchResponse] Found response:`, response);
+          
+          // Parse JSON fields if they're strings
+          return {
+            ...response,
+            responseData: typeof response.responseData === 'string' ? JSON.parse(response.responseData) : response.responseData,
+            colorFeelings: typeof response.colorFeelings === 'string' ? JSON.parse(response.colorFeelings) : response.colorFeelings,
+            fontShapeAnswers: typeof response.fontShapeAnswers === 'string' ? JSON.parse(response.fontShapeAnswers) : response.fontShapeAnswers,
+            gestaltAnswers: typeof response.gestaltAnswers === 'string' ? JSON.parse(response.gestaltAnswers) : response.gestaltAnswers,
+          };
+        } catch (error) {
+          console.error('[fetchResponse] Error:', error);
+          return null;
+        }
+      }),
+
     getApprovalStatus: publicProcedure
       .input(z.object({ studentId: z.number(), tabNumber: z.number() }))
       .query(async ({ input }) => {
