@@ -1070,15 +1070,21 @@ export default function ProjectPage() {
                       style={{
                         width: "100%",
                         padding: "1rem",
-                        border: !meetsMinimum && researchText.length > 0 ? "2px solid #DC2626" : "1px solid #D1D5DB",
+                        border: !researchText.trim() ? "2px solid #DC2626" : !meetsMinimum && researchText.length > 0 ? "2px solid #DC2626" : "1px solid #D1D5DB",
                         borderRadius: "0.375rem",
                         fontFamily: "'Alef', 'Assistant', sans-serif",
                         minHeight: "200px",
                         resize: "vertical",
                         fontSize: "1rem",
+                        backgroundColor: !researchText.trim() ? "#FEE2E2" : "#FFFFFF",
                       }}
                       placeholder="Paste your research and writing here. Minimum 100 words required. / הדבק את המחקר והכתיבה שלך. מינימום 100 מילים."
                     />
+                    {!researchText.trim() && (
+                      <p style={{ color: "#DC2626", fontSize: "0.875rem", marginTop: "0.5rem", fontWeight: "bold" }}>
+                        ⚠️ This field is required! (שדה זה נדרש!)
+                      </p>
+                    )}
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.5rem" }}>
                       <span style={{ fontSize: "0.875rem", color: meetsMinimum ? "#16A34A" : "#DC2626", fontWeight: "bold" }}>
                         Word count / ספיראת מילים: {wordCount} / 100 {meetsMinimum ? "✓" : ""}

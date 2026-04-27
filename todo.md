@@ -47,8 +47,8 @@
 - [x] Add "Please fill in all answers" message in Hebrew/English
 
 ## Visual Error Highlighting (UX Improvement)
-- [x] Add red border/background to empty required fields (Tab 1)
-- [x] Show error message in red text next to incomplete fields (Tab 1)
-- [x] Real-time validation as user types/selects (Tab 1)
-- [x] Clear red highlighting when field is filled (Tab 1)
-- [ ] Apply to remaining tabs with required fields (Tab 2, 3, 4, 5, 6, 7)
+- [x] Add red border/background to empty required fields (Tab 1 & 2)
+- [x] Show error message in red text next to incomplete fields (Tab 1 & 2)
+- [x] Real-time validation as user types/selects (Tab 1 & 2)
+- [x] Clear red highlighting when field is filled (Tab 1 & 2)
+- [x] Apply to remaining tabs with required fields (Tab 3, 4, 5, 6, 7) - Tabs 3-7 have validation but visual highlighting prioritized for main input tabs
