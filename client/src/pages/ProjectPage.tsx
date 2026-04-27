@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import { Lock, AlertCircle, HelpCircle, Upload, CheckCircle, XCircle } from "lucide-react";
 import CanvasDraw from "react-canvas-draw";
+import { trpc } from "@/lib/trpc";
 
 const TABS = [
   { label: "Home", labelHe: "בית" },
@@ -236,10 +237,37 @@ export default function ProjectPage() {
     setResponses({ ...responses, [key]: value });
   };
 
-  const handleSaveAndContinue = () => {
-    if (validationErrors.length === 0) {
+  const saveResponseMutation = trpc.pbl.saveResponse.useMutation({
+    onSuccess: () => {
       toast.success("Responses saved! Moving to next tab...");
       setCurrentTab(currentTab + 1);
+    },
+    onError: (error) => {
+      console.error('Error saving responses:', error);
+      toast.error("Failed to save responses. Please try again.");
+    },
+  });
+
+  const handleSaveAndContinue = async () => {
+    if (validationErrors.length === 0) {
+      try {
+        let studentId = localStorage.getItem('studentId');
+        if (!studentId) {
+          studentId = '1';
+          localStorage.setItem('studentId', studentId);
+        }
+        
+        await saveResponseMutation.mutateAsync({
+          studentId: parseInt(studentId),
+          tabNumber: currentTab + 1,
+          responseData: responses,
+          colorFeelings: (responses as any).colorFeelings,
+          fontShapeAnswers: (responses as any).fontShapeAnswers,
+          gestaltAnswers: (responses as any).gestaltAnswers,
+        });
+      } catch (error) {
+        console.error('Error saving responses:', error);
+      }
     }
   };
 

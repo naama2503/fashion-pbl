@@ -3,17 +3,18 @@
  * Simple password protection + approval system for all 7 tabs
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { translations } from "@/lib/translations";
-import { Eye, EyeOff, CheckCircle, XCircle } from "lucide-react";
+import { Eye, EyeOff, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 const TEACHER_PASSWORD = "teacher123"; // Simple password (in production, use proper auth)
 
-// Mock student data
+// Mock student data (fallback)
 const MOCK_STUDENTS = [
   {
     id: 1,
@@ -79,6 +80,28 @@ export default function AdminDashboard() {
   const [showPassword, setShowPassword] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentData | null>(null);
   const [students, setStudents] = useState(MOCK_STUDENTS);
+  const [loading, setLoading] = useState(false);
+  
+  // Fetch all students from database
+  const { data: dbStudents, isLoading: isLoadingStudents } = trpc.pbl.getAllStudents.useQuery(undefined, {
+    enabled: isLoggedIn,
+  });
+  
+  // Fetch student responses
+  const { data: studentResponses } = trpc.pbl.getStudentResponses.useQuery(
+    { studentId: selectedStudent?.id || 0 },
+    { enabled: isLoggedIn && !!selectedStudent?.id }
+  );
+  
+  // Update approval mutation
+  const updateApprovalMutation = trpc.pbl.updateApproval.useMutation({
+    onSuccess: () => {
+      toast.success("Approval updated successfully!");
+    },
+    onError: (error) => {
+      toast.error("Failed to update approval");
+    },
+  });
 
   const handleLogin = () => {
     if (password === TEACHER_PASSWORD) {
@@ -90,32 +113,56 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleApprove = (studentId: number, tabIndex: number) => {
-    setStudents(
-      students.map((s) => {
-        if (s.id === studentId) {
-          const newApprovals = [...s.approvals];
-          newApprovals[tabIndex] = true;
-          return { ...s, approvals: newApprovals };
-        }
-        return s;
-      })
-    );
-    toast.success(`Tab ${tabIndex + 1} approved! (מאושר!)`);
+  const handleApprove = async (studentId: number, tabIndex: number) => {
+    try {
+      await updateApprovalMutation.mutateAsync({
+        studentId,
+        tabNumber: tabIndex + 1,
+        isApproved: true,
+      });
+      
+      // Update local state
+      setStudents(
+        students.map((s) => {
+          if (s.id === studentId) {
+            const newApprovals = [...s.approvals];
+            newApprovals[tabIndex] = true;
+            return { ...s, approvals: newApprovals };
+          }
+          return s;
+        })
+      );
+      toast.success(`Tab ${tabIndex + 1} approved!`);
+    } catch (error) {
+      console.error('Error approving:', error);
+      toast.error('Failed to approve tab');
+    }
   };
 
-  const handleReject = (studentId: number, tabIndex: number) => {
-    setStudents(
-      students.map((s) => {
-        if (s.id === studentId) {
-          const newApprovals = [...s.approvals];
-          newApprovals[tabIndex] = false;
-          return { ...s, approvals: newApprovals };
-        }
-        return s;
-      })
-    );
-    toast.success(`Tab ${tabIndex + 1} rejected for revision`);
+  const handleReject = async (studentId: number, tabIndex: number) => {
+    try {
+      await updateApprovalMutation.mutateAsync({
+        studentId,
+        tabNumber: tabIndex + 1,
+        isApproved: false,
+      });
+      
+      // Update local state
+      setStudents(
+        students.map((s) => {
+          if (s.id === studentId) {
+            const newApprovals = [...s.approvals];
+            newApprovals[tabIndex] = false;
+            return { ...s, approvals: newApprovals };
+          }
+          return s;
+        })
+      );
+      toast.success(`Tab ${tabIndex + 1} rejected for revision`);
+    } catch (error) {
+      console.error('Error rejecting:', error);
+      toast.error('Failed to reject tab');
+    }
   };
 
   if (!isLoggedIn) {
