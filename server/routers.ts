@@ -103,36 +103,23 @@ export const appRouter = router({
               throw new Error(`Failed to update response: ${errorMsg}`);
             }
           } else {
-            // Insert new record with all 10 values using raw SQL with snake_case column names
+            // Insert new record with all 10 values using Drizzle ORM
             try {
-              console.log(`[saveResponse] Inserting new record with raw SQL (10 values)...`);
+              console.log(`[saveResponse] Inserting new record (10 values)...`);
               
-              // Use raw SQL with camelCase column names to match actual database table
-              await db.execute(
-                sql`INSERT INTO student_responses (
-                  studentId, 
-                  tabNumber, 
-                  responseData, 
-                  colorFeelings, 
-                  fontShapeAnswers, 
-                  gestaltAnswers, 
-                  canvaLink, 
-                  vectorFileUrl, 
-                  presentationFileUrl, 
-                  updatedAt
-                ) VALUES (
-                  ${student_id},
-                  ${tab_number},
-                  ${response_data},
-                  ${color_feelings},
-                  ${font_shape_answers},
-                  ${gestalt_answers},
-                  ${canva_link},
-                  ${vector_file_url},
-                  ${presentation_file_url},
-                  ${now}
-                )`
-              );
+              // Use Drizzle ORM insert method
+              await db.insert(studentResponses).values({
+                studentId: student_id,
+                tabNumber: tab_number,
+                responseData: response_data,
+                colorFeelings: color_feelings,
+                fontShapeAnswers: font_shape_answers,
+                gestaltAnswers: gestalt_answers,
+                canvaLink: canva_link,
+                vectorFileUrl: vector_file_url,
+                presentationFileUrl: presentation_file_url,
+                updatedAt: new Date(),
+              });
               console.log(`[saveResponse] ✓ Successfully inserted new record for student ${student_id}, tab ${tab_number}`);
             } catch (insertError) {
               console.error("[saveResponse] ✗ Error inserting record:", insertError);
