@@ -52,12 +52,12 @@ export const appRouter = router({
         try {
           console.log(`[saveResponse] Saving response for student ${input.studentId}, tab ${input.tabNumber}`);
           
-          // Prepare the data to save
+          // Prepare the data to save - stringify JSON objects
           const dataToSave = {
-            responseData: JSON.stringify(input.responseData),
-            colorFeelings: input.colorFeelings ? JSON.stringify(input.colorFeelings) : null,
-            fontShapeAnswers: input.fontShapeAnswers ? JSON.stringify(input.fontShapeAnswers) : null,
-            gestaltAnswers: input.gestaltAnswers ? JSON.stringify(input.gestaltAnswers) : null,
+            responseData: JSON.stringify(input.responseData || {}),
+            colorFeelings: JSON.stringify(input.colorFeelings || {}),
+            fontShapeAnswers: JSON.stringify(input.fontShapeAnswers || {}),
+            gestaltAnswers: JSON.stringify(input.gestaltAnswers || {}),
             canvaLink: input.canvaLink || null,
             vectorFileUrl: input.vectorFileUrl || null,
             presentationFileUrl: input.presentationFileUrl || null,
@@ -69,6 +69,7 @@ export const appRouter = router({
             const result = await db.select().from(studentResponses)
               .where(and(eq(studentResponses.studentId, input.studentId), eq(studentResponses.tabNumber, input.tabNumber)));
             existing = result && result.length > 0 ? result[0] : null;
+            console.log(`[saveResponse] Found existing record: ${existing ? 'yes' : 'no'}`);
           } catch (queryError) {
             console.error("[saveResponse] Error querying existing record:", queryError);
             // Continue anyway - we'll try to insert
@@ -77,7 +78,7 @@ export const appRouter = router({
           if (existing) {
             // Update existing record
             try {
-              await db.update(studentResponses).set(dataToSave).where(eq(studentResponses.id, existing.id));
+              await db.update(studentResponses).set(dataToSave as any).where(eq(studentResponses.id, existing.id));
               console.log(`[saveResponse] Updated record ID ${existing.id}`);
             } catch (updateError) {
               console.error("[saveResponse] Error updating record:", updateError);
@@ -86,13 +87,13 @@ export const appRouter = router({
           } else {
             // Insert new record
             try {
-              await db.insert(studentResponses).values([
-                {
-                  studentId: input.studentId,
-                  tabNumber: input.tabNumber,
-                  ...dataToSave,
-                }
-              ]);
+              const insertData = {
+                studentId: input.studentId,
+                tabNumber: input.tabNumber,
+                ...dataToSave,
+              };
+              console.log(`[saveResponse] Inserting new record with data:`, insertData);
+              await db.insert(studentResponses).values([insertData as any]);
               console.log(`[saveResponse] Inserted new record for student ${input.studentId}, tab ${input.tabNumber}`);
             } catch (insertError) {
               console.error("[saveResponse] Error inserting record:", insertError);

@@ -32,10 +32,10 @@ export const studentResponses = mysqlTable("student_responses", {
   id: int("id").autoincrement().primaryKey(),
   studentId: int("studentId").notNull(),
   tabNumber: int("tabNumber").notNull(), // 1-7
-  responseData: text("responseData").notNull(), // JSON stringified
-  colorFeelings: text("colorFeelings"), // JSON stringified
-  fontShapeAnswers: text("fontShapeAnswers"), // JSON stringified
-  gestaltAnswers: text("gestaltAnswers"), // JSON stringified
+  responseData: text("responseData").notNull().default("{}"), // JSON stringified
+  colorFeelings: text("colorFeelings").default("{}"), // JSON stringified
+  fontShapeAnswers: text("fontShapeAnswers").default("{}"), // JSON stringified
+  gestaltAnswers: text("gestaltAnswers").default("{}"), // JSON stringified
   canvaLink: text("canvaLink"), // Tab 5 Canva link
   vectorFileUrl: text("vectorFileUrl"), // Tab 6 vector file
   presentationFileUrl: text("presentationFileUrl"), // Tab 7 presentation file
