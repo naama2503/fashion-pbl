@@ -37,3 +37,11 @@
 - [x] Teacher Admin Dashboard - Review and approve submissions (connected to tRPC)
 - [x] tRPC backend wiring - Connect all tabs to database
 - [x] Translate all remaining UI strings (AdminDashboard + all tabs)
+
+## Database & Query Fixes (BLOCKING)
+- [x] Fix SQL query to use snake_case column names (student_id, tab_number, etc)
+- [x] Drop and recreate student_responses table with snake_case columns
+- [x] Update saveResponse mutation to use snake_case in raw SQL
+- [x] Update fetchResponse query to use snake_case column names
+- [x] Add validation - disable Continue button until all fields filled
+- [x] Add "Please fill in all answers" message in Hebrew/English

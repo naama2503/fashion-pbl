@@ -52,28 +52,28 @@ export const appRouter = router({
         try {
           console.log(`[saveResponse] Saving response for student ${input.studentId}, tab ${input.tabNumber}`);
           
-          // Prepare all 10 values with exact types - using camelCase as that's what exists in DB
-          const studentId = input.studentId;
-          const tabNumber = input.tabNumber;
-          const responseData = JSON.stringify(input.responseData || {});
-          const colorFeelings = JSON.stringify(input.colorFeelings || {});
-          const fontShapeAnswers = JSON.stringify(input.fontShapeAnswers || {});
-          const gestaltAnswers = JSON.stringify(input.gestaltAnswers || {});
-          const canvaLink = input.canvaLink || "";
-          const vectorFileUrl = input.vectorFileUrl || "";
-          const presentationFileUrl = input.presentationFileUrl || "";
+          // Prepare all 10 values with exact types - using snake_case for database
+          const student_id = input.studentId;
+          const tab_number = input.tabNumber;
+          const response_data = JSON.stringify(input.responseData || {});
+          const color_feelings = JSON.stringify(input.colorFeelings || {});
+          const font_shape_answers = JSON.stringify(input.fontShapeAnswers || {});
+          const gestalt_answers = JSON.stringify(input.gestaltAnswers || {});
+          const canva_link = input.canvaLink || "";
+          const vector_file_url = input.vectorFileUrl || "";
+          const presentation_file_url = input.presentationFileUrl || "";
           const now = new Date().toISOString();
 
           console.log(`[saveResponse] All 10 values prepared:`, {
-            studentId, tabNumber, responseData, colorFeelings, fontShapeAnswers, 
-            gestaltAnswers, canvaLink, vectorFileUrl, presentationFileUrl, updatedAt: now
+            student_id, tab_number, response_data, color_feelings, font_shape_answers, 
+            gestalt_answers, canva_link, vector_file_url, presentation_file_url, updated_at: now
           });
 
-          // Try to find existing record
+          // Try to find existing record using snake_case column names
           let existing = null;
           try {
             const result = await db.select().from(studentResponses)
-              .where(and(eq(studentResponses.studentId, studentId), eq(studentResponses.tabNumber, tabNumber)));
+              .where(and(eq(studentResponses.studentId, student_id), eq(studentResponses.tabNumber, tab_number)));
             existing = result && result.length > 0 ? result[0] : null;
             console.log(`[saveResponse] Found existing record: ${existing ? 'yes' : 'no'}`);
           } catch (queryError) {
@@ -86,13 +86,13 @@ export const appRouter = router({
               console.log(`[saveResponse] Updating record ID ${existing.id}...`);
               await db.update(studentResponses)
                 .set({
-                  responseData,
-                  colorFeelings,
-                  fontShapeAnswers,
-                  gestaltAnswers,
-                  canvaLink,
-                  vectorFileUrl,
-                  presentationFileUrl,
+                  responseData: response_data,
+                  colorFeelings: color_feelings,
+                  fontShapeAnswers: font_shape_answers,
+                  gestaltAnswers: gestalt_answers,
+                  canvaLink: canva_link,
+                  vectorFileUrl: vector_file_url,
+                  presentationFileUrl: presentation_file_url,
                   updatedAt: new Date(),
                 })
                 .where(eq(studentResponses.id, existing.id));
@@ -103,38 +103,37 @@ export const appRouter = router({
               throw new Error(`Failed to update response: ${errorMsg}`);
             }
           } else {
-            // Insert new record with all 10 values using raw SQL for exact control
-            // Using camelCase column names as that's what exists in the actual database
+            // Insert new record with all 10 values using raw SQL with snake_case column names
             try {
               console.log(`[saveResponse] Inserting new record with raw SQL (10 values)...`);
               
-              // Use raw SQL to have exact control over parameters - using ACTUAL camelCase column names
+              // Use raw SQL with snake_case column names to match actual database table
               await db.execute(
                 sql`INSERT INTO student_responses (
-                  studentId, 
-                  tabNumber, 
-                  responseData, 
-                  colorFeelings, 
-                  fontShapeAnswers, 
-                  gestaltAnswers, 
-                  canvaLink, 
-                  vectorFileUrl, 
-                  presentationFileUrl, 
-                  updatedAt
+                  student_id, 
+                  tab_number, 
+                  response_data, 
+                  color_feelings, 
+                  font_shape_answers, 
+                  gestalt_answers, 
+                  canva_link, 
+                  vector_file_url, 
+                  presentation_file_url, 
+                  updated_at
                 ) VALUES (
-                  ${studentId},
-                  ${tabNumber},
-                  ${responseData},
-                  ${colorFeelings},
-                  ${fontShapeAnswers},
-                  ${gestaltAnswers},
-                  ${canvaLink},
-                  ${vectorFileUrl},
-                  ${presentationFileUrl},
+                  ${student_id},
+                  ${tab_number},
+                  ${response_data},
+                  ${color_feelings},
+                  ${font_shape_answers},
+                  ${gestalt_answers},
+                  ${canva_link},
+                  ${vector_file_url},
+                  ${presentation_file_url},
                   ${now}
                 )`
               );
-              console.log(`[saveResponse] ✓ Successfully inserted new record for student ${studentId}, tab ${tabNumber}`);
+              console.log(`[saveResponse] ✓ Successfully inserted new record for student ${student_id}, tab ${tab_number}`);
             } catch (insertError) {
               console.error("[saveResponse] ✗ Error inserting record:", insertError);
               const errorMsg = insertError instanceof Error ? insertError.message : 'Unknown error';

@@ -291,7 +291,29 @@ export default function ProjectPage() {
   });
 
   const handleSaveAndContinue = async () => {
-    if (validationErrors.length === 0) {
+    // Check if current tab has required fields filled
+    const checkTabValidation = () => {
+      if (currentTab === 1) {
+        // Tab 1: Group Decision - check population and why
+        const population = (responses as any).population || '';
+        const whyChosen = (responses as any).whyChosen || '';
+        if (!population.trim() || !whyChosen.trim()) {
+          toast.error('Please fill in all answers! (אנא מלאו את כל התשובות!)');
+          return false;
+        }
+      } else if (currentTab === 2) {
+        // Tab 2: Research - check research text
+        const researchText = (responses as any).researchText || '';
+        const wordCount = researchText.trim().split(/\s+/).filter((w: string) => w.length > 0).length;
+        if (wordCount < 100) {
+          toast.error('Please write at least 100 words! (אנא כתוב לפחות 100 מילים!)');
+          return false;
+        }
+      }
+      return true;
+    };
+
+    if (validationErrors.length === 0 && checkTabValidation()) {
       try {
         let studentId = localStorage.getItem('studentId');
         if (!studentId) {
