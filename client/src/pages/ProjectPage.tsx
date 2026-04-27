@@ -995,7 +995,7 @@ export default function ProjectPage() {
                     </button>
                     <button
                       onClick={handleSaveAndContinue}
-                      disabled={isLocked}
+                      disabled={false}
                       style={{
                         backgroundColor: isLocked ? "#D1D5DB" : "#FDBA74",
                         color: "#333333",
@@ -1119,7 +1119,7 @@ export default function ProjectPage() {
                   
                   <button
                     onClick={handleSaveAndContinue}
-                    disabled={isLocked || !meetsMinimum || !gemVisited}
+                    disabled={!meetsMinimum || !gemVisited}
                     style={{
                       width: "100%",
                       backgroundColor: isLocked || !meetsMinimum || !gemVisited ? "#D1D5DB" : "#FCA5A5",
