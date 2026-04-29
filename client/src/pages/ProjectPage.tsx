@@ -248,7 +248,22 @@ export default function ProjectPage() {
 
   const canAccessTab = (tabIndex: number) => {
     if (tabIndex === 0) return true;
-    return !isLocked;
+    if (tabIndex === 1) return true;
+    if (tabIndex === 2) {
+      const population = (responses as any).chosenPopulation || '';
+      const whyChosen = (responses as any).whyChosen || '';
+      return population.trim() && whyChosen.trim() && checkTabCompletion(1, { chosen_population: population, why_chosen: whyChosen });
+    }
+    if (tabIndex === 3) {
+      const researchText = (responses as any).researchText || '';
+      const wordCount = researchText.trim().split(/\s+/).filter((w: string) => w.length > 0).length;
+      return wordCount >= 100 && checkTabCompletion(2, { research_text: researchText });
+    }
+    if (tabIndex === 4) {
+      const thornVsSmile = (responses as any).thornVsSmile || '';
+      return thornVsSmile.trim() && checkTabCompletion(3, { thorn_vs_smile: thornVsSmile });
+    }
+    return false;
   };
 
   const updateResponse = (key: string, value: any) => {
