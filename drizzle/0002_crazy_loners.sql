@@ -14,10 +14,10 @@ ALTER TABLE `approval_log` ADD `created_at` timestamp DEFAULT (now()) NOT NULL;-
 ALTER TABLE `approval_log` ADD `updated_at` timestamp DEFAULT (now()) NOT NULL ON UPDATE CURRENT_TIMESTAMP;--> statement-breakpoint
 ALTER TABLE `student_responses` ADD `student_id` int NOT NULL;--> statement-breakpoint
 ALTER TABLE `student_responses` ADD `tab_number` int NOT NULL;--> statement-breakpoint
-ALTER TABLE `student_responses` ADD `response_data` text DEFAULT ('{}') NOT NULL;--> statement-breakpoint
-ALTER TABLE `student_responses` ADD `color_feelings` text DEFAULT ('{}');--> statement-breakpoint
-ALTER TABLE `student_responses` ADD `font_shape_answers` text DEFAULT ('{}');--> statement-breakpoint
-ALTER TABLE `student_responses` ADD `gestalt_answers` text DEFAULT ('{}');--> statement-breakpoint
+ALTER TABLE `student_responses` ADD `response_data` text NOT NULL;--> statement-breakpoint
+ALTER TABLE `student_responses` ADD `color_feelings` text;--> statement-breakpoint
+ALTER TABLE `student_responses` ADD `font_shape_answers` text;--> statement-breakpoint
+ALTER TABLE `student_responses` ADD `gestalt_answers` text;--> statement-breakpoint
 ALTER TABLE `student_responses` ADD `canva_link` text;--> statement-breakpoint
 ALTER TABLE `student_responses` ADD `vector_file_url` text;--> statement-breakpoint
 ALTER TABLE `student_responses` ADD `presentation_file_url` text;--> statement-breakpoint
