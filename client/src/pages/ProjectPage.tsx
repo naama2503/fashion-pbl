@@ -596,11 +596,11 @@ export default function ProjectPage() {
                   </div>
                 </div>
 
-                {/* PART C: Gestalt Gallery with Brand Logos */}
+                {/* PART D: Gestalt Gallery with Brand Logos */}
                 <>
                 <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
                   <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
-                    Part C - Gestalt Principles (חלק ג - עקרונות גשטלט)
+                    Part D - Gestalt Principles (חלק ד - עקרונות גשטלט)
                   </h2>
                   <p style={{ backgroundColor: "#DBEAFE", border: "2px solid #3B82F6", borderRadius: "0.5rem", padding: "1rem", marginBottom: "2rem", color: "#1E40AF", fontSize: "0.95rem", lineHeight: "1.6" }}>
                     Gestalt principles explain how our brain naturally organizes visual elements into groups or a whole. (עקרונות הגשטלט מסבירים כיצד המוח שלנו מארגן באופן טבעי אלמנטים חזותיים לקבוצות או ליחידה אחת שלמה.)
