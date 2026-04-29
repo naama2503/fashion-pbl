@@ -754,14 +754,26 @@ export default function ProjectPage() {
                   </div>
 
                   {(() => {
+                    const thornVsSmileValid = tab3Responses.thornVsSmile && /^[A-Z].*[.!?]$/.test(tab3Responses.thornVsSmile.trim());
+                    const fontPsychologyValid = tab3Responses.fontShapeAnswers && /^[A-Z].*[.!?]$/.test(tab3Responses.fontShapeAnswers.trim());
                     const allQuizAnswered = GESTALT_PRACTICE_QUIZ.every((_, idx) => tab3Responses[`gestalt_quiz_${idx}`]);
                     const allQuizCorrect = GESTALT_PRACTICE_QUIZ.every((logo, idx) => tab3Responses[`gestalt_quiz_${idx}`] === logo.principle);
-                    const canContinue = !isLocked && allQuizAnswered && allQuizCorrect;
+                    const canContinue = !isLocked && thornVsSmileValid && fontPsychologyValid && allQuizAnswered && allQuizCorrect;
                     return (
                       <>
+                        {!thornVsSmileValid && tab3Responses.thornVsSmile && (
+                          <div style={{ backgroundColor: "#FEE2E2", border: "2px solid #EF4444", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem", color: "#991B1B", fontSize: "0.9rem" }}>
+                            ⚠️ Fix Thorn vs Smile: Capital letter + punctuation (תקן קוץ לעומת חיוך: אות גדולה וסימן פיסוק)
+                          </div>
+                        )}
+                        {!fontPsychologyValid && tab3Responses.fontShapeAnswers && (
+                          <div style={{ backgroundColor: "#FEE2E2", border: "2px solid #EF4444", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem", color: "#991B1B", fontSize: "0.9rem" }}>
+                            ⚠️ Fix Font Psychology: Capital letter + punctuation (תקן פסיכולוגיה פונט: אות גדולה וסימן פיסוק)
+                          </div>
+                        )}
                         {!allQuizCorrect && allQuizAnswered && (
                           <div style={{ backgroundColor: "#FEE2E2", border: "2px solid #EF4444", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem", color: "#991B1B", fontSize: "0.9rem" }}>
-                            ⚠️ Not all answers are correct. Please review and try again! (לא כל התשובות נכונות. אנא בדוק שוב!)
+                            ⚠️ Not all Gestalt answers correct. Review and try again! (לא כל תשובות הגשטלט נכונות. בדוק שוב!)
                           </div>
                         )}
                         <button
