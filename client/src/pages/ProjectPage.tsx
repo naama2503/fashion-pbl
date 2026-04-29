@@ -743,17 +743,17 @@ export default function ProjectPage() {
                     return (
                       <>
                         {!thornVsSmileValid && tab3Responses.thornVsSmile && (
-                          <div style={{ backgroundColor: "#FEE2E2", border: "2px solid #EF4444", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem", color: "#991B1B", fontSize: "0.9rem" }}>
+                          <div style={{ backgroundColor: "#FEE2E2", border: "2px solid #EF4444", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem", color: "#991B1B", fontSize: "0.9rem", direction: "rtl", textAlign: "right" }}>
                             ⚠️ Fix Thorn vs Smile: Capital letter + punctuation (תקן קוץ לעומת חיוך: אות גדולה וסימן פיסוק)
                           </div>
                         )}
                         {!fontPsychologyValid && tab3Responses.fontShapeAnswers && (
-                          <div style={{ backgroundColor: "#FEE2E2", border: "2px solid #EF4444", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem", color: "#991B1B", fontSize: "0.9rem" }}>
+                          <div style={{ backgroundColor: "#FEE2E2", border: "2px solid #EF4444", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem", color: "#991B1B", fontSize: "0.9rem", direction: "rtl", textAlign: "right" }}>
                             ⚠️ Fix Font Psychology: Capital letter + punctuation (תקן פסיכולוגיה פונט: אות גדולה וסימן פיסוק)
                           </div>
                         )}
                         {!allQuizCorrect && allQuizAnswered && (
-                          <div style={{ backgroundColor: "#FEE2E2", border: "2px solid #EF4444", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem", color: "#991B1B", fontSize: "0.9rem" }}>
+                          <div style={{ backgroundColor: "#FEE2E2", border: "2px solid #EF4444", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem", color: "#991B1B", fontSize: "0.9rem", direction: "rtl", textAlign: "right" }}>
                             ⚠️ Not all Gestalt answers correct. Review and try again! (לא כל תשובות הגשטלט נכונות. בדוק שוב!)
                           </div>
                         )}
@@ -956,9 +956,9 @@ export default function ProjectPage() {
                     )}
                     
                     {validationErrors.length > 0 && (
-                      <div style={{ backgroundColor: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: "0.375rem", padding: "0.75rem", marginTop: "0.75rem" }}>
+                      <div style={{ backgroundColor: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: "0.375rem", padding: "0.75rem", marginTop: "0.75rem", direction: "rtl", textAlign: "right" }}>
                         {validationErrors.map((error, idx) => (
-                          <div key={idx} style={{ display: "flex", gap: "0.5rem", color: "#DC2626", fontSize: "0.875rem", marginBottom: idx < validationErrors.length - 1 ? "0.5rem" : 0 }}>
+                          <div key={idx} style={{ display: "flex", gap: "0.5rem", color: "#DC2626", fontSize: "0.875rem", marginBottom: idx < validationErrors.length - 1 ? "0.5rem" : 0, flexDirection: "row-reverse" }}>
                             <AlertCircle size={16} style={{ flexShrink: 0 }} />
                             <span>{error}</span>
                           </div>
@@ -985,19 +985,19 @@ export default function ProjectPage() {
                     </button>
                     <button
                       onClick={handleSaveAndContinue}
-                      disabled={isLocked}
+                      disabled={isLocked || !checkTabCompletion(1, responses)}
                       style={{
-                        backgroundColor: isLocked ? "#D1D5DB" : "#FDBA74",
+                        backgroundColor: isLocked || !checkTabCompletion(1, responses) ? "#D1D5DB" : "#FDBA74",
                         color: "#333333",
                         padding: "0.75rem",
                         fontSize: "1rem",
                         fontWeight: "bold",
                         border: "none",
                         borderRadius: "0.5rem",
-                        cursor: isLocked ? "not-allowed" : "pointer",
+                        cursor: isLocked || !checkTabCompletion(1, responses) ? "not-allowed" : "pointer",
                       }}
                     >
-                      Save & Continue / שמור והמשך
+                      {!checkTabCompletion(1, responses) && Object.values(responses).some(v => v) ? "Fix grammar and punctuation / תקן דקדוק וסימני פיסוק" : "Save & Continue / שמור והמשך"}
                     </button>
                   </div>
                 </div>
