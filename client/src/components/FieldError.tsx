@@ -6,6 +6,7 @@ interface FieldErrorProps {
   isValid: boolean;
   language?: "en" | "he";
   shake?: boolean;
+  detailedMessage?: string; // Detailed explanation for the error
 }
 
 /**
@@ -16,6 +17,7 @@ export const FieldError: React.FC<FieldErrorProps> = ({
   isValid,
   language = "en",
   shake = false,
+  detailedMessage,
 }) => {
   if (!error) return null;
 
@@ -42,16 +44,37 @@ export const FieldError: React.FC<FieldErrorProps> = ({
           marginTop: "0.125rem",
         }}
       />
-      <span
+      <div
         style={{
-          color: "#dc2626",
-          fontSize: "0.875rem",
-          fontWeight: "500",
-          lineHeight: "1.4",
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.25rem",
         }}
       >
-        {error}
-      </span>
+        <span
+          style={{
+            color: "#dc2626",
+            fontSize: "0.875rem",
+            fontWeight: "600",
+            lineHeight: "1.4",
+          }}
+        >
+          {error}
+        </span>
+        {detailedMessage && (
+          <span
+            style={{
+              color: "#991b1b",
+              fontSize: "0.8125rem",
+              fontWeight: "400",
+              lineHeight: "1.5",
+              opacity: 0.9,
+            }}
+          >
+            {detailedMessage}
+          </span>
+        )}
+      </div>
     </div>
   );
 };
@@ -71,6 +94,7 @@ interface FieldInputProps {
   onShakeComplete?: () => void;
   minHeight?: string;
   rows?: number;
+  detailedMessage?: string; // Detailed explanation for the error
 }
 
 export const FieldInput: React.FC<FieldInputProps> = ({
@@ -85,6 +109,7 @@ export const FieldInput: React.FC<FieldInputProps> = ({
   onShakeComplete,
   minHeight = "auto",
   rows = 3,
+  detailedMessage,
 }) => {
   const isRTL = language === "he";
   const isValid = !error;
@@ -123,7 +148,7 @@ export const FieldInput: React.FC<FieldInputProps> = ({
           className={shake ? "shake" : ""}
           onAnimationEnd={handleAnimationEnd}
         />
-        <FieldError error={error} isValid={isValid} language={language} />
+        <FieldError error={error} isValid={isValid} language={language} detailedMessage={detailedMessage} />
       </div>
     );
   }

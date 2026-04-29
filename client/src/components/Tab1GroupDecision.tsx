@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Lock, AlertCircle, CheckCircle } from "lucide-react";
 import { FieldInput, FieldError } from "./FieldError";
 import { validateGrammar } from "@/utils/grammarValidator";
+import { getGroupNameMessage, getRequiredFieldMessage } from "@/utils/detailedErrorMessages";
 
 interface Tab1Props {
   responses: Record<string, any>;
@@ -18,6 +19,10 @@ interface Tab1Props {
 
 interface FieldErrors {
   [key: string]: string | null;
+}
+
+interface DetailedFieldErrors {
+  [key: string]: { message: string | null; detailed: string | null };
 }
 
 export const Tab1GroupDecision: React.FC<Tab1Props> = ({
@@ -51,10 +56,14 @@ export const Tab1GroupDecision: React.FC<Tab1Props> = ({
       const fieldKey = `studentName${idx + 1}`;
       if (!name?.trim()) {
         errors[fieldKey] = language === "en" ? `Student ${idx + 1} name is required.` : `שם סטודנט ${idx + 1} נדרש.`;
-      } else if (!/^[A-Z].*[.!?]$/.test(name.trim())) {
+      } else if (!/^[A-Z]/.test(name.trim())) {
         errors[fieldKey] = language === "en"
-          ? `Fix capitalization and punctuation in Student ${idx + 1}.`
-          : `תקן הון וסימני פיסוק בסטודנט ${idx + 1}.`;
+          ? `Fix capitalization in Student ${idx + 1}.`
+          : `תקן הון בסטודנט ${idx + 1}.`;
+      } else if (!/[.!?]$/.test(name.trim())) {
+        errors[fieldKey] = language === "en"
+          ? `Fix punctuation in Student ${idx + 1}.`
+          : `תקן פיסוק בסטודנט ${idx + 1}.`;
       } else {
         errors[fieldKey] = null;
       }
