@@ -64,7 +64,7 @@ const GESTALT_LEARNING_EXAMPLES = [
   { 
     name: "FedEx Arrow", 
     nameHe: "חץ FedEx",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/b/b9/FedEx_Corporation_logo.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/b/b9/FedEx_Corporation_-_Logo.svg",
     principle: "Figure/Ground (דמות ורקע)",
     explanation: "The white space between 'E' and 'x' creates a hidden arrow.",
     explanationHe: "הרווח הלבן בין האותיות E ל-x יוצר חץ נסתר."
@@ -80,7 +80,7 @@ const GESTALT_LEARNING_EXAMPLES = [
   { 
     name: "Olympics", 
     nameHe: "אולימפיאדה",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Olympic_rings_with_white_rims.svg/512px-Olympic_rings_with_white_rims.svg.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Olympic_rings_without_rims.svg",
     principle: "Unity/Proximity (אחדות/קרבה)",
     explanation: "The five rings are positioned close together, creating a unified symbol despite being separate circles.",
     explanationHe: "חמשת הטבעות ממוקמות קרוב זו לזו, יוצרות סמל אחוד למרות שהן עיגולים נפרדים."
@@ -88,7 +88,7 @@ const GESTALT_LEARNING_EXAMPLES = [
   { 
     name: "Adidas", 
     nameHe: "אדידס",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/512px-Adidas_Logo.svg.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg",
     principle: "Balance/Symmetry (איזון/סימטריה)",
     explanation: "Three parallel stripes create perfect visual balance and symmetrical repetition.",
     explanationHe: "שלושה פסים מקבילים יוצרים איזון ויחזור סימטרי מושלמים."
@@ -100,7 +100,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "Beats by Dre",
     nameHe: "Beats by Dre",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Beats_Electronics_logo.svg/512px-Beats_Electronics_logo.svg.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/Beats_Electronics_logo.svg",
     principle: "Figure/Ground",
     principleHe: "דמות ורקע",
     explanation: "The 'b' inside the circle is also a person wearing headphones - two images in one.",
@@ -109,7 +109,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "IBM",
     nameHe: "IBM",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/512px-IBM_logo.svg.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg",
     principle: "Closure",
     principleHe: "סגירה",
     explanation: "Our mind closes the gaps between the horizontal lines to read the letters.",
@@ -118,7 +118,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "Unilever",
     nameHe: "יוניליוור",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Unilever_logo.svg/512px-Unilever_logo.svg.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/b/b1/Unilever.svg",
     principle: "Closure",
     principleHe: "סגירה",
     explanation: "The 'U' is formed by our mind completing the open lines.",
