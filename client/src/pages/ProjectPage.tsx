@@ -4,6 +4,8 @@ import Navigation from "@/components/Navigation";
 import { Lock, AlertCircle, HelpCircle, Upload, CheckCircle, XCircle } from "lucide-react";
 import CanvasDraw from "react-canvas-draw";
 import { trpc } from "@/lib/trpc";
+import { validateGrammar, checkTabCompletion, getRubricForTab } from "@/utils/grammarValidator";
+import { RubricPanel } from "@/components/RubricPanel";
 
 const TABS = [
   { label: "Home", labelHe: "בית" },
@@ -31,38 +33,6 @@ const FONT_CORRECT_ANSWERS = {
 };
 
 
-// Grammar & Punctuation Validation Function
-const validateGrammar = (text: string): { isValid: boolean; errors: string[] } => {
-  const errors: string[] = [];
-  
-  if (!text || text.trim().length === 0) {
-    return { isValid: false, errors: ["Text cannot be empty"] };
-  }
-
-  // Split into sentences
-  const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
-  
-  if (sentences.length === 0) {
-    errors.push("Text must end with a period (.), question mark (?), or exclamation mark (!)");
-    return { isValid: false, errors };
-  }
-
-  sentences.forEach((sentence, idx) => {
-    const trimmed = sentence.trim();
-    
-    // Check if sentence starts with capital letter
-    if (trimmed.length > 0 && !/^[A-Z\u05D0-\u05EA]/.test(trimmed)) {
-      errors.push(`Sentence ${idx + 1} must start with a capital letter`);
-    }
-    
-    // Check for standalone lowercase 'i'
-    if (/\bi\b/.test(trimmed)) {
-      errors.push(`Sentence ${idx + 1} has lowercase 'i' - must be 'I'`);
-    }
-  });
-
-  return { isValid: errors.length === 0, errors };
-};
 
 const IMAGES = {
   groupTop: "https://d2xsxph8kpxj0f.cloudfront.net/310519663590009957/UXiCrDDkTDpzvHtgmiLssq/icon-group-decision-top-bRGmLFS52tVBmxVuPyKH7h.webp",
@@ -459,6 +429,15 @@ export default function ProjectPage() {
                           minHeight: "80px",
                           resize: "vertical"
                         }}
+                      />
+                    </div>
+                    
+                    {/* Rubric Panel for Tab 3 - Thorn vs Smile */}
+                    <div style={{ marginTop: "1rem" }}>
+                      <RubricPanel
+                        rubricItems={[getRubricForTab(3)[0]]}
+                        responses={{ thorn_vs_smile: tab3Responses.thornVsSmile }}
+                        language="en"
                       />
                     </div>
                   </div>
@@ -1098,6 +1077,15 @@ export default function ProjectPage() {
                     </div>
                   </div>
                   
+                  {/* Rubric Panel for Tab 2 */}
+                  <div style={{ marginBottom: "1.5rem" }}>
+                    <RubricPanel
+                      rubricItems={getRubricForTab(2)}
+                      responses={{ research_text: researchText }}
+                      language="en"
+                    />
+                  </div>
+                  
                   {!meetsMinimum && researchText.length > 0 && (
                     <div style={{ backgroundColor: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: "0.375rem", padding: "0.75rem", marginBottom: "1.5rem" }}>
                       <div style={{ display: "flex", gap: "0.5rem", color: "#DC2626", fontSize: "0.875rem" }}>
@@ -1119,20 +1107,20 @@ export default function ProjectPage() {
                   
                   <button
                     onClick={handleSaveAndContinue}
-                    disabled={isLocked || !meetsMinimum || !gemVisited}
+                    disabled={isLocked || !meetsMinimum || !gemVisited || !checkTabCompletion(2, { research_text: researchText })}
                     style={{
                       width: "100%",
-                      backgroundColor: isLocked || !meetsMinimum || !gemVisited ? "#D1D5DB" : "#FCA5A5",
+                      backgroundColor: isLocked || !meetsMinimum || !gemVisited || !checkTabCompletion(2, { research_text: researchText }) ? "#D1D5DB" : "#FCA5A5",
                       color: "#333333",
                       padding: "0.75rem",
                       fontSize: "1rem",
                       fontWeight: "bold",
                       border: "none",
                       borderRadius: "0.5rem",
-                      cursor: isLocked || !meetsMinimum || !gemVisited ? "not-allowed" : "pointer",
+                      cursor: isLocked || !meetsMinimum || !gemVisited || !checkTabCompletion(2, { research_text: researchText }) ? "not-allowed" : "pointer",
                     }}
                   >
-                    Save & Continue / שמור והמשך
+                    {!checkTabCompletion(2, { research_text: researchText }) && researchText.trim() ? "Fix grammar and punctuation / תקן דקדוק וסימני פיסוק" : "Save & Continue / שמור והמשך"}
                   </button>
                 </div>
               </div>
@@ -1237,6 +1225,34 @@ export default function ProjectPage() {
               </div>
               
               <div style={{ marginBottom: "2rem", backgroundColor: "#F0FDF4", padding: "1.5rem", borderRadius: "0.375rem", borderLeft: "4px solid #22C55E" }}>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Step 2.5: Logo Description / שלב 2.5: תיאור הלוגו</h3>
+                <p style={{ color: "#555555", marginBottom: "1rem" }}>Describe your logo design. Explain the symbols you used and why they represent your population. (תארו את עיצוב הלוגו שלכם. הסבירו את הסמלים שהשתמשתם בהם ומדוע הם מייצגים את אוכלוסיה שלכם.)</p>
+                <textarea
+                  value={(responses as any).logoDescription || ""}
+                  onChange={(e) => updateResponse("logoDescription", e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    border: "1px solid #D1D5DB",
+                    borderRadius: "0.375rem",
+                    fontFamily: "'Alef', 'Assistant', 'sans-serif",
+                    minHeight: "100px",
+                    fontSize: "0.95rem",
+                  }}
+                  placeholder="Describe your logo design..."
+                />
+                
+                {/* Rubric Panel for Tab 4 - Logo Description */}
+                <div style={{ marginTop: "1rem" }}>
+                  <RubricPanel
+                    rubricItems={getRubricForTab(4)}
+                    responses={{ logo_description: (responses as any).logoDescription || "" }}
+                    language="en"
+                  />
+                </div>
+              </div>
+              
+              <div style={{ marginBottom: "2rem", backgroundColor: "#F0FDF4", padding: "1.5rem", borderRadius: "0.375rem", borderLeft: "4px solid #22C55E" }}>
                 <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Step 3: Share Your Canva Link / שלב 3: שיתוף הקישור שלך ב-Canva</h3>
                 <p style={{ color: "#555555", marginBottom: "1rem" }}>Paste your Canva "Can Edit" link below. Make sure the link allows editing. (הדבק את הקישור "Can Edit" שלך מ-Canva במטה. טא וודא שהקישור מאפשר עריכה.)</p>
                 <input
@@ -1263,20 +1279,20 @@ export default function ProjectPage() {
             
             <button
               onClick={handleSaveAndContinue}
-              disabled={!isValidCanvaLink}
+              disabled={!isValidCanvaLink || !checkTabCompletion(4, { logo_description: (responses as any).logoDescription || "" })}
               style={{
                 width: "100%",
-                backgroundColor: isValidCanvaLink ? "#86EFAC" : "#D1D5DB",
+                backgroundColor: !isValidCanvaLink || !checkTabCompletion(4, { logo_description: (responses as any).logoDescription || "" }) ? "#D1D5DB" : "#86EFAC",
                 color: "#333333",
                 padding: "0.75rem",
                 fontSize: "1rem",
                 fontWeight: "bold",
                 border: "none",
                 borderRadius: "0.5rem",
-                cursor: isValidCanvaLink ? "pointer" : "not-allowed",
+                cursor: !isValidCanvaLink || !checkTabCompletion(4, { logo_description: (responses as any).logoDescription || "" }) ? "not-allowed" : "pointer",
               }}
             >
-              Save & Continue / שמור והמשך
+              {!checkTabCompletion(4, { logo_description: (responses as any).logoDescription || "" }) && (responses as any).logoDescription ? "Fix grammar and punctuation" : "Save & Continue / שמור והמשך"}
             </button>
           </div>
         </div>
