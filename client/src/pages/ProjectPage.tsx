@@ -326,7 +326,7 @@ export default function ProjectPage() {
     }
   };
 
-  // Tab 3: Design Inquiry - 3 Parts (Color, Font/Shape, Gestalt)
+  // Tab 3: Design Inquiry - Restructured with Color → Font → Thorn/Smile → Gestalt
   if (currentTab === 3) {
     return (
       <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
@@ -342,15 +342,12 @@ export default function ProjectPage() {
                 <p style={{ color: "#555555", marginBottom: "1rem" }}>
                   Learn how colors, fonts, and design principles communicate messages. (למדו כיצד צבעים, פונטים ועקרונות עיצוב מעבירים הודעות.)
                 </p>
-                <div style={{ backgroundColor: "#F0F9FF", border: "2px solid #93C5FD", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", fontSize: "0.9rem", color: "#1E40AF", lineHeight: "1.6" }}>
+                <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", fontSize: "0.9rem", color: "#92400E", lineHeight: "1.6" }}>
                   <p style={{ marginBottom: "0.5rem" }}>
-                    <strong>What is Gestalt?</strong> Gestalt principles explain how our brain naturally organizes visual elements into groups or a whole, instead of seeing them as separate parts.
+                    <strong>What is Color Psychology?</strong> Colors influence our emotions and perceptions. Different colors evoke different feelings and associations.
                   </p>
-                  <p style={{ marginBottom: "0.5rem" }}>
-                    <strong>מה זה גשטלט?</strong> עקרונות הגשטלט מסבירים כיצד המוח שלנו מארגן באופן טבעי אלמנטים חזותיים לקבוצות או ליחידה אחת שלמה, במקום לראות אותם כחלקים נפרדים.
-                  </p>
-                  <p style={{ fontStyle: "italic", fontSize: "0.85rem", direction: "rtl", textAlign: "right" }}>
-                    עקרונות הגשטלט מסבירים כיצד המוח שלנו מארגן באופן טבעי אלמנטים חזותיים לקבוצות או ליחידה אחת שלמה, במקום לראות אותם כחלקים נפרדים.
+                  <p style={{ marginBottom: "0.5rem", direction: "rtl", textAlign: "right" }}>
+                    <strong>מה זה פסיכולוגיה של צבע?</strong> צבעים משפיעים על הרגשות והתפיסות שלנו. צבעים שונים עוררים רגשות וקשרים שונים.
                   </p>
                 </div>
 
@@ -367,7 +364,10 @@ export default function ProjectPage() {
                     Part A: Color Psychology / חלק א: פסיכולוגיה של צבע
                   </h2>
                   <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
-                    What does each color make you feel? Click "Reveal Professional Meaning" to see what designers think. / איזה רגש מעלה אצלכם כל צבע? לחצו על הכדורים כדי לראות מה חושבים מעצבים.
+                    What does each color make you feel? Click "Reveal Professional Meaning" to see what designers think.
+                  </p>
+                  <p style={{ color: "#555555", marginBottom: "1.5rem", fontSize: "0.95rem", direction: "rtl", textAlign: "right" }}>
+                    איזה רגש מעלה אצלכם כל צבע? לחצו על "גלה משמעות מקצועית" כדי לראות מה מעצבים חושבים.
                   </p>
                   
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1.5rem" }}>
