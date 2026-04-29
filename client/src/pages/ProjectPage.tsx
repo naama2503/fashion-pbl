@@ -59,7 +59,7 @@ const GESTALT_LEARNING_EXAMPLES = [
     logo: "https://upload.wikimedia.org/wikipedia/en/2/24/WWF_logo.svg",
     principle: "Closure (סגירה)",
     explanation: "The missing lines are completed by our mind to create the whole panda.",
-    explanationHe: "הקווים החסרים מושלמים על ידי המוח שלנו כדי ליצור את הפנדה השלמה."
+    explanationHe: "המוח שלנו משלים את הקווים החסרים כדי ליצור דמות של פנדה שלמה."
   },
   { 
     name: "FedEx Arrow", 
@@ -67,7 +67,7 @@ const GESTALT_LEARNING_EXAMPLES = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/b/b9/FedEx_Corporation_-_Logo.svg",
     principle: "Figure/Ground (דמות ורקע)",
     explanation: "The white space between 'E' and 'x' creates a hidden arrow.",
-    explanationHe: "הרווח הלבן בין האותיות E ל-x יוצר חץ נסתר."
+     explanationHe: "המרחב הלבן שבין אותיות E ו-x יוצר חץ נסתר."
   },
   { 
     name: "Amazon", 
@@ -75,7 +75,7 @@ const GESTALT_LEARNING_EXAMPLES = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
     principle: "Continuation (המשכיות)",
     explanation: "The yellow arrow leads our eye from A to Z in a smooth movement.",
-    explanationHe: "החץ הצהוב מוליך את העין שלנו מ-A ל-Z בתנועה חלקה."
+    explanationHe: "חץ הצהב מוליך את העין שלנו מ-A ל-Z בתנועה חלקה."
   },
   { 
     name: "Olympics", 
@@ -83,7 +83,7 @@ const GESTALT_LEARNING_EXAMPLES = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Olympic_rings_without_rims.svg",
     principle: "Unity/Proximity (אחדות/קרבה)",
     explanation: "The five rings are positioned close together, creating a unified symbol despite being separate circles.",
-    explanationHe: "חמשת הטבעות ממוקמות קרוב זו לזו, יוצרות סמל אחוד למרות שהן עיגולים נפרדים."
+    explanationHe: "חמש הטבעות ממוקמות קרוב זו לזו, מה שיוצר סמל מאוחד למרות שהן מעגולים נפרדים."
   },
   { 
     name: "Adidas", 
@@ -91,7 +91,7 @@ const GESTALT_LEARNING_EXAMPLES = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg",
     principle: "Balance/Symmetry (איזון/סימטריה)",
     explanation: "Three parallel stripes create perfect visual balance and symmetrical repetition.",
-    explanationHe: "שלושה פסים מקבילים יוצרים איזון ויחזור סימטרי מושלמים."
+    explanationHe: "שלושה פסים מקבילים יוצרים איזון חזותי וחזרה סימטרית מושלמה."
   },
 ];
 
@@ -113,7 +113,7 @@ const GESTALT_PRACTICE_QUIZ = [
     principle: "Closure",
     principleHe: "סגירה",
     explanation: "Our mind closes the gaps between the horizontal lines to read the letters.",
-    explanationHe: "המוח שלנו סוגר את הפערים בין הקווים האופקיים כדי לקרוא את האותיות."
+    explanationHe: "המוח שלנו סוגר את הפערים בין הקווים האופקיים כדי לקרוא את דיבורים."
   },
   {
     name: "Unilever",
@@ -122,7 +122,7 @@ const GESTALT_PRACTICE_QUIZ = [
     principle: "Closure",
     principleHe: "סגירה",
     explanation: "The 'U' is formed by our mind completing the open lines.",
-    explanationHe: "ה-'U' נוצרת על ידי המוח שלנו המשלים את הקווים הפתוחים."
+    explanationHe: "ד-'U' נוצרת על ידי המוח שלנו המשלים את הקווים הפתוחים."
   },
 ];
 
@@ -347,7 +347,7 @@ export default function ProjectPage() {
                     <strong>What is Color Psychology?</strong> Colors influence our emotions and perceptions. Different colors evoke different feelings and associations.
                   </p>
                   <p style={{ marginBottom: "0.5rem", direction: "rtl", textAlign: "right" }}>
-                    <strong>מה זה פסיכולוגיה של צבע?</strong> צבעים משפיעים על הרגשות והתפיסות שלנו. צבעים שונים עוררים רגשות וקשרים שונים.
+                    <strong>מהי פסיכולוגיה של צבע?</strong> צבעים משפיעים על הרגשות ועל התפיסה שלנו. צבעים שונים מעוררים רגשות ואסוציאציות שונות.
                   </p>
                 </div>
 
@@ -419,12 +419,18 @@ export default function ProjectPage() {
                       <div>
                         <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Thorns (קוצים)</p>
                         <img src={IMAGES.thorns} alt="Thorns" style={{ width: "100%", borderRadius: "0.5rem", maxHeight: "200px", objectFit: "cover" }} />
-                        <p style={{ color: "#555555", fontSize: "0.875rem", marginTop: "0.5rem" }}>This image feels: Strong, Serious, Dangerous (התמונה הזו מרגישה: חזקה, רצינית, מסוכנת)</p>
+                        <div>
+                          <p style={{ color: "#555555", fontSize: "0.875rem", marginTop: "0.5rem" }}>This image feels: Strong, Serious, Dangerous</p>
+                          <p style={{ color: "#555555", fontSize: "0.875rem", marginTop: "0.5rem", direction: "rtl", textAlign: "right" }}>התמונה הזו מרגישה: חזקה, רצינית, מסוכנת.</p>
+                        </div>
                       </div>
                       <div>
                         <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>Smiling Child (ילד חיוך)</p>
                         <img src={IMAGES.smilingChild} alt="Smiling Child" style={{ width: "100%", borderRadius: "0.5rem", maxHeight: "200px", objectFit: "cover" }} />
-                        <p style={{ color: "#555555", fontSize: "0.875rem", marginTop: "0.5rem" }}>This image feels: Fun, Childish, Friendly (התמונה הזו מרגישה: כיף, ילדותית, ידידותית)</p>
+                        <div>
+                          <p style={{ color: "#555555", fontSize: "0.875rem", marginTop: "0.5rem" }}>This image feels: Fun, Childish, Friendly</p>
+                          <p style={{ color: "#555555", fontSize: "0.875rem", marginTop: "0.5rem", direction: "rtl", textAlign: "right" }}>התמונה הזו מרגישה: כיפית, ילדותית, ידידותית.</p>
+                        </div>
                       </div>
                     </div>
                     
