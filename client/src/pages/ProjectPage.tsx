@@ -331,6 +331,9 @@ export default function ProjectPage() {
                   <p style={{ marginBottom: "0.5rem" }}>
                     <strong>What is Gestalt?</strong> Gestalt principles explain how our brain naturally organizes visual elements into groups or a whole, instead of seeing them as separate parts.
                   </p>
+                  <p style={{ marginBottom: "0.5rem" }}>
+                    <strong>מה זה גשטלט?</strong> עקרונות הגשטלט מסבירים כיצד המוח שלנו מארגן באופן טבעי אלמנטים חזותיים לקבוצות או ליחידה אחת שלמה, במקום לראות אותם כחלקים נפרדים.
+                  </p>
                   <p style={{ fontStyle: "italic", fontSize: "0.85rem", direction: "rtl", textAlign: "right" }}>
                     עקרונות הגשטלט מסבירים כיצד המוח שלנו מארגן באופן טבעי אלמנטים חזותיים לקבוצות או ליחידה אחת שלמה, במקום לראות אותם כחלקים נפרדים.
                   </p>
@@ -1033,11 +1036,17 @@ export default function ProjectPage() {
                     <p style={{ fontSize: "0.95rem", color: "#333333", lineHeight: "1.6", marginBottom: "1rem" }}>
                       <strong>Assignment (משימה):</strong> Research your chosen population and write about their situation. Include statistics and facts.
                     </p>
+                    <p style={{ fontSize: "0.95rem", color: "#333333", lineHeight: "1.6", marginBottom: "1rem", direction: "rtl", textAlign: "right" }}>
+                      <strong>משימה:</strong> חקור את האוכלוסיה שבחרת וכתוב על מצבם. כלול סטטיסטיקות ועובדות.
+                    </p>
                     <p style={{ fontSize: "0.9rem", color: "#555555", marginBottom: "1rem" }}>
                       <strong>Example (דוגמה):</strong> "According to UNICEF, 160 million children worldwide are engaged in child labor. In developing countries, children often work instead of attending school, limiting their future opportunities. This population needs awareness and support."
                     </p>
+                    <p style={{ fontSize: "0.9rem", color: "#555555", marginBottom: "1rem", direction: "rtl", textAlign: "right" }}>
+                      <strong>דוגמה:</strong> "לפי יוניסף, 160 מיליון ילדים ברחבי העולם עובדים בעבודת ילדים. במדינות מתפתחות, ילדים עובדים לעיתים במקום להיות בבית ספר, מה שמגביל את הזדמנויות שלהם בעתיד. אוכלוסיה זו זקוקה למודעות ותמיכה."
+                    </p>
                     <p style={{ fontSize: "0.9rem", color: "#555555" }}>
-                      <strong>💡 Tip / עצה:</strong> Use Google Gemini to help with your research and writing. (השתמשו ב-Google Gemini לעזרה עם המחקר והכתיבה.) <a href="https://gemini.google.com/gem/1AnFJbpYQ-hsXjJDhota5pIkU3Qt9h6Vy?usp=sharing" target="_blank" rel="noopener noreferrer" onClick={() => updateResponse("gemVisited", true)} style={{ color: "#2563EB", textDecoration: "underline" }}>Open Gem Helper / פתח עזר →</a>
+                      <strong>💡 Open / פתח:</strong> Use Google Gemini to help with your research and writing. (השתמשו ב-Google Gemini לעזרה עם המחקר והכתיבה.) <a href="https://gemini.google.com/gem/1AnFJbpYQ-hsXjJDhota5pIkU3Qt9h6Vy?usp=sharing" target="_blank" rel="noopener noreferrer" onClick={() => updateResponse("gemVisited", true)} style={{ color: "#2563EB", textDecoration: "underline" }}>Open Gem Helper / פתח עזר →</a>
                     </p>
                   </div>
                   
