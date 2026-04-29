@@ -84,3 +84,56 @@ button, input, textarea, select {
   padding-left: 1rem;
   padding-right: 1rem;
 }
+
+/* Shake Animation for Failed Validation */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Field-level error styling */
+.field-error {
+  border-color: #dc2626 !important;
+  background-color: rgba(220, 38, 38, 0.05);
+}
+
+.field-error-message {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+  font-weight: 500;
+}
+
+.field-error-message[dir="rtl"] {
+  text-align: right;
+  direction: rtl;
+}
+
+.field-valid {
+  border-color: #16a34a !important;
+  background-color: rgba(22, 163, 74, 0.05);
+}
+
+/* Input field styling */
+input[type="text"],
+input[type="email"],
+textarea,
+select {
+  transition: all 0.2s ease;
+  border: 2px solid #d1d5db;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}

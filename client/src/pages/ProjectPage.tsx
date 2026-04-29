@@ -6,6 +6,8 @@ import CanvasDraw from "react-canvas-draw";
 import { trpc } from "@/lib/trpc";
 import { validateGrammar, checkTabCompletion, getRubricForTab } from "@/utils/grammarValidator";
 import { RubricPanel } from "@/components/RubricPanel";
+import { Tab1GroupDecision } from "@/components/Tab1GroupDecision";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const TABS = [
   { label: "Home", labelHe: "בית" },
@@ -159,6 +161,7 @@ const WORDS_TO_CATEGORIZE = [
 ];
 
 export default function ProjectPage() {
+  const { language } = useLanguage();
   const [currentTab, setCurrentTab] = useState(0);
   const [responses, setResponses] = useState({});
   const [isLocked, setIsLocked] = useState(false);
@@ -796,223 +799,22 @@ export default function ProjectPage() {
   // Tab 1: Group Decision
   if (currentTab === 1) {
     return (
-      <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
-        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
-        
-        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
-          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "2rem", alignItems: "start" }}>
-              <div>
-                <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-                  Group Decision (החלטה קבוצתית)
-                </h1>
-                <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
-                  Work in groups of 2-3. Choose a population to help. (עבדו בקבוצות של 2-3. בחרו אוכלוסיה לעזור.)
-                </p>
-                {isLocked && (
-                  <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #FCD34D", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem", display: "flex", gap: "0.75rem" }}>
-                    <Lock size={24} style={{ color: "#D97706" }} />
-                    <p style={{ fontWeight: "bold", color: "#92400E" }}>This tab is locked. Get teacher approval for Tab 1 first! (טאב זה נעול. קבל אישור ממורה עבור טאב 1 בראשונה!)</p>
-                  </div>
-                )}
-                <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem" }}>
-                  <div style={{ marginBottom: "2rem", backgroundColor: "#F3F4F6", padding: "1rem", borderRadius: "0.375rem", borderLeft: "4px solid #333333" }}>
-                    <p style={{ fontSize: "0.95rem", color: "#333333", lineHeight: "1.6" }}>
-                      <strong>Assignment (משימה):</strong> Think of a group of people in the world today who are suffering and people are not aware enough of their struggle. 
-                      (חשבו על קבוצת אנשים בעולם היום שסובלים ואנשים לא מודעים מספיק למאבקם.)
-                    </p>
-                  </div>
-                  <div style={{ marginBottom: "2rem" }}>
-                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      Group Members / חברי הקבוצה
-                    </label>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }}>
-                      {studentNames.map((name, idx) => (
-                        <input
-                          key={idx}
-                          type="text"
-                          value={name}
-                          onChange={(e) => {
-                            const newNames = [...studentNames];
-                            newNames[idx] = e.target.value;
-                            setStudentNames(newNames);
-                          }}
-                          disabled={isLocked}
-                          style={{
-                            padding: "0.75rem",
-                            border: "1px solid #D1D5DB",
-                            borderRadius: "0.375rem",
-                            fontFamily: "'Alef', 'Assistant', sans-serif",
-                          }}
-                          placeholder={`Student ${idx + 1} / תלמיד ${idx + 1}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <div style={{ marginBottom: "2rem" }}>
-                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem", color: "#333333" }}>
-                      Compare Populations (השווה בין אוכלוסיות)
-                    </label>
-                    <div style={{ overflowX: "auto" }}>
-                      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
-                        <thead>
-                          <tr style={{ backgroundColor: "#F3F4F6", borderBottom: "2px solid #D1D5DB" }}>
-                            <th style={{ padding: "0.75rem", textAlign: "left", fontWeight: "bold", color: "#333333", borderRight: "1px solid #D1D5DB" }}>
-                              Population Name / שם אוכלוסיה
-                            </th>
-                            {studentNames.map((name: string, idx: number) => (
-                              <th key={idx} style={{ padding: "0.75rem", textAlign: "center", fontWeight: "bold", color: "#333333", borderRight: "1px solid #D1D5DB" }}>
-                                {name}
-                              </th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {[
-                            { en: "Name of Population", he: "שם אוכלוסיה" },
-                            { en: "Why they're a good choice?", he: "למה הם בחירה טובה?" },
-                            { en: "Why NOT to choose them?", he: "למה לא לבחור אותם?" }
-                          ].map((row, rowIdx) => (
-                            <tr key={rowIdx} style={{ borderBottom: "1px solid #E5E7EB" }}>
-                              <td style={{ padding: "0.75rem", fontWeight: "bold", color: "#555555", backgroundColor: "#F9FAFB", borderRight: "1px solid #D1D5DB" }}>
-                                {row.en} / {row.he}
-                              </td>
-                              {studentNames.map((name: string, colIdx: number) => (
-                                <td key={colIdx} style={{ padding: "0.75rem", borderRight: "1px solid #D1D5DB" }}>
-                                  <textarea
-                                    value={(responses as any)[`table_${rowIdx}_${colIdx}`] || ""}
-                                    onChange={(e) => updateResponse(`table_${rowIdx}_${colIdx}`, e.target.value)}
-                                    disabled={isLocked}
-                                    style={{
-                                      width: "100%",
-                                      padding: "0.5rem",
-                                      border: "1px solid #D1D5DB",
-                                      borderRadius: "0.375rem",
-                                      fontFamily: "'Alef', 'Assistant', sans-serif",
-                                      minHeight: "60px",
-                                      resize: "vertical",
-                                    }}
-                                    placeholder="Enter text... / הזן טקסט..."
-                                  />
-                                </td>
-                              ))}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  <div style={{ marginBottom: "2rem" }}>
-                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      Which population did you choose? (איזו אוכלוסייה בחרתם?)
-                    </label>
-                    <input
-                      type="text"
-                      value={(responses as any).chosenPopulation || ""}
-                      onChange={(e) => updateResponse("chosenPopulation", e.target.value)}
-                      disabled={isLocked}
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        border: !(responses as any).chosenPopulation?.trim() ? "2px solid #DC2626" : "1px solid #D1D5DB",
-                        borderRadius: "0.375rem",
-                        fontFamily: "'Alef', 'Assistant', sans-serif",
-                        marginBottom: "0.5rem",
-                        backgroundColor: !(responses as any).chosenPopulation?.trim() ? "#FEE2E2" : "#FFFFFF",
-                      }}
-                      placeholder="Enter population name... / הזן שם אוכלוסיה..."
-                    />
-                    {!(responses as any).chosenPopulation?.trim() && (
-                      <p style={{ color: "#DC2626", fontSize: "0.875rem", marginBottom: "1rem", fontWeight: "bold" }}>
-                        ⚠️ This field is required! (שדה זה נדרש!)
-                      </p>
-                    )}
-                    <label style={{ display: "block", fontWeight: "bold", fontSize: "1rem", marginBottom: "0.5rem", color: "#333333" }}>
-                      Why? (at least 2 sentences) / למה? (לפחות 2 משפטים)
-                    </label>
-                    <textarea
-                      value={(responses as any).whyChosen || ""}
-                      onChange={(e) => {
-                        updateResponse("whyChosen", e.target.value);
-                        setValidationErrors([]);
-                      }}
-                      disabled={isLocked}
-                      style={{
-                        width: "100%",
-                        padding: "0.75rem",
-                        border: !(responses as any).whyChosen?.trim() ? "2px solid #DC2626" : "1px solid #D1D5DB",
-                        borderRadius: "0.375rem",
-                        fontFamily: "'Alef', 'Assistant', sans-serif",
-                        minHeight: "100px",
-                        resize: "vertical",
-                        backgroundColor: !(responses as any).whyChosen?.trim() ? "#FEE2E2" : "#FFFFFF",
-                      }}
-                      placeholder="Explain your choice..."
-                    />
-                    {!(responses as any).whyChosen?.trim() && (
-                      <p style={{ color: "#DC2626", fontSize: "0.875rem", marginBottom: "1rem", fontWeight: "bold" }}>
-                        ⚠️ This field is required! (שדה זה נדרש!)
-                      </p>
-                    )}
-                    
-                    {validationErrors.length > 0 && (
-                      <div style={{ backgroundColor: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: "0.375rem", padding: "0.75rem", marginTop: "0.75rem", direction: "rtl", textAlign: "right" }}>
-                        {validationErrors.map((error, idx) => (
-                          <div key={idx} style={{ display: "flex", gap: "0.5rem", color: "#DC2626", fontSize: "0.875rem", marginBottom: idx < validationErrors.length - 1 ? "0.5rem" : 0, flexDirection: "row-reverse" }}>
-                            <AlertCircle size={16} style={{ flexShrink: 0 }} />
-                            <span>{error}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-                    <button
-                      onClick={handleViewPreviousWork}
-                      disabled={isLoadingPreviousWork}
-                      style={{
-                        backgroundColor: "#E0E7FF",
-                        color: "#333333",
-                        padding: "0.75rem",
-                        fontSize: "0.9rem",
-                        fontWeight: "bold",
-                        border: "2px solid #818CF8",
-                        borderRadius: "0.5rem",
-                        cursor: isLoadingPreviousWork ? "not-allowed" : "pointer",
-                      }}
-                    >
-                      {isLoadingPreviousWork ? "Loading..." : "📋 View Previous Work"}
-                    </button>
-                    <button
-                      onClick={handleSaveAndContinue}
-                      disabled={isLocked || !checkTabCompletion(1, responses)}
-                      style={{
-                        backgroundColor: isLocked || !checkTabCompletion(1, responses) ? "#D1D5DB" : "#FDBA74",
-                        color: "#333333",
-                        padding: "0.75rem",
-                        fontSize: "1rem",
-                        fontWeight: "bold",
-                        border: "none",
-                        borderRadius: "0.5rem",
-                        cursor: isLocked || !checkTabCompletion(1, responses) ? "not-allowed" : "pointer",
-                      }}
-                    >
-                      {!checkTabCompletion(1, responses) && Object.values(responses).some(v => v) ? "Fix grammar and punctuation / תקן דקדוק וסימני פיסוק" : "Save & Continue / שמור והמשך"}
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <img src={IMAGES.groupBottom} alt="Social change" style={{ width: "100%", borderRadius: "0.5rem", marginBottom: "1rem" }} />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Tab1GroupDecision
+        responses={responses}
+        updateResponse={updateResponse}
+        isLocked={isLocked}
+        language={language as "en" | "he"}
+        tabColor={tabColor}
+        onSave={handleSaveAndContinue}
+        onViewPreviousWork={handleViewPreviousWork}
+        isLoadingPreviousWork={isLoadingPreviousWork}
+        saveDisabled={!checkTabCompletion(1, responses)}
+        images={IMAGES}
+      />
     );
   }
 
-  // Tab 2: Research & Writing
+  // Tab 2: Research & Writing (Using old inline rendering for now)
   if (currentTab === 2) {
     const researchText = (responses as any).researchText || "";
     const wordCount = researchText.trim().split(/\s+/).filter((w: string) => w.length > 0).length;

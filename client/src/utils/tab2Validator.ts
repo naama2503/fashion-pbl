@@ -36,27 +36,34 @@ export const isValidCapitalPunctuation = (text: string | undefined): boolean => 
 };
 
 /**
- * Get specific error message for a field
+ * Get specific, granular error message for a field
+ * Returns specific feedback about what needs to be fixed
  */
-export const getFieldErrorMessage = (fieldName: string, value: string | undefined, language: "en" | "he" = "en"): string | null => {
+export const getFieldErrorMessage = (
+  fieldName: string,
+  value: string | undefined,
+  language: "en" | "he" = "en"
+): string | null => {
   if (!value || value.trim().length === 0) {
-    return language === "en" ? `${fieldName} is required` : `${fieldName} נדרש`;
+    return language === "en"
+      ? `${fieldName} is required.`
+      : `${fieldName} נדרש.`;
   }
 
   const trimmed = value.trim();
-  
+
   // Check capital letter
   if (!/^[A-Z]/.test(trimmed)) {
-    return language === "en" 
-      ? `${fieldName}: Must start with a capital letter.` 
-      : `${fieldName}: חייב להתחיל באות גדולה.`;
+    return language === "en"
+      ? `Fix capitalization in ${fieldName}: Start with a capital letter.`
+      : `תקן הון ב${fieldName}: התחל באות גדולה.`;
   }
 
   // Check ending punctuation
   if (!/[.!?]$/.test(trimmed)) {
     return language === "en"
-      ? `${fieldName}: Must end with . ! or ?`
-      : `${fieldName}: חייב להסתיים ב . ! או ?`;
+      ? `Fix punctuation in ${fieldName}: End with . ! or ?`
+      : `תקן פיסוק ב${fieldName}: הסתיים ב . ! או ?`;
   }
 
   return null;
@@ -65,7 +72,10 @@ export const getFieldErrorMessage = (fieldName: string, value: string | undefine
 /**
  * Validate all Tab 2 fields
  */
-export const validateTab2Fields = (fields: Tab2Fields, language: "en" | "he" = "en"): ValidationResult => {
+export const validateTab2Fields = (
+  fields: Tab2Fields,
+  language: "en" | "he" = "en"
+): ValidationResult => {
   const fieldErrors: Record<string, string | null> = {};
   const errors: string[] = [];
 
@@ -90,7 +100,7 @@ export const validateTab2Fields = (fields: Tab2Fields, language: "en" | "he" = "
     const displayName = language === "en" ? enName : heName;
     const value = fields[fieldKey];
     const error = getFieldErrorMessage(displayName, value, language);
-    
+
     fieldErrors[fieldKey] = error;
     if (error) {
       errors.push(error);
@@ -135,4 +145,15 @@ export const getFieldValidationStatus = (
     isValid: error === null,
     error,
   };
+};
+
+/**
+ * Get all field errors as a map for real-time display
+ */
+export const getFieldErrorsMap = (
+  fields: Tab2Fields,
+  language: "en" | "he" = "en"
+): Record<string, string | null> => {
+  const result = validateTab2Fields(fields, language);
+  return result.fieldErrors;
 };
