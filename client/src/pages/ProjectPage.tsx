@@ -450,14 +450,7 @@ export default function ProjectPage() {
                       />
                     </div>
                     
-                    {/* Rubric Panel for Tab 3 - Thorn vs Smile */}
-                    <div style={{ marginTop: "1rem" }}>
-                      <RubricPanel
-                        rubricItems={[getRubricForTab(3)[0]]}
-                        responses={{ thorn_vs_smile: tab3Responses.thornVsSmile }}
-                        language="en"
-                      />
-                    </div>
+
                   </div>
 
                   {/* Font Psychology */}
@@ -476,25 +469,7 @@ export default function ProjectPage() {
                       ))}
                     </div>
                     
-                    {!fontRevealed.psychology ? (
-                      <button
-                        onClick={() => setFontRevealed({ ...fontRevealed, psychology: true })}
-                        disabled={isLocked}
-                        style={{
-                          width: "100%",
-                          backgroundColor: "#D8B4FE",
-                          color: "#333333",
-                          padding: "0.75rem 1.5rem",
-                          borderRadius: "0.5rem",
-                          border: "none",
-                          fontWeight: "bold",
-                          cursor: isLocked ? "not-allowed" : "pointer",
-                          marginBottom: "1rem",
-                        }}
-                      >
-                        Reveal Font Psychology / גלה פסיכולוגיה של פונטים
-                      </button>
-                    ) : (
+                    {true && (
                       <div style={{ backgroundColor: "#F0F9FF", border: "2px solid #93C5FD", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1.5rem" }}>
                         <p style={{ fontWeight: "bold", color: "#1E40AF", marginBottom: "0.5rem" }}>Font Psychology / פסיכולוגיה של פונטים:</p>
                         <ul style={{ fontSize: "0.875rem", color: "#333333", marginLeft: "1.5rem", marginBottom: "1rem" }}>
@@ -619,7 +594,7 @@ export default function ProjectPage() {
                       {GESTALT_LEARNING_EXAMPLES.map((example, idx) => (
                         <div key={idx} style={{ backgroundColor: "#F0FDF4", padding: "1.5rem", borderRadius: "0.5rem", border: "2px solid #86EFAC", textAlign: "center" }}>
                           <div style={{ marginBottom: "1rem", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "150px" }}>
-                            <img src={example.logo} alt={example.name} style={{ height: "150px", maxWidth: "100%", objectFit: "contain" }} />
+                            <img src={example.logo} alt={example.name} style={{ height: "150px", maxWidth: "100%", objectFit: "contain" }} onError={(e) => { e.currentTarget.style.display = 'none'; if (e.currentTarget.parentElement) e.currentTarget.parentElement.textContent = example.name; }} />
                           </div>
                           <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem", fontSize: "0.95rem" }}>{example.name}</p>
                           <p style={{ fontWeight: "bold", color: "#16A34A", marginBottom: "0.75rem", fontSize: "0.9rem" }}>
@@ -628,7 +603,7 @@ export default function ProjectPage() {
                           <p style={{ color: "#333333", fontSize: "0.85rem", lineHeight: "1.5", marginBottom: "0.5rem" }}>
                             {example.explanation}
                           </p>
-                          <p style={{ color: "#555555", fontSize: "0.8rem", lineHeight: "1.5", fontStyle: "italic" }}>
+                          <p style={{ color: "#555555", fontSize: "0.8rem", lineHeight: "1.5", fontStyle: "italic", direction: "rtl", textAlign: "right" }}>
                             {example.explanationHe}
                           </p>
                         </div>
