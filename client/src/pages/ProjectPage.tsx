@@ -253,9 +253,9 @@ export default function ProjectPage() {
     if (tabIndex === 0) return true;
     if (tabIndex === 1) return true;
     if (tabIndex === 2) {
-      const population = (responses as any).chosenPopulation || '';
+      const population = (responses as any).populationName || '';
       const whyChosen = (responses as any).whyChosen || '';
-      return population.trim() && whyChosen.trim() && checkTabCompletion(1, { chosen_population: population, why_chosen: whyChosen });
+      return population.trim() && whyChosen.trim() && checkTabCompletion(1, responses);
     }
     if (tabIndex === 3) {
       const researchText = (responses as any).researchText || '';
@@ -289,7 +289,7 @@ export default function ProjectPage() {
     const checkTabValidation = () => {
       if (currentTab === 1) {
         // Tab 1: Group Decision - check population and why
-        const population = (responses as any).chosenPopulation || '';
+        const population = (responses as any).populationName || '';
         const whyChosen = (responses as any).whyChosen || '';
         if (!population.trim() || !whyChosen.trim()) {
           toast.error('Please fill in all answers! (אנא מלאו את כל התשובות!)');

@@ -154,7 +154,9 @@
 - [x] Fix population name validation - Fixed field name mismatch (chosenPopulation -> populationName)
 - [x] Separated capitalization and punctuation checks for all Tab 1 fields (student names, population, explanation, table cells)
 - [x] Fixed Save button disabled issue - Updated rubric field names to match Tab1GroupDecision
+- [x] Fixed persistent error message - Updated handleSaveAndContinue and canAccessTab to use correct field names
 - [x] All 132 tests passing after fixes
 - [x] Error messages now display in Hebrew when language="he"
 - [x] "I chose the Homeless." should now be accepted
 - [x] Save button should now be enabled when all fields are filled
+- [x] Persistent "Please fill in all answers" error message removed
