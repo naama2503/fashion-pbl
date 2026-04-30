@@ -160,3 +160,13 @@
 - [x] "I chose the Homeless." should now be accepted
 - [x] Save button should now be enabled when all fields are filled
 - [x] Persistent "Please fill in all answers" error message removed
+
+
+## Tab 3 (Design Inquiry) - Critical Fixes
+- [x] Replace broken SVG images with PNG URLs (FedEx, Beats, Unilever)
+- [x] Add loading="lazy" and alt text attributes to images
+- [x] Added container div with set height/width for images (width: 150px, height: 150px)
+- [x] Font psychology multiple choice validation already working - allows retries with "Try again" button
+- [x] Fixed Save button being disabled - now passes full responses object to checkTabCompletion
+- [x] All 132 tests passing
+- [x] Tab 3 fully functional

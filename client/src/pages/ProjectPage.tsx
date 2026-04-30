@@ -66,7 +66,7 @@ const GESTALT_LEARNING_EXAMPLES = [
   { 
     name: "FedEx Arrow", 
     nameHe: "חץ FedEx",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/b/b9/FedEx_Corporation_-_Logo.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/FedEx_Corporation_-_Logo.svg/512px-FedEx_Corporation_-_Logo.svg.png",
     principle: "Figure/Ground (דמות ורקע)",
     explanation: "The white space between 'E' and 'x' creates a hidden arrow.",
      explanationHe: "המרחב הלבן שבין אותיות E ו-x יוצר חץ נסתר."
@@ -102,7 +102,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "Beats by Dre",
     nameHe: "Beats by Dre",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/Beats_Electronics_logo.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Beats_Electronics_logo.svg/512px-Beats_Electronics_logo.svg.png",
     principle: "Figure/Ground",
     principleHe: "דמות ורקע",
     explanation: "The 'b' inside the circle is also a person wearing headphones - two images in one.",
@@ -120,7 +120,7 @@ const GESTALT_PRACTICE_QUIZ = [
   {
     name: "Unilever",
     nameHe: "יוניליוור",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/b/b1/Unilever.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Unilever.svg/512px-Unilever.svg.png",
     principle: "Closure",
     principleHe: "סגירה",
     explanation: "The 'U' is formed by our mind completing the open lines.",
@@ -603,7 +603,7 @@ export default function ProjectPage() {
                       {GESTALT_LEARNING_EXAMPLES.map((example, idx) => (
                         <div key={idx} style={{ backgroundColor: "#F0FDF4", padding: "1.5rem", borderRadius: "0.5rem", border: "2px solid #86EFAC", textAlign: "center" }}>
                           <div style={{ marginBottom: "1rem", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "150px" }}>
-                            <img src={example.logo} alt={example.name} style={{ height: "150px", maxWidth: "100%", objectFit: "contain" }} onError={(e) => { e.currentTarget.style.display = 'none'; if (e.currentTarget.parentElement) e.currentTarget.parentElement.textContent = example.name; }} />
+                            <img src={example.logo} alt={`${example.name} Logo`} loading="lazy" style={{ height: "150px", maxWidth: "100%", objectFit: "contain", width: "150px" }} onError={(e) => { e.currentTarget.style.display = 'none'; if (e.currentTarget.parentElement) e.currentTarget.parentElement.textContent = example.name; }} />
                           </div>
                           <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem", fontSize: "0.95rem" }}>{example.name}</p>
                           <p style={{ fontWeight: "bold", color: "#16A34A", marginBottom: "0.75rem", fontSize: "0.9rem" }}>
@@ -640,7 +640,7 @@ export default function ProjectPage() {
                           <div key={idx} style={{ backgroundColor: "#FEF3C7", padding: "1.5rem", borderRadius: "0.5rem", border: "2px solid #FBBF24" }}>
                             {/* Logo Display */}
                             <div style={{ marginBottom: "1rem", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "150px" }}>
-                              <img src={logo.logo} alt={`${logo.name} logo`} crossOrigin="anonymous" style={{ height: "150px", maxWidth: "100%", objectFit: "contain" }} onError={(e) => { e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3E' + logo.name + '%3C/text%3E%3C/svg%3E'; }} />
+                              <img src={logo.logo} alt={`${logo.name} Logo`} loading="lazy" crossOrigin="anonymous" style={{ height: "150px", maxWidth: "100%", objectFit: "contain", width: "150px" }} onError={(e) => { e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3E' + logo.name + '%3C/text%3E%3C/svg%3E'; }} />
                             </div>
                             <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "1rem", fontSize: "0.95rem", textAlign: "center" }}>
                               {logo.name} ({logo.nameHe})
@@ -1098,20 +1098,20 @@ export default function ProjectPage() {
             
             <button
               onClick={handleSaveAndContinue}
-              disabled={!isValidCanvaLink || !checkTabCompletion(4, { logo_description: (responses as any).logoDescription || "" })}
+              disabled={!isValidCanvaLink || !checkTabCompletion(4, responses)}
               style={{
                 width: "100%",
-                backgroundColor: !isValidCanvaLink || !checkTabCompletion(4, { logo_description: (responses as any).logoDescription || "" }) ? "#D1D5DB" : "#86EFAC",
+                backgroundColor: !isValidCanvaLink || !checkTabCompletion(4, responses) ? "#D1D5DB" : "#86EFAC",
                 color: "#333333",
                 padding: "0.75rem",
                 fontSize: "1rem",
                 fontWeight: "bold",
                 border: "none",
                 borderRadius: "0.5rem",
-                cursor: !isValidCanvaLink || !checkTabCompletion(4, { logo_description: (responses as any).logoDescription || "" }) ? "not-allowed" : "pointer",
+                cursor: !isValidCanvaLink || !checkTabCompletion(4, responses) ? "not-allowed" : "pointer",
               }}
             >
-              {!checkTabCompletion(4, { logo_description: (responses as any).logoDescription || "" }) && (responses as any).logoDescription ? "Fix grammar and punctuation" : "Save & Continue / שמור והמשך"}
+              {!checkTabCompletion(4, responses) && (responses as any).logoDescription ? "Fix grammar and punctuation" : "Save & Continue / שמור והמשך"}
             </button>
           </div>
         </div>
