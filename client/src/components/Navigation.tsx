@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLocation } from "wouter";
 
 interface NavigationProps {
   currentTab: number;
@@ -16,6 +17,7 @@ export default function Navigation({
   tabs,
 }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [, navigate] = useLocation();
 
   const tabColors = [
     "bg-yellow-400", // 1. Home
@@ -54,6 +56,17 @@ export default function Navigation({
               </button>
             ))}
           </nav>
+          
+          {/* Admin Link */}
+          <div className="mt-8 pt-8 border-t border-gray-700">
+            <button
+              onClick={() => navigate("/admin")}
+              className="w-full flex items-center gap-2 px-4 py-3 rounded-lg bg-gray-700 hover:bg-gray-600 text-white font-bold transition-all"
+            >
+              <Settings size={20} />
+              <span>Teacher Admin</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -92,6 +105,20 @@ export default function Navigation({
               </button>
             ))}
           </nav>
+          
+          {/* Admin Link */}
+          <div className="mt-8 pt-8 border-t border-gray-700">
+            <button
+              onClick={() => {
+                navigate("/admin");
+                setIsOpen(false);
+              }}
+              className="w-full flex items-center gap-2 px-4 py-3 rounded-lg bg-gray-700 hover:bg-gray-600 text-white font-bold transition-all"
+            >
+              <Settings size={20} />
+              <span>Teacher Admin</span>
+            </button>
+          </div>
         </div>
       )}
     </>
