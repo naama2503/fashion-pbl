@@ -87,10 +87,14 @@ export const Tab1GroupDecision: React.FC<Tab1Props> = ({
         const key = `table_${rowIdx}_${colIdx}`;
         const value = responses[key] || "";
         if (value?.trim()) {
-          if (!/^[A-Z].*[.!?]$/.test(value.trim())) {
+          if (!/^[A-Z]/.test(value.trim())) {
             errors[key] = language === "en"
-              ? `Fix capitalization and punctuation in row ${rowIdx + 1}, student ${colIdx + 1}.`
-              : `תקן הון וסימני פיסוק בשורה ${rowIdx + 1}, סטודנט ${colIdx + 1}.`;
+              ? `Fix capitalization in row ${rowIdx + 1}, student ${colIdx + 1}.`
+              : `תקן הון בשורה ${rowIdx + 1}, סטודנט ${colIdx + 1}.`;
+          } else if (!/[.!?]$/.test(value.trim())) {
+            errors[key] = language === "en"
+              ? `Fix punctuation in row ${rowIdx + 1}, student ${colIdx + 1}.`
+              : `תקן פיסוק בשורה ${rowIdx + 1}, סטודנט ${colIdx + 1}.`;
           } else {
             errors[key] = null;
           }
@@ -98,26 +102,34 @@ export const Tab1GroupDecision: React.FC<Tab1Props> = ({
       });
     });
 
-    // Validate chosen population
-    const chosenPopulation = responses.chosenPopulation || "";
+    // Validate chosen population (using populationName field)
+    const chosenPopulation = responses.populationName || "";
     if (!chosenPopulation?.trim()) {
-      errors.chosenPopulation = language === "en" ? "Final population choice is required." : "בחירה סופית של אוכלוסייה נדרשת.";
-    } else if (!/^[A-Z].*[.!?]$/.test(chosenPopulation.trim())) {
-      errors.chosenPopulation = language === "en"
-        ? "Fix capitalization and punctuation in final choice."
-        : "תקן הון וסימני פיסוק בבחירה הסופית.";
+      errors.populationName = language === "en" ? "Final population choice is required." : "בחירה סופית של אוכלוסייה נדרשת.";
+    } else if (!/^[A-Z]/.test(chosenPopulation.trim())) {
+      errors.populationName = language === "en"
+        ? "Fix capitalization in population name."
+        : "תקן הון בשם האוכלוסייה.";
+    } else if (!/[.!?]$/.test(chosenPopulation.trim())) {
+      errors.populationName = language === "en"
+        ? "Fix punctuation in population name."
+        : "תקן פיסוק בשם האוכלוסייה.";
     } else {
-      errors.chosenPopulation = null;
+      errors.populationName = null;
     }
 
     // Validate why chosen
     const whyChosen = responses.whyChosen || "";
     if (!whyChosen?.trim()) {
       errors.whyChosen = language === "en" ? "Explanation is required." : "הסבר נדרש.";
-    } else if (!/^[A-Z].*[.!?]$/.test(whyChosen.trim())) {
+    } else if (!/^[A-Z]/.test(whyChosen.trim())) {
       errors.whyChosen = language === "en"
-        ? "Fix capitalization and punctuation in explanation."
-        : "תקן הון וסימני פיסוק בהסבר.";
+        ? "Fix capitalization in explanation."
+        : "תקן הון בהסבר.";
+    } else if (!/[.!?]$/.test(whyChosen.trim())) {
+      errors.whyChosen = language === "en"
+        ? "Fix punctuation in explanation."
+        : "תקן פיסוק בהסבר.";
     } else {
       errors.whyChosen = null;
     }

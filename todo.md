@@ -148,3 +148,12 @@
 - [x] Created comprehensive test suite with 23 tests for detailed error messages
 - [x] All 132 tests passing (including 23 new tests)
 - [x] Ready to integrate into Tab 1, 2, 3, and 4
+
+
+## Bug Fixes - Tab 1 Critical Issues
+- [x] Fix population name validation - Fixed field name mismatch (chosenPopulation -> populationName)
+- [x] Separated capitalization and punctuation checks for all Tab 1 fields (student names, population, explanation, table cells)
+- [x] All 132 tests still passing after fixes
+- [x] Error messages now display in Hebrew when language="he"
+- [ ] Add missing Hebrew translations for remaining UI text on Tab 1
+- [ ] Verify end-to-end: "I chose the Homeless." should now be accepted
