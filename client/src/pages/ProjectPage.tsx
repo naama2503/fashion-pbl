@@ -1087,8 +1087,8 @@ export default function ProjectPage() {
                 <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#333333", marginBottom: "0.75rem" }}>Step 2.5: Logo Description / שלב 2.5: תיאור הלוגו</h3>
                 <p style={{ color: "#555555", marginBottom: "1rem" }}>Describe your logo design. Explain the symbols you used and why they represent your population. (תארו את עיצוב הלוגו שלכם. הסבירו את הסמלים שהשתמשתם בהם ומדוע הם מייצגים את אוכלוסיה שלכם.)</p>
                 <textarea
-                  value={(responses as any).logoDescription || ""}
-                  onChange={(e) => updateResponse("logoDescription", e.target.value)}
+                  value={(responses as any).logo_description || ""}
+                  onChange={(e) => updateResponse("logo_description", e.target.value)}
                   style={{
                     width: "100%",
                     padding: "0.75rem",
@@ -1105,7 +1105,7 @@ export default function ProjectPage() {
                 <div style={{ marginTop: "1rem" }}>
                   <RubricPanel
                     rubricItems={getRubricForTab(4)}
-                    responses={{ logo_description: (responses as any).logoDescription || "" }}
+                    responses={{ logo_description: (responses as any).logo_description || "" }}
                     language={language}
                   />
                 </div>

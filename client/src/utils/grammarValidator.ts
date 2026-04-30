@@ -222,43 +222,34 @@ export const TAB_RUBRICS: Record<number, RubricItem[]> = {
       errorMessageHe: 'תיאור הלוגו חייב להיות מלא בדקדוק נכון'
     }
   ],
-  5: [ // Vector Art
+  5: [ // Vector Art - File upload only
     {
-      id: 'vector_description',
-      label: 'Vector Art Description',
-      labelHe: 'תיאור אמנות וקטור',
-      rule: (text: string): boolean => {
-        const errors = validateGrammar(text, 'Description');
-        return errors.length === 0 && text.trim().length > 0;
-      },
-      errorMessage: 'Vector description must be filled with correct grammar',
-      errorMessageHe: 'תיאור הווקטור חייב להיות מלא בדקדוק נכון'
+      id: 'vectorFile',
+      label: 'Vector File Uploaded',
+      labelHe: 'קובץ וקטור הועלה',
+      rule: (file: any): boolean => !!file && file.name && file.size > 0,
+      errorMessage: 'Please upload a vector file',
+      errorMessageHe: 'אנא העלה קובץ וקטור'
     }
   ],
-  6: [ // Fashion Item
+  6: [ // Fashion Item - File upload only
     {
-      id: 'fashion_description',
-      label: 'Fashion Item Description',
-      labelHe: 'תיאור פריט אופנה',
-      rule: (text: string): boolean => {
-        const errors = validateGrammar(text, 'Description');
-        return errors.length === 0 && text.trim().length > 0;
-      },
-      errorMessage: 'Fashion description must be filled with correct grammar',
-      errorMessageHe: 'תיאור האופנה חייב להיות מלא בדקדוק נכון'
+      id: 'fashionFile',
+      label: 'Fashion Item File Uploaded',
+      labelHe: 'קובץ פריט אופנה הועלה',
+      rule: (file: any): boolean => !!file && file.name && file.size > 0,
+      errorMessage: 'Please upload a fashion item file',
+      errorMessageHe: 'אנא העלה קובץ פריט אופנה'
     }
   ],
-  7: [ // Presentation
+  7: [ // Presentation - File upload only
     {
-      id: 'presentation_notes',
-      label: 'Presentation Notes',
-      labelHe: 'הערות מצגה',
-      rule: (text: string): boolean => {
-        const errors = validateGrammar(text, 'Notes');
-        return errors.length === 0 && text.trim().length > 0;
-      },
-      errorMessage: 'Presentation notes must be filled with correct grammar',
-      errorMessageHe: 'הערות המצגה חייבות להיות מלאות בדקדוק נכון'
+      id: 'presentationFile',
+      label: 'Presentation File Uploaded',
+      labelHe: 'קובץ מצגה הועלה',
+      rule: (file: any): boolean => !!file && file.name && file.size > 0,
+      errorMessage: 'Please upload a presentation file',
+      errorMessageHe: 'אנא העלה קובץ מצגה'
     }
   ]
 };
