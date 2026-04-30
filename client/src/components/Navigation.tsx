@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Menu, X, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
+import ProgressBar from "./ProgressBar";
 
 interface NavigationProps {
   currentTab: number;
   onTabChange: (tabIndex: number) => void;
   canAccessTab: (tabIndex: number) => boolean;
   tabs: { label: string; labelHe: string }[];
+  completedTabs?: number;
 }
 
 export default function Navigation({
@@ -15,6 +17,7 @@ export default function Navigation({
   onTabChange,
   canAccessTab,
   tabs,
+  completedTabs = 0,
 }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [, navigate] = useLocation();
@@ -34,7 +37,15 @@ export default function Navigation({
       {/* Desktop Sidebar */}
       <div className="hidden md:fixed md:left-0 md:top-0 md:h-screen md:w-64 md:bg-gray-900 md:text-white md:overflow-y-auto md:z-40">
         <div className="p-6">
-          <h1 className="text-2xl font-black mb-8">Fashion PBL</h1>
+          <h1 className="text-2xl font-black mb-4">Fashion PBL</h1>
+          <ProgressBar
+            currentTab={currentTab}
+            totalTabs={tabs.length}
+            completedTabs={completedTabs}
+            canAccessTab={canAccessTab}
+            onTabChange={onTabChange}
+          />
+          <div className="mt-6"></div>
           <nav className="space-y-2">
             {tabs.map((tab, idx) => (
               <button

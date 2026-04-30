@@ -269,6 +269,17 @@ export default function ProjectPage() {
     return false;
   };
 
+  // Calculate completed tabs
+  const completedTabs = [
+    true,
+    checkTabCompletion(1, responses),
+    checkTabCompletion(2, { research_text: (responses as any).researchText || '' }),
+    checkTabCompletion(3, { thorn_vs_smile: (responses as any).thornVsSmile || '' }),
+    false,
+    false,
+    false,
+  ].filter(Boolean).length;
+
   const updateResponse = (key: string, value: any) => {
     setResponses({ ...responses, [key]: value });
   };
@@ -333,7 +344,7 @@ export default function ProjectPage() {
   if (currentTab === 3) {
     return (
       <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
-        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
         
         <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
           <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
@@ -852,7 +863,7 @@ export default function ProjectPage() {
     
     return (
       <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
-        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
         
         <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
           <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
@@ -986,7 +997,7 @@ export default function ProjectPage() {
   if (currentTab === 0) {
     return (
       <div style={{ backgroundColor: tabColor, minHeight: "100vh" }}>
-        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
         
         <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", alignItems: "center" }}>
           <div>
@@ -1027,7 +1038,7 @@ export default function ProjectPage() {
     
     return (
       <div style={{ backgroundColor: "#DCFCE7", minHeight: "100vh" }}>
-        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
         
         <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
           <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
@@ -1176,7 +1187,7 @@ export default function ProjectPage() {
     
     return (
       <div style={{ backgroundColor: "#FEF9C3", minHeight: "100vh" }}>
-        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
         
         <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
           <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
@@ -1350,7 +1361,7 @@ export default function ProjectPage() {
     
     return (
       <div style={{ backgroundColor: "#E0E7FF", minHeight: "100vh" }}>
-        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
         
         <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
           <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
@@ -1461,7 +1472,7 @@ export default function ProjectPage() {
   // Placeholder for other tabs
   return (
     <div style={{ backgroundColor: tabColor, minHeight: "100vh", padding: "2rem", textAlign: "center" }}>
-      <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} />
+      <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
       <h1 style={{ marginTop: "5rem", fontSize: "2rem", fontWeight: "bold", color: "#333333" }}>
         {TABS[currentTab].label} ({TABS[currentTab].labelHe})
       </h1>
