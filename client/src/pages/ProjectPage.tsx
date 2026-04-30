@@ -28,10 +28,10 @@ const COLORS = [
 // Correct answers for font verification
 const FONT_CORRECT_ANSWERS = {
   thornVsSmile: ["cinzel", "fredoka"], // Cinzel for thorns (serious/sharp), Fredoka for smile (fun/rounded)
-  toyStore: "fredoka", // Fun, playful
-  gamingSpace: "orbitron", // Tech, futuristic
-  restaurant: "cinzel", // Elegant, formal
-  hospital: "anton", // Strong, trustworthy, bold
+  toyStore: "Fredoka", // Fun, playful
+  gamingSpace: "Orbitron", // Tech, futuristic
+  restaurant: "Cinzel", // Elegant, formal
+  hospital: "Anton", // Strong, trustworthy, bold
 };
 
 
@@ -496,20 +496,27 @@ export default function ProjectPage() {
                               Which font would you use for a toy store? / איזה פונט הייתם משתמשים לחנות צעצועים?
                             </label>
                             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                              {["Anton", "Fredoka", "Cinzel", "Orbitron"].map((font) => (
-                                <label key={font} style={{ display: "flex", alignItems: "center", cursor: "pointer", fontSize: "0.875rem" }}>
-                                  <input
-                                    type="radio"
-                                    name="toyStore"
-                                    value={font}
-                                    checked={tab3Responses.toyStore === font}
-                                    onChange={(e) => setTab3Responses({ ...tab3Responses, toyStore: e.target.value })}
-                                    style={{ marginRight: "0.5rem", cursor: "pointer" }}
-                                  />
-                                  {font}
-                                </label>
-                              ))}
+                              {["Anton", "Fredoka", "Cinzel", "Orbitron"].map((font) => {
+                                const isCorrect = font === FONT_CORRECT_ANSWERS.toyStore;
+                                const isSelected = tab3Responses.toyStore === font;
+                                return (
+                                  <label key={font} style={{ display: "flex", alignItems: "center", cursor: "pointer", fontSize: "0.875rem", padding: "0.5rem", backgroundColor: isSelected ? (isCorrect ? "#DCFCE7" : "#FEE2E2") : "transparent", borderRadius: "0.25rem" }}>
+                                    <input
+                                      type="radio"
+                                      name="toyStore"
+                                      value={font}
+                                      checked={isSelected}
+                                      onChange={(e) => setTab3Responses({ ...tab3Responses, toyStore: e.target.value })}
+                                      style={{ marginRight: "0.5rem", cursor: "pointer" }}
+                                    />
+                                    {font} {isSelected && (isCorrect ? "✓" : "✗")}
+                                  </label>
+                                );
+                              })}
                             </div>
+                            {tab3Responses.toyStore && tab3Responses.toyStore !== FONT_CORRECT_ANSWERS.toyStore && (
+                              <p style={{ color: "#DC2626", fontSize: "0.8rem", marginTop: "0.5rem" }}>Try again! (נסו שוב!)</p>
+                            )}
                           </div>
                           
                           <div style={{ marginBottom: "1.5rem" }}>
@@ -517,20 +524,27 @@ export default function ProjectPage() {
                               Which font would you use for a gaming space? / איזה פונט הייתם משתמשים למרחב גיימיג?
                             </label>
                             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                              {["Anton", "Fredoka", "Cinzel", "Orbitron"].map((font) => (
-                                <label key={font} style={{ display: "flex", alignItems: "center", cursor: "pointer", fontSize: "0.875rem" }}>
-                                  <input
-                                    type="radio"
-                                    name="gamingSpace"
-                                    value={font}
-                                    checked={tab3Responses.gamingSpace === font}
-                                    onChange={(e) => setTab3Responses({ ...tab3Responses, gamingSpace: e.target.value })}
-                                    style={{ marginRight: "0.5rem", cursor: "pointer" }}
-                                  />
-                                  {font}
-                                </label>
-                              ))}
+                              {["Anton", "Fredoka", "Cinzel", "Orbitron"].map((font) => {
+                                const isCorrect = font === FONT_CORRECT_ANSWERS.gamingSpace;
+                                const isSelected = tab3Responses.gamingSpace === font;
+                                return (
+                                  <label key={font} style={{ display: "flex", alignItems: "center", cursor: "pointer", fontSize: "0.875rem", padding: "0.5rem", backgroundColor: isSelected ? (isCorrect ? "#DCFCE7" : "#FEE2E2") : "transparent", borderRadius: "0.25rem" }}>
+                                    <input
+                                      type="radio"
+                                      name="gamingSpace"
+                                      value={font}
+                                      checked={isSelected}
+                                      onChange={(e) => setTab3Responses({ ...tab3Responses, gamingSpace: e.target.value })}
+                                      style={{ marginRight: "0.5rem", cursor: "pointer" }}
+                                    />
+                                    {font} {isSelected && (isCorrect ? "✓" : "✗")}
+                                  </label>
+                                );
+                              })}
                             </div>
+                            {tab3Responses.gamingSpace && tab3Responses.gamingSpace !== FONT_CORRECT_ANSWERS.gamingSpace && (
+                              <p style={{ color: "#DC2626", fontSize: "0.8rem", marginTop: "0.5rem" }}>Try again! (נסו שוב!)</p>
+                            )}
                           </div>
                           
                           <div style={{ marginBottom: "1.5rem" }}>
@@ -538,20 +552,27 @@ export default function ProjectPage() {
                               Which font would you use for a restaurant? / איזה פונט הייתם משתמשים למסעדה?
                             </label>
                             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                              {["Anton", "Fredoka", "Cinzel", "Orbitron"].map((font) => (
-                                <label key={font} style={{ display: "flex", alignItems: "center", cursor: "pointer", fontSize: "0.875rem" }}>
-                                  <input
-                                    type="radio"
-                                    name="restaurant"
-                                    value={font}
-                                    checked={tab3Responses.restaurant === font}
-                                    onChange={(e) => setTab3Responses({ ...tab3Responses, restaurant: e.target.value })}
-                                    style={{ marginRight: "0.5rem", cursor: "pointer" }}
-                                  />
-                                  {font}
-                                </label>
-                              ))}
+                              {["Anton", "Fredoka", "Cinzel", "Orbitron"].map((font) => {
+                                const isCorrect = font === FONT_CORRECT_ANSWERS.restaurant;
+                                const isSelected = tab3Responses.restaurant === font;
+                                return (
+                                  <label key={font} style={{ display: "flex", alignItems: "center", cursor: "pointer", fontSize: "0.875rem", padding: "0.5rem", backgroundColor: isSelected ? (isCorrect ? "#DCFCE7" : "#FEE2E2") : "transparent", borderRadius: "0.25rem" }}>
+                                    <input
+                                      type="radio"
+                                      name="restaurant"
+                                      value={font}
+                                      checked={isSelected}
+                                      onChange={(e) => setTab3Responses({ ...tab3Responses, restaurant: e.target.value })}
+                                      style={{ marginRight: "0.5rem", cursor: "pointer" }}
+                                    />
+                                    {font} {isSelected && (isCorrect ? "✓" : "✗")}
+                                  </label>
+                                );
+                              })}
                             </div>
+                            {tab3Responses.restaurant && tab3Responses.restaurant !== FONT_CORRECT_ANSWERS.restaurant && (
+                              <p style={{ color: "#DC2626", fontSize: "0.8rem", marginTop: "0.5rem" }}>Try again! (נסו שוב!)</p>
+                            )}
                           </div>
                           
                           <div>
@@ -559,20 +580,27 @@ export default function ProjectPage() {
                               Which font would you use for a hospital? / איזה פונט הייתם משתמשים לבית חולים?
                             </label>
                             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                              {["Anton", "Fredoka", "Cinzel", "Orbitron"].map((font) => (
-                                <label key={font} style={{ display: "flex", alignItems: "center", cursor: "pointer", fontSize: "0.875rem" }}>
-                                  <input
-                                    type="radio"
-                                    name="hospital"
-                                    value={font}
-                                    checked={tab3Responses.hospital === font}
-                                    onChange={(e) => setTab3Responses({ ...tab3Responses, hospital: e.target.value })}
-                                    style={{ marginRight: "0.5rem", cursor: "pointer" }}
-                                  />
-                                  {font}
-                                </label>
-                              ))}
+                              {["Anton", "Fredoka", "Cinzel", "Orbitron"].map((font) => {
+                                const isCorrect = font === FONT_CORRECT_ANSWERS.hospital;
+                                const isSelected = tab3Responses.hospital === font;
+                                return (
+                                  <label key={font} style={{ display: "flex", alignItems: "center", cursor: "pointer", fontSize: "0.875rem", padding: "0.5rem", backgroundColor: isSelected ? (isCorrect ? "#DCFCE7" : "#FEE2E2") : "transparent", borderRadius: "0.25rem" }}>
+                                    <input
+                                      type="radio"
+                                      name="hospital"
+                                      value={font}
+                                      checked={isSelected}
+                                      onChange={(e) => setTab3Responses({ ...tab3Responses, hospital: e.target.value })}
+                                      style={{ marginRight: "0.5rem", cursor: "pointer" }}
+                                    />
+                                    {font} {isSelected && (isCorrect ? "✓" : "✗")}
+                                  </label>
+                                );
+                              })}
                             </div>
+                            {tab3Responses.hospital && tab3Responses.hospital !== FONT_CORRECT_ANSWERS.hospital && (
+                              <p style={{ color: "#DC2626", fontSize: "0.8rem", marginTop: "0.5rem" }}>Try again! (נסו שוב!)</p>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -639,8 +667,8 @@ export default function ProjectPage() {
                         return (
                           <div key={idx} style={{ backgroundColor: "#FEF3C7", padding: "1.5rem", borderRadius: "0.5rem", border: "2px solid #FBBF24" }}>
                             {/* Logo Display */}
-                            <div style={{ marginBottom: "1rem", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "150px" }}>
-                              <img src={logo.logo} alt={`${logo.name} Logo`} loading="lazy" crossOrigin="anonymous" style={{ height: "150px", maxWidth: "100%", objectFit: "contain", width: "150px" }} onError={(e) => { e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3E' + logo.name + '%3C/text%3E%3C/svg%3E'; }} />
+                            <div style={{ marginBottom: "1rem", display: "flex", justifyContent: "center", alignItems: "center", minHeight: "150px", backgroundColor: "#FFFFFF", borderRadius: "0.25rem" }}>
+                              <img src={logo.logo} alt={`${logo.name} Logo`} loading="lazy" style={{ height: "150px", maxWidth: "100%", objectFit: "contain", width: "150px" }} onError={(e) => { e.currentTarget.style.display = 'none'; if (e.currentTarget.parentElement) e.currentTarget.parentElement.textContent = logo.name; }} />
                             </div>
                             <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "1rem", fontSize: "0.95rem", textAlign: "center" }}>
                               {logo.name} ({logo.nameHe})
@@ -739,10 +767,11 @@ export default function ProjectPage() {
 
                   {(() => {
                     const thornVsSmileValid = tab3Responses.thornVsSmile && /^[A-Z].*[.!?]$/.test(tab3Responses.thornVsSmile.trim());
-                    const fontPsychologyValid = tab3Responses.fontShapeAnswers && /^[A-Z].*[.!?]$/.test(tab3Responses.fontShapeAnswers.trim());
+                    const fontPsychologyAnswered = tab3Responses.toyStore && tab3Responses.gamingSpace && tab3Responses.restaurant && tab3Responses.hospital;
+                    const fontPsychologyCorrect = tab3Responses.toyStore === FONT_CORRECT_ANSWERS.toyStore && tab3Responses.gamingSpace === FONT_CORRECT_ANSWERS.gamingSpace && tab3Responses.restaurant === FONT_CORRECT_ANSWERS.restaurant && tab3Responses.hospital === FONT_CORRECT_ANSWERS.hospital;
                     const allQuizAnswered = GESTALT_PRACTICE_QUIZ.every((_, idx) => tab3Responses[`gestalt_quiz_${idx}`]);
                     const allQuizCorrect = GESTALT_PRACTICE_QUIZ.every((logo, idx) => tab3Responses[`gestalt_quiz_${idx}`] === logo.principle);
-                    const canContinue = !isLocked && thornVsSmileValid && fontPsychologyValid && allQuizAnswered && allQuizCorrect;
+                    const canContinue = !isLocked && thornVsSmileValid && fontPsychologyAnswered && fontPsychologyCorrect && allQuizAnswered && allQuizCorrect;
                     return (
                       <>
                         {!thornVsSmileValid && tab3Responses.thornVsSmile && (
@@ -750,9 +779,9 @@ export default function ProjectPage() {
                             ⚠️ Fix Thorn vs Smile: Capital letter + punctuation (תקן קוץ לעומת חיוך: אות גדולה וסימן פיסוק)
                           </div>
                         )}
-                        {!fontPsychologyValid && tab3Responses.fontShapeAnswers && (
+                        {fontPsychologyAnswered && !fontPsychologyCorrect && (
                           <div style={{ backgroundColor: "#FEE2E2", border: "2px solid #EF4444", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem", color: "#991B1B", fontSize: "0.9rem", direction: "rtl", textAlign: "right" }}>
-                            ⚠️ Fix Font Psychology: Capital letter + punctuation (תקן פסיכולוגיה פונט: אות גדולה וסימן פיסוק)
+                            ⚠️ Fix Font Psychology answers - some are incorrect. Try again! (תקן תשובות פסיכולוגיה פונט - חלקן שגויות. נסו שוב!)
                           </div>
                         )}
                         {!allQuizCorrect && allQuizAnswered && (
