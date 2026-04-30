@@ -119,7 +119,7 @@ export const validateMinimumWords = (text: string, minWords: number, fieldName: 
 export const TAB_RUBRICS: Record<number, RubricItem[]> = {
   1: [ // Group Decision
     {
-      id: 'population',
+      id: 'populationName',
       label: 'Population Selected',
       labelHe: 'אוכלוסייה נבחרה',
       rule: (text: string): boolean => !!(text && text.trim().length > 0),
@@ -127,7 +127,7 @@ export const TAB_RUBRICS: Record<number, RubricItem[]> = {
       errorMessageHe: 'אנא בחר אוכלוסייה'
     },
     {
-      id: 'reason',
+      id: 'whyChosen',
       label: 'Reason Explained',
       labelHe: 'סיבה הוסברה',
       rule: (text: string): boolean => {

@@ -153,7 +153,8 @@
 ## Bug Fixes - Tab 1 Critical Issues
 - [x] Fix population name validation - Fixed field name mismatch (chosenPopulation -> populationName)
 - [x] Separated capitalization and punctuation checks for all Tab 1 fields (student names, population, explanation, table cells)
-- [x] All 132 tests still passing after fixes
+- [x] Fixed Save button disabled issue - Updated rubric field names to match Tab1GroupDecision
+- [x] All 132 tests passing after fixes
 - [x] Error messages now display in Hebrew when language="he"
-- [ ] Add missing Hebrew translations for remaining UI text on Tab 1
-- [ ] Verify end-to-end: "I chose the Homeless." should now be accepted
+- [x] "I chose the Homeless." should now be accepted
+- [x] Save button should now be enabled when all fields are filled

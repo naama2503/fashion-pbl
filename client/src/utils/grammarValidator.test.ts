@@ -82,7 +82,7 @@ describe('Grammar Validator', () => {
     it('should return rubric items for Tab 1', () => {
       const rubric = getRubricForTab(1);
       expect(rubric.length).toBeGreaterThan(0);
-      expect(rubric.some(item => item.id === 'population')).toBe(true);
+      expect(rubric.some(item => item.id === 'populationName')).toBe(true);
     });
 
     it('should return rubric items for Tab 2', () => {
@@ -112,8 +112,8 @@ describe('Grammar Validator', () => {
 
     it('should return true if all rubric items pass', () => {
       const responses = {
-        population: 'Homeless',
-        reason: 'Because we can help them. They need support.',
+        populationName: 'Homeless',
+        whyChosen: 'Because we can help them. They need support.',
       };
       const result = checkTabCompletion(1, responses);
       expect(result).toBe(true);
@@ -121,8 +121,8 @@ describe('Grammar Validator', () => {
 
     it('should return false if grammar is invalid', () => {
       const responses = {
-        population: 'Homeless',
-        reason: 'because we can help them. they need support.',
+        populationName: 'Homeless',
+        whyChosen: 'because we can help them. they need support.',
       };
       const result = checkTabCompletion(1, responses);
       expect(result).toBe(false);
