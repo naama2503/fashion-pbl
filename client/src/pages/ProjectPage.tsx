@@ -930,7 +930,7 @@ export default function ProjectPage() {
                     <RubricPanel
                       rubricItems={getRubricForTab(2)}
                       responses={{ research_text: researchText }}
-                      language="en"
+                      language={language}
                     />
                   </div>
                   
@@ -991,7 +991,7 @@ export default function ProjectPage() {
         <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", alignItems: "center" }}>
           <div>
             <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
-              HOW CAN FASHION CREATE SOCIAL CHANGE?
+              {language === "en" ? "HOW CAN FASHION CREATE SOCIAL CHANGE?" : "איך אופנה יכולה ליצור שינוי חברתי?"}
             </h1>
             <p style={{ fontSize: "1.125rem", color: "#555555", lineHeight: "1.6", marginBottom: "2rem" }}>
               In this project, you will work in groups to design a fashion item that sends a message for social change. (בפרויקט זה, תעבדו בקבוצות כדי לעצב פריט אופנה השולח הודעה לשינוי חברתי.)
@@ -1009,7 +1009,7 @@ export default function ProjectPage() {
                 cursor: "pointer",
               }}
             >
-              Start Your Project →
+              {language === "en" ? "Start Your Project →" : "התחל את הפרויקט שלך ←"}
             </button>
           </div>
           <div>
@@ -1095,7 +1095,7 @@ export default function ProjectPage() {
                   <RubricPanel
                     rubricItems={getRubricForTab(4)}
                     responses={{ logo_description: (responses as any).logoDescription || "" }}
-                    language="en"
+                    language={language}
                   />
                 </div>
               </div>

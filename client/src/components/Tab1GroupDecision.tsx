@@ -276,7 +276,7 @@ export const Tab1GroupDecision: React.FC<Tab1Props> = ({
                                 borderLeft: isRTL ? "1px solid #D1D5DB" : "none",
                               }}
                             >
-                              {name || `Student ${idx + 1}`}
+                              {name || (language === "en" ? `Student ${idx + 1}` : `סטודנט ${idx + 1}`)}
                             </th>
                           ))}
                         </tr>
