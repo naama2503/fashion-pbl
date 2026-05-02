@@ -201,13 +201,17 @@ export const appRouter = router({
       if (!db) return [];
       try {
         // Get unique student IDs from student_responses table
-        // Gracefully handle if groupName column doesn't exist yet
+        // Works with or without groupName column
         let responses: any[] = [];
         try {
           responses = await db.select().from(studentResponses);
         } catch (selectError: any) {
-          // If groupName column doesn't exist, return empty list
-          console.warn('[getAllStudents] groupName column not available yet');
+          console.warn('[getAllStudents] Error fetching responses:', selectError);
+          return [];
+        }
+        
+        // If no responses, return empty list
+        if (!responses || responses.length === 0) {
           return [];
         }
         
