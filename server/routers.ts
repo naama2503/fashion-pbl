@@ -196,7 +196,23 @@ export const appRouter = router({
       const db = await getDb();
       if (!db) return [];
       try {
-        return await db.select().from(students);
+        // Get unique student IDs from student_responses table
+        const responses = await db.select().from(studentResponses);
+        const uniqueStudentIds = Array.from(new Set(responses.map(r => r.studentId)));
+        
+        // For each unique student ID, get their first response to get metadata
+        const students_list: any[] = uniqueStudentIds.map(studentId => {
+          const firstResponse = responses.find(r => r.studentId === studentId);
+          return {
+            id: studentId,
+            groupName: `Student ${studentId}`,
+            members: firstResponse?.responseData ? JSON.stringify([`Student ${studentId}`]) : '[]',
+            createdAt: firstResponse?.createdAt || new Date(),
+            updatedAt: firstResponse?.updatedAt || new Date(),
+          };
+        });
+        
+        return students_list;
       } catch (error) {
         console.error('[getAllStudents] Error:', error);
         return [];
