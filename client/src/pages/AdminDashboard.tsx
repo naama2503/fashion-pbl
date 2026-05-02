@@ -1,9 +1,9 @@
 /*
  * Fashion PBL – Teacher Admin Dashboard
- * Simple password protection + approval system for all 7 tabs
+ * Connected to real database via tRPC queries
  */
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,87 +12,31 @@ import { translations } from "@/lib/translations";
 import { Eye, EyeOff, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
-const TEACHER_PASSWORD = "teacher123"; // Simple password (in production, use proper auth)
-
-// Mock student data (fallback)
-const MOCK_STUDENTS = [
-  {
-    id: 1,
-    name: "Leah Cohen",
-    group: "Group A",
-    responses: {
-      tab1_groupName: "Helping Homeless",
-      tab1_members: ["Leah", "David"],
-      tab1_whyChosen: "We want to help people without homes",
-      tab2_q1_who: "People who live on the streets",
-      tab2_q2_why: "They need our help and support",
-      tab2_q3_problem: "They don't have shelter or food",
-      tab2_q4_change: "We need more shelters and community support",
-      tab3_colorChoices: { Orange: "Friendly", Blue: "Trust" },
-      tab3_colorExplanation: "Orange shows we're friendly and caring",
-      tab4_logoDescription: "A hand reaching out to help",
-      tab4_logoReasoning: "Shows compassion and support",
-      tab5_itemType: "Shirt (חולצה)",
-      tab5_itemDescription: "Orange shirt with a helping hand",
-      tab5_howItHelps: "Raises awareness about homelessness",
-      tab6_checklist: { "We chose a group": true, "We researched": true },
-      tab7_reflection: "This project taught us about compassion",
-    },
-    approvals: [true, true, false, false, false, false, false],
-  },
-  {
-    id: 2,
-    name: "Yosef Levi",
-    group: "Group B",
-    responses: {
-      tab1_groupName: "Elderly Care",
-      tab1_members: ["Yosef", "Miriam", "Noa"],
-      tab1_whyChosen: "Elderly people are often lonely",
-      tab2_q1_who: "Senior citizens in care homes",
-      tab2_q2_why: "They have wisdom and experience",
-      tab2_q3_problem: "Many feel isolated and forgotten",
-      tab2_q4_change: "We need better community engagement",
-      tab3_colorChoices: { Purple: "Creative", Green: "Peace/Growth" },
-      tab3_colorExplanation: "Purple for creativity, Green for growth",
-      tab4_logoDescription: "Interlocking hands representing connection",
-      tab4_logoReasoning: "Shows unity between generations",
-      tab5_itemType: "Hat (כובע)",
-      tab5_itemDescription: "Purple hat with green accents",
-      tab5_howItHelps: "Symbolizes respect and connection",
-      tab6_checklist: { "We chose a group": true, "We researched": true, "We created logo": true },
-      tab7_reflection: "Learned about intergenerational respect",
-    },
-    approvals: [true, true, true, true, false, false, false],
-  },
-];
-
-interface StudentData {
-  id: number;
-  name: string;
-  group: string;
-  responses: Record<string, any>;
-  approvals: boolean[];
-}
+const TEACHER_PASSWORD = "teacher123";
 
 export default function AdminDashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<StudentData | null>(null);
-  const [students, setStudents] = useState(MOCK_STUDENTS);
-  const [loading, setLoading] = useState(false);
-  
+  const [selectedStudentId, setSelectedStudentId] = useState<number | null>(null);
+
   // Fetch all students from database
-  const { data: dbStudents, isLoading: isLoadingStudents } = trpc.pbl.getAllStudents.useQuery(undefined, {
+  const { data: dbStudents = [], isLoading: isLoadingStudents } = trpc.pbl.getAllStudents.useQuery(undefined, {
     enabled: isLoggedIn,
   });
-  
-  // Fetch student responses
-  const { data: studentResponses } = trpc.pbl.getStudentResponses.useQuery(
-    { studentId: selectedStudent?.id || 0 },
-    { enabled: isLoggedIn && !!selectedStudent?.id }
+
+  // Fetch student responses for selected student
+  const { data: studentResponses = [] } = trpc.pbl.getStudentResponses.useQuery(
+    { studentId: selectedStudentId || 0 },
+    { enabled: isLoggedIn && !!selectedStudentId }
   );
-  
+
+  // Fetch approval status for each tab
+  const { data: approvalStatuses = {} } = trpc.pbl.getApprovalStatus.useQuery(
+    { studentId: selectedStudentId || 0, tabNumber: 1 },
+    { enabled: isLoggedIn && !!selectedStudentId }
+  );
+
   // Update approval mutation
   const updateApprovalMutation = trpc.pbl.updateApproval.useMutation({
     onSuccess: () => {
@@ -113,55 +57,31 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleApprove = async (studentId: number, tabIndex: number) => {
+  const handleApprove = async (studentId: number, tabNumber: number) => {
     try {
       await updateApprovalMutation.mutateAsync({
         studentId,
-        tabNumber: tabIndex + 1,
+        tabNumber,
         isApproved: true,
       });
-      
-      // Update local state
-      setStudents(
-        students.map((s) => {
-          if (s.id === studentId) {
-            const newApprovals = [...s.approvals];
-            newApprovals[tabIndex] = true;
-            return { ...s, approvals: newApprovals };
-          }
-          return s;
-        })
-      );
-      toast.success(`Tab ${tabIndex + 1} approved!`);
+      toast.success(`Tab ${tabNumber} approved!`);
     } catch (error) {
-      console.error('Error approving:', error);
-      toast.error('Failed to approve tab');
+      console.error("Error approving:", error);
+      toast.error("Failed to approve tab");
     }
   };
 
-  const handleReject = async (studentId: number, tabIndex: number) => {
+  const handleReject = async (studentId: number, tabNumber: number) => {
     try {
       await updateApprovalMutation.mutateAsync({
         studentId,
-        tabNumber: tabIndex + 1,
+        tabNumber,
         isApproved: false,
       });
-      
-      // Update local state
-      setStudents(
-        students.map((s) => {
-          if (s.id === studentId) {
-            const newApprovals = [...s.approvals];
-            newApprovals[tabIndex] = false;
-            return { ...s, approvals: newApprovals };
-          }
-          return s;
-        })
-      );
-      toast.success(`Tab ${tabIndex + 1} rejected for revision`);
+      toast.success(`Tab ${tabNumber} rejected for revision`);
     } catch (error) {
-      console.error('Error rejecting:', error);
-      toast.error('Failed to reject tab');
+      console.error("Error rejecting:", error);
+      toast.error("Failed to reject tab");
     }
   };
 
@@ -201,50 +121,38 @@ export default function AdminDashboard() {
     );
   }
 
-  if (selectedStudent) {
+  const selectedStudent = dbStudents.find((s) => s.id === selectedStudentId);
+
+  if (selectedStudent && studentResponses.length > 0) {
     return (
       <div className="min-h-screen bg-amber-50 p-4">
         <div className="container">
-          <Button onClick={() => setSelectedStudent(null)} variant="outline" className="mb-6">
+          <Button onClick={() => setSelectedStudentId(null)} variant="outline" className="mb-6">
             ← Back to Students / חזור לתלמידים
           </Button>
 
           <Card className="p-8 border-2 border-gray-300">
-            <h2 className="text-3xl font-black mb-2">{selectedStudent.name}</h2>
-            <p className="text-gray-600 mb-6">{selectedStudent.group} / קבוצה</p>
+            <h2 className="text-3xl font-black mb-2">{selectedStudent.groupName || `Student ${selectedStudent.id}`}</h2>
+            <p className="text-gray-600 mb-6">{selectedStudent.members ? `Members: ${selectedStudent.members}` : "Group"}</p>
 
             <div className="space-y-8">
-              {[
-                { tab: 1, label: translations.nav.step1, key: "tab1_groupName" },
-                { tab: 2, label: translations.nav.step2, key: "tab2_q1_who" },
-                { tab: 3, label: translations.nav.step3, key: "tab3_colorExplanation" },
-                { tab: 4, label: translations.nav.step4, key: "tab4_logoDescription" },
-                { tab: 5, label: translations.nav.step5, key: "tab5_itemDescription" },
-                { tab: 6, label: translations.nav.step6, key: "tab6_checklist" },
-                { tab: 7, label: translations.nav.step7, key: "tab7_reflection" },
-              ].map((item) => (
-                <div key={item.tab} className="border-2 border-gray-300 rounded-lg p-6">
+              {studentResponses.map((response, idx) => (
+                <div key={response.id} className="border-2 border-gray-300 rounded-lg p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold">{item.label}</h3>
+                    <h3 className="text-xl font-bold">
+                      Tab {response.tabNumber} - {["Home", "Group Decision", "Research", "Design Inquiry", "Logo", "Vector Art", "Fashion Item", "Presentation"][response.tabNumber - 1]}
+                    </h3>
                     <div className="flex gap-2">
                       <Button
-                        onClick={() => handleApprove(selectedStudent.id, item.tab - 1)}
-                        className={`flex items-center gap-1 ${
-                          selectedStudent.approvals[item.tab - 1]
-                            ? "bg-green-600 hover:bg-green-700"
-                            : "bg-gray-300 hover:bg-gray-400"
-                        } text-white`}
+                        onClick={() => handleApprove(selectedStudent.id, response.tabNumber)}
+                        className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white"
                       >
                         <CheckCircle size={16} />
                         {translations.admin.approve}
                       </Button>
                       <Button
-                        onClick={() => handleReject(selectedStudent.id, item.tab - 1)}
-                        className={`flex items-center gap-1 ${
-                          !selectedStudent.approvals[item.tab - 1]
-                            ? "bg-red-600 hover:bg-red-700"
-                            : "bg-gray-300 hover:bg-gray-400"
-                        } text-white`}
+                        onClick={() => handleReject(selectedStudent.id, response.tabNumber)}
+                        className="flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white"
                       >
                         <XCircle size={16} />
                         {translations.admin.reject}
@@ -254,21 +162,14 @@ export default function AdminDashboard() {
 
                   <div className="bg-gray-50 p-4 rounded border-l-4 border-gray-900">
                     <p className="text-sm text-gray-700 whitespace-pre-wrap">
-                      {JSON.stringify(selectedStudent.responses[item.key], null, 2)}
+                      {JSON.stringify(response.responseData, null, 2)}
                     </p>
                   </div>
 
                   <div className="mt-3">
-                    {selectedStudent.approvals[item.tab - 1] ? (
-                      <span className="inline-flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
-                        <CheckCircle size={14} />
-                        {translations.gating.approved}
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">
-                        {translations.gating.pending}
-                      </span>
-                    )}
+                    <span className="inline-flex items-center gap-1 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">
+                      {translations.gating.pending}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -289,42 +190,37 @@ export default function AdminDashboard() {
           </Button>
         </div>
 
-        <div className="grid gap-4">
-          {students.map((student) => {
-            const approvedCount = student.approvals.filter(Boolean).length;
-            const totalTabs = student.approvals.length;
-
-            return (
-              <Card key={student.id} className="p-6 border-2 border-gray-300 hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setSelectedStudent(student)}>
+        {isLoadingStudents ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="animate-spin mr-2" />
+            <p>Loading students...</p>
+          </div>
+        ) : dbStudents.length === 0 ? (
+          <Card className="p-8 text-center">
+            <p className="text-gray-600">No students found. Students will appear here after they submit their work.</p>
+          </Card>
+        ) : (
+          <div className="grid gap-4">
+            {dbStudents.map((student) => (
+              <Card
+                key={student.id}
+                className="p-6 border-2 border-gray-300 hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => setSelectedStudentId(student.id)}
+              >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-bold">{student.name}</h3>
-                    <p className="text-gray-600">{student.group}</p>
-                    <div className="mt-2 flex gap-2">
-                      {student.approvals.map((approved, idx) => (
-                        <div
-                          key={idx}
-                          className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-                            approved ? "bg-green-500 text-white" : "bg-yellow-400 text-gray-900"
-                          }`}
-                          title={`Tab ${idx + 1}`}
-                        >
-                          {idx + 1}
-                        </div>
-                      ))}
-                    </div>
+                    <h3 className="text-xl font-bold">{student.groupName || `Student ${student.id}`}</h3>
+                    <p className="text-gray-600">{student.members ? `Members: ${student.members}` : "No members"}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-3xl font-black text-gray-900">
-                      {approvedCount}/{totalTabs}
-                    </p>
-                    <p className="text-sm text-gray-600">Approved</p>
+                    <p className="text-sm text-gray-600">Responses submitted</p>
+                    <p className="text-2xl font-bold">{studentResponses.filter((r) => r.studentId === student.id).length}/7</p>
                   </div>
                 </div>
               </Card>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
