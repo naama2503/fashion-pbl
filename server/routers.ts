@@ -282,6 +282,23 @@ export const appRouter = router({
           throw new Error(`Failed to update approval: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
       }),
+
+    getAllStudentResponses: publicProcedure.query(async () => {
+      const db = await getDb();
+      if (!db) return [];
+      try {
+        // Get all responses for the dashboard list view
+        try {
+          return await db.select().from(studentResponses);
+        } catch (selectError: any) {
+          console.warn('[getAllStudentResponses] groupName column not available yet');
+          return [];
+        }
+      } catch (error) {
+        console.error('[getAllStudentResponses] Error:', error);
+        return [];
+      }
+    }),
   }),
 });
 

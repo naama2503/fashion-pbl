@@ -9,23 +9,30 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { translations } from "@/lib/translations";
-import { Eye, EyeOff, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { Eye, EyeOff, CheckCircle, XCircle, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
 const TEACHER_PASSWORD = "teacher123";
+const TAB_NAMES = ["Home", "Group Decision", "Research", "Design Inquiry", "Logo", "Vector Art", "Fashion Item"];
 
 export default function AdminDashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState<number | null>(null);
+  const [expandedStudentId, setExpandedStudentId] = useState<number | null>(null);
 
   // Fetch all students from database
   const { data: dbStudents = [], isLoading: isLoadingStudents } = trpc.pbl.getAllStudents.useQuery(undefined, {
     enabled: isLoggedIn,
   });
 
-  // Fetch student responses for selected student
+  // Fetch ALL student responses for list view status display
+  const { data: allStudentResponses = [] } = trpc.pbl.getAllStudentResponses.useQuery(undefined, {
+    enabled: isLoggedIn,
+  });
+
+  // Fetch student responses for selected student (detail view)
   const { data: studentResponses = [] } = trpc.pbl.getStudentResponses.useQuery(
     { studentId: selectedStudentId || 0 },
     { enabled: isLoggedIn && !!selectedStudentId }
@@ -98,30 +105,36 @@ export default function AdminDashboard() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter Password"
+                className="border-2 border-gray-300 text-lg pr-10"
                 onKeyPress={(e) => e.key === "Enter" && handleLogin()}
-                placeholder={translations.admin.password}
-                className="border-2 border-gray-300 pr-10"
               />
               <button
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600"
+                className="absolute right-3 top-3 text-gray-500"
               >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
 
-            <Button onClick={handleLogin} className="w-full bg-gray-900 text-white hover:bg-gray-800 py-2 font-bold">
-              {translations.admin.login}
+            <Button
+              onClick={handleLogin}
+              className="w-full bg-gray-900 text-white hover:bg-gray-800 py-3 font-bold text-lg"
+            >
+              Login
             </Button>
           </div>
 
-          <p className="text-xs text-gray-500 text-center mt-4">Demo password: teacher123 / סיסמה: teacher123</p>
+          <p className="text-xs text-gray-500 text-center mt-6">
+            Demo password: teacher123 / סיסמה: teacher123
+          </p>
         </Card>
       </div>
     );
   }
 
   const selectedStudent = dbStudents.find((s) => s.id === selectedStudentId);
+  const isExpanded = expandedStudentId === selectedStudentId;
 
   if (selectedStudent && studentResponses.length > 0) {
     return (
@@ -140,7 +153,7 @@ export default function AdminDashboard() {
                 <div key={response.id} className="border-2 border-gray-300 rounded-lg p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-bold">
-                      Tab {response.tabNumber} - {["Home", "Group Decision", "Research", "Design Inquiry", "Logo", "Vector Art", "Fashion Item", "Presentation"][response.tabNumber - 1]}
+                      Tab {response.tabNumber} - {TAB_NAMES[response.tabNumber - 1]}
                     </h3>
                     <div className="flex gap-2">
                       <Button
@@ -201,24 +214,91 @@ export default function AdminDashboard() {
           </Card>
         ) : (
           <div className="grid gap-4">
-            {dbStudents.map((student) => (
-              <Card
-                key={student.id}
-                className="p-6 border-2 border-gray-300 hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => setSelectedStudentId(student.id)}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-xl font-bold">{student.groupName || `Student ${student.id}`}</h3>
-                    <p className="text-gray-600">{student.members ? `Members: ${student.members}` : "No members"}</p>
+            {dbStudents.map((student) => {
+              // Use allStudentResponses for list view, studentResponses for detail view
+              const studentTabs = (selectedStudentId === student.id ? studentResponses : allStudentResponses).filter((r) => r.studentId === student.id);
+              const tabStatuses = Array.from({ length: 7 }, (_, i) => {
+                const tabNum = i + 1;
+                const response = studentTabs.find(r => r.tabNumber === tabNum);
+                return {
+                  tabNum,
+                  submitted: !!response,
+                  label: TAB_NAMES[i]
+                };
+              });
+
+              return (
+                <Card
+                  key={student.id}
+                  className="p-6 border-2 border-gray-300 hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold">{student.groupName || `Student ${student.id}`}</h3>
+                      <p className="text-gray-600">{student.members ? `Members: ${student.members}` : "No members"}</p>
+                    </div>
+                    <div className="text-right mr-4">
+                      <p className="text-sm text-gray-600">Responses submitted</p>
+                      <p className="text-2xl font-bold">{studentTabs.length}/7</p>
+                    </div>
+                    <button
+                      onClick={() => setExpandedStudentId(isExpanded ? null : student.id)}
+                      className="p-2 hover:bg-gray-200 rounded"
+                    >
+                      {isExpanded ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+                    </button>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm text-gray-600">Responses submitted</p>
-                    <p className="text-2xl font-bold">{studentResponses.filter((r) => r.studentId === student.id).length}/7</p>
+
+                  {/* Tab Status Indicators */}
+                  <div className="grid grid-cols-7 gap-2 mt-4">
+                    {tabStatuses.map((tab) => (
+                      <div
+                        key={tab.tabNum}
+                        className={`p-2 rounded text-center text-xs font-semibold cursor-pointer hover:shadow-md transition-shadow ${
+                          tab.submitted
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-gray-100 text-gray-600'
+                        }`}
+                        title={tab.label}
+                        onClick={() => {
+                          if (tab.submitted) {
+                            setSelectedStudentId(student.id);
+                          }
+                        }}
+                      >
+                        {tab.submitted ? '✓' : '○'} {tab.tabNum}
+                      </div>
+                    ))}
                   </div>
-                </div>
-              </Card>
-            ))}
+
+                  {/* Expanded Details */}
+                  {isExpanded && studentTabs.length > 0 && (
+                    <div className="mt-6 pt-6 border-t-2 border-gray-300 space-y-4">
+                      <h4 className="font-bold text-lg">Submitted Work:</h4>
+                      {studentTabs.map((response) => (
+                        <div
+                          key={response.id}
+                          className="bg-white p-4 rounded border-l-4 border-blue-500 cursor-pointer hover:shadow-md transition-shadow"
+                          onClick={() => setSelectedStudentId(student.id)}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <h5 className="font-semibold">Tab {response.tabNumber} - {TAB_NAMES[response.tabNumber - 1]}</h5>
+                            <span className="text-xs text-gray-500">
+                              {new Date(response.createdAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-700 line-clamp-2">
+                            {typeof response.responseData === 'string'
+                              ? response.responseData
+                              : JSON.stringify(response.responseData).substring(0, 100)}...
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Card>
+              );
+            })}
           </div>
         )}
       </div>
