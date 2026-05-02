@@ -241,3 +241,14 @@
 - [x] Verified Approve/Reject buttons are functional
 - [x] All 132 tests passing - no regressions
 - [x] Database connection fully working for admin oversight
+
+
+## Admin Dashboard - Group Names Display (COMPLETED)
+- [x] Added groupName column to student_responses table schema
+- [x] Updated saveResponse mutation to accept and store groupName parameter
+- [x] Updated ProjectPage to retrieve groupName from localStorage and pass to saveResponse
+- [x] Updated App.tsx to store groupName in localStorage when student logs in
+- [x] Updated getAllStudents query to display actual group names instead of "Student 1", "Student 2"
+- [x] Admin dashboard now shows group names (e.g., "Thursday", "Monday", etc.)
+- [x] All 132 tests passing - no regressions
+- [x] Group names properly correlated with student IDs in the database

@@ -39,6 +39,7 @@ export const appRouter = router({
     saveResponse: publicProcedure
       .input(z.object({
         studentId: z.number(),
+        groupName: z.string().optional(),
         tabNumber: z.number(),
         responseData: z.record(z.string(), z.any()),
         colorFeelings: z.record(z.string(), z.string()).optional(),
@@ -58,8 +59,9 @@ export const appRouter = router({
         try {
           console.log(`[saveResponse] Saving response for student ${input.studentId}, tab ${input.tabNumber}`);
           
-          // Prepare all 10 values with exact types - using snake_case for database
+          // Prepare all values with exact types - using snake_case for database
           const student_id = input.studentId;
+          const group_name = input.groupName || "";
           const tab_number = input.tabNumber;
           const response_data = JSON.stringify(input.responseData || {});
           const color_feelings = JSON.stringify(input.colorFeelings || {});
@@ -70,8 +72,8 @@ export const appRouter = router({
           const presentation_file_url = input.presentationFileUrl || "";
           const now = new Date().toISOString();
 
-          console.log(`[saveResponse] All 10 values prepared:`, {
-            student_id, tab_number, response_data, color_feelings, font_shape_answers, 
+          console.log(`[saveResponse] All values prepared:`, {
+            student_id, group_name, tab_number, response_data, color_feelings, font_shape_answers, 
             gestalt_answers, canva_link, vector_file_url, presentation_file_url, updated_at: now
           });
 
@@ -92,6 +94,7 @@ export const appRouter = router({
               console.log(`[saveResponse] Updating record ID ${existing.id}...`);
               await db.update(studentResponses)
                 .set({
+                  groupName: group_name,
                   responseData: response_data,
                   colorFeelings: color_feelings,
                   fontShapeAnswers: font_shape_answers,
@@ -116,6 +119,7 @@ export const appRouter = router({
               // Use Drizzle ORM insert with proper types
               await db.insert(studentResponses).values({
                 studentId: student_id,
+                groupName: group_name,
                 tabNumber: tab_number,
                 responseData: response_data,
                 colorFeelings: color_feelings,
@@ -197,16 +201,26 @@ export const appRouter = router({
       if (!db) return [];
       try {
         // Get unique student IDs from student_responses table
-        const responses = await db.select().from(studentResponses);
+        // Gracefully handle if groupName column doesn't exist yet
+        let responses: any[] = [];
+        try {
+          responses = await db.select().from(studentResponses);
+        } catch (selectError: any) {
+          // If groupName column doesn't exist, return empty list
+          console.warn('[getAllStudents] groupName column not available yet');
+          return [];
+        }
+        
         const uniqueStudentIds = Array.from(new Set(responses.map(r => r.studentId)));
         
         // For each unique student ID, get their first response to get metadata
         const students_list: any[] = uniqueStudentIds.map(studentId => {
           const firstResponse = responses.find(r => r.studentId === studentId);
+          const groupName = firstResponse?.groupName || `Student ${studentId}`;
           return {
             id: studentId,
-            groupName: `Student ${studentId}`,
-            members: firstResponse?.responseData ? JSON.stringify([`Student ${studentId}`]) : '[]',
+            groupName: groupName,
+            members: firstResponse?.responseData ? JSON.stringify([groupName]) : '[]',
             createdAt: firstResponse?.createdAt || new Date(),
             updatedAt: firstResponse?.updatedAt || new Date(),
           };

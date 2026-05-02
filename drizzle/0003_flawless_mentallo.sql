@@ -1,0 +1,1 @@
+ALTER TABLE `student_responses` ADD `group_name` varchar(255) DEFAULT '';

@@ -344,8 +344,10 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
           localStorage.setItem('studentId', studentId);
         }
         
+        const groupName = localStorage.getItem('groupName') || '';
         await saveResponseMutation.mutateAsync({
           studentId: parseInt(studentId),
+          groupName: groupName,
           tabNumber: currentTab + 1,
           responseData: responses,
           colorFeelings: (responses as any).colorFeelings,

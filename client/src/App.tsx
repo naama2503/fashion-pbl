@@ -34,6 +34,7 @@ function App() {
   useEffect(() => {
     const savedStudentId = localStorage.getItem("studentId");
     const savedStudentName = localStorage.getItem("studentName");
+    const savedGroupName = localStorage.getItem("groupName");
     if (savedStudentId) {
       setStudentId(parseInt(savedStudentId));
       setStudentName(savedStudentName);
@@ -45,6 +46,7 @@ function App() {
     setStudentName(name);
     localStorage.setItem("studentId", id.toString());
     localStorage.setItem("studentName", name);
+    localStorage.setItem("groupName", name); // Store group name for database
   };
 
   return (
