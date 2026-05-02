@@ -160,11 +160,29 @@ const WORDS_TO_CATEGORIZE = [
   { word: "Youthful", wordHe: "צעיר", category: "Childish" },
 ];
 
-export default function ProjectPage() {
+interface ProjectPageProps {
+  studentId?: number;
+}
+
+export default function ProjectPage({ studentId }: ProjectPageProps) {
   const { language } = useLanguage();
   const [currentTab, setCurrentTab] = useState(0);
   const [responses, setResponses] = useState({});
   const [isLocked, setIsLocked] = useState(false);
+
+  // Load saved responses for returning students
+  useEffect(() => {
+    if (studentId) {
+      const savedResponses = localStorage.getItem(`responses_${studentId}`);
+      if (savedResponses) {
+        try {
+          setResponses(JSON.parse(savedResponses));
+        } catch (error) {
+          console.error("Failed to load saved responses:", error);
+        }
+      }
+    }
+  }, [studentId]);
   const [validationErrors, setValidationErrors] = useState([]);
   const [studentNames, setStudentNames] = useState(["Student 1", "Student 2", "Student 3"]);
   

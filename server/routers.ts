@@ -24,10 +24,16 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         const db = await getDb();
         if (!db) throw new Error("Database not available");
-        const result = await db.insert(students).values([
+        await db.insert(students).values([
           { groupName: input.groupName, members: JSON.stringify(input.members) }
         ]);
-        return { success: true };
+        // Get the inserted ID
+        const insertedStudents = await db.select().from(students)
+          .where(eq(students.groupName, input.groupName))
+          .orderBy(sql`id DESC`)
+          .limit(1);
+        const studentId = insertedStudents[0]?.id || 1;
+        return { success: true, studentId };
       }),
 
     saveResponse: publicProcedure
