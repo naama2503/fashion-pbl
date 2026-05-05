@@ -145,6 +145,15 @@ export const translations = {
     viewResponses: "View Responses (צפה בתשובות)",
     allApproved: "All tabs approved (כל הכרטיסיות אושרו)",
     pendingApproval: "Pending approval (בהמתנה לאישור)",
+    approved: "Approved (מאושר)",
+    rejected: "Rejected (דחוי)",
+    pending: "Pending (בהמתנה)",
+    feedbackNotes: "Feedback Notes (הערות משוב)",
+    addFeedback: "Add feedback for revision (הוסף משוב לתיקון)",
+    feedbackPlaceholder: "What should the group fix? (מה הקבוצה צריכה לתקן?)",
+    viewCanva: "View Canva Design (צפה בעיצוב Canva)",
+    viewPresentation: "View Presentation (צפה במצגה)",
+    downloadFile: "Download File (הורד קובץ)",
   },
 
   // Common
