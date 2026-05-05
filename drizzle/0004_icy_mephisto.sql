@@ -1,0 +1,1 @@
+ALTER TABLE `student_responses` DROP COLUMN `group_name`;

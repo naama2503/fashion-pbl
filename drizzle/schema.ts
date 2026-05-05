@@ -31,7 +31,6 @@ export type InsertStudent = typeof students.$inferInsert;
 export const studentResponses = mysqlTable("student_responses", {
   id: int("id").autoincrement().primaryKey(),
   studentId: int("student_id").notNull(),
-  groupName: varchar("group_name", { length: 255 }).default(""), // Store group name for admin dashboard
   tabNumber: int("tab_number").notNull(), // 1-7
   responseData: text("response_data").notNull().default("{}"), // JSON stringified
   colorFeelings: text("color_feelings").default("{}"), // JSON stringified
