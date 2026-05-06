@@ -71,7 +71,14 @@ export default function Home() {
         {/* CTA Buttons */}
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
           <button
-            onClick={() => navigate("/project")}
+            onClick={() => {
+              // Clear localStorage to show login form
+              localStorage.removeItem("studentId");
+              localStorage.removeItem("studentName");
+              localStorage.removeItem("groupName");
+              // Reload page to reset state
+              window.location.href = "/project";
+            }}
             style={{
               backgroundColor: "#333333",
               color: "white",
