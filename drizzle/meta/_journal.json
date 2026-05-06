@@ -36,6 +36,13 @@
       "when": 1777991082979,
       "tag": "0004_icy_mephisto",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1778090672597,
+      "tag": "0005_add_tab7_tab8_columns",
+      "breakpoints": true
     }
   ]
 }

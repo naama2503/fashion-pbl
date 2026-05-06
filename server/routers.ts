@@ -299,6 +299,32 @@ export const appRouter = router({
         return [];
       }
     }),
+
+    getLastActiveTab: publicProcedure
+      .input(z.object({ studentId: z.number() }))
+      .query(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return { lastTab: 0 };
+        try {
+          console.log(`[getLastActiveTab] Fetching last active tab for student ${input.studentId}`);
+          const responses = await db.select().from(studentResponses)
+            .where(eq(studentResponses.studentId, input.studentId))
+            .orderBy(sql`tab_number DESC`)
+            .limit(1);
+          
+          if (responses.length === 0) {
+            console.log(`[getLastActiveTab] No responses found for student ${input.studentId}`);
+            return { lastTab: 0 };
+          }
+          
+          const lastTab = responses[0].tabNumber;
+          console.log(`[getLastActiveTab] Last active tab for student ${input.studentId}: ${lastTab}`);
+          return { lastTab };
+        } catch (error) {
+          console.error('[getLastActiveTab] Error:', error);
+          return { lastTab: 0 };
+        }
+      }),
   }),
 });
 
