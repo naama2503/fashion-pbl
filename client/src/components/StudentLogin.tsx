@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -13,11 +13,18 @@ export function StudentLogin({ onLoginSuccess }: StudentLoginProps) {
   const [groupName, setGroupName] = useState("");
   const [members, setMembers] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isReturning, setIsReturning] = useState(false);
+  const [returningStudentId, setReturningStudentId] = useState<number | null>(null);
+
+  // Check if group exists
+  const checkGroupQuery = trpc.pbl.checkGroup.useQuery(
+    { groupName: groupName.trim() },
+    { enabled: groupName.trim().length > 2 }
+  );
 
   const createGroupMutation = trpc.pbl.createGroup.useMutation({
     onSuccess: (data: any) => {
       toast.success("Group created successfully!");
-      // Use the real student ID returned from the mutation
       const studentId = data.studentId || 1;
       onLoginSuccess(studentId, groupName);
     },
@@ -27,6 +34,20 @@ export function StudentLogin({ onLoginSuccess }: StudentLoginProps) {
     },
   });
 
+  // Update returning status when checkGroup query completes
+  useEffect(() => {
+    if (checkGroupQuery.data) {
+      if (checkGroupQuery.data.exists) {
+        setIsReturning(true);
+        setReturningStudentId(checkGroupQuery.data.studentId);
+        toast.success("Welcome back! 👋");
+      } else {
+        setIsReturning(false);
+        setReturningStudentId(null);
+      }
+    }
+  }, [checkGroupQuery.data]);
+
   const handleLogin = async () => {
     if (!groupName.trim()) {
       toast.error("Please enter a group name");
@@ -35,15 +56,21 @@ export function StudentLogin({ onLoginSuccess }: StudentLoginProps) {
 
     setIsLoading(true);
     try {
-      const memberList = members
-        .split(",")
-        .map((m) => m.trim())
-        .filter((m) => m.length > 0);
+      if (isReturning && returningStudentId) {
+        // Returning student - just login with existing ID
+        onLoginSuccess(returningStudentId, groupName);
+      } else {
+        // New group - create it
+        const memberList = members
+          .split(",")
+          .map((m) => m.trim())
+          .filter((m) => m.length > 0);
 
-      await createGroupMutation.mutateAsync({
-        groupName: groupName.trim(),
-        members: memberList.length > 0 ? memberList : [groupName],
-      });
+        await createGroupMutation.mutateAsync({
+          groupName: groupName.trim(),
+          members: memberList.length > 0 ? memberList : [groupName],
+        });
+      }
     } catch (error) {
       console.error("Login error:", error);
     } finally {
@@ -72,31 +99,38 @@ export function StudentLogin({ onLoginSuccess }: StudentLoginProps) {
               className="border-2 border-gray-300 text-lg"
               onKeyPress={(e) => e.key === "Enter" && handleLogin()}
             />
+            {isReturning && (
+              <p className="text-sm text-green-600 font-semibold mt-2">
+                ✓ We found your group! / ✓ מצאנו את הקבוצה שלך!
+              </p>
+            )}
           </div>
 
-          <div>
-            <label className="block text-sm font-bold mb-2">
-              Member Names (optional) / שמות חברים (אופציונלי)
-            </label>
-            <Input
-              type="text"
-              value={members}
-              onChange={(e) => setMembers(e.target.value)}
-              placeholder="e.g., Leah, David, Sarah / לאה, דוד, שרה"
-              className="border-2 border-gray-300 text-lg"
-              onKeyPress={(e) => e.key === "Enter" && handleLogin()}
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Separate with commas / הפרד בפסיקים
-            </p>
-          </div>
+          {!isReturning && (
+            <div>
+              <label className="block text-sm font-bold mb-2">
+                Member Names (optional) / שמות חברים (אופציונלי)
+              </label>
+              <Input
+                type="text"
+                value={members}
+                onChange={(e) => setMembers(e.target.value)}
+                placeholder="e.g., Leah, David, Sarah / לאה, דוד, שרה"
+                className="border-2 border-gray-300 text-lg"
+                onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Separate with commas / הפרד בפסיקים
+              </p>
+            </div>
+          )}
 
           <Button
             onClick={handleLogin}
             disabled={isLoading || !groupName.trim()}
             className="w-full bg-gray-900 text-white hover:bg-gray-800 py-3 font-bold text-lg"
           >
-            {isLoading ? "Loading..." : "Start Project / התחל פרויקט"}
+            {isLoading ? "Loading..." : isReturning ? "Continue / המשך" : "Start Project / התחל פרויקט"}
           </Button>
         </div>
 

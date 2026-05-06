@@ -19,6 +19,20 @@ export const appRouter = router({
   }),
 
   pbl: router({
+    checkGroup: publicProcedure
+      .input(z.object({ groupName: z.string() }))
+      .query(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+        const existing = await db.select().from(students)
+          .where(eq(students.groupName, input.groupName))
+          .limit(1);
+        if (existing.length > 0) {
+          return { exists: true, studentId: existing[0].id };
+        }
+        return { exists: false, studentId: null };
+      }),
+
     createGroup: publicProcedure
       .input(z.object({ groupName: z.string(), members: z.array(z.string()) }))
       .mutation(async ({ input }) => {
