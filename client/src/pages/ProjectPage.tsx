@@ -170,24 +170,6 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
   const [responses, setResponses] = useState({});
   const [isLocked, setIsLocked] = useState(false);
 
-  const [isLoadingLastTab, setIsLoadingLastTab] = useState(true);
-  const getLastTabQuery = trpc.pbl.getLastActiveTab.useQuery(
-    { studentId: studentId || 0 },
-    { enabled: !!studentId }
-  );
-
-  // Auto-resume from last active tab
-  useEffect(() => {
-    if (studentId && getLastTabQuery.data) {
-      const lastTab = getLastTabQuery.data.lastTab || 0;
-      console.log(`[ProjectPage] Auto-resuming student ${studentId} to tab ${lastTab}`);
-      setCurrentTab(lastTab);
-      setIsLoadingLastTab(false);
-    } else if (studentId && !getLastTabQuery.isLoading) {
-      setIsLoadingLastTab(false);
-    }
-  }, [studentId, getLastTabQuery.data, getLastTabQuery.isLoading]);
-
   // Load saved responses for returning students
   useEffect(() => {
     if (studentId) {
