@@ -17,12 +17,12 @@ const TABS = [
   { label: "Creating a Logo", labelHe: "יצירת לוגו" },
   { label: "Vector Art", labelHe: "וקטור אמנות" },
   { label: "Fashion Item", labelHe: "פריט אופנה" },
-  { label: "Product Choice", labelHe: "בחירת מוצר" },
+  { label: "Presentation", labelHe: "מצגת" },
   { label: "Reflection", labelHe: "רפלקציה" },
 ];
 
 const COLORS = [
-  "#FDE68A", "#FDBA74", "#FCA5A5", "#D8B4FE", "#93C5FD", "#86EFAC", "#94A3B8", "#C7D2FE", "#F3E8FF"
+  "#FDE68A", "#FDBA74", "#FCA5A5", "#D8B4FE", "#93C5FD", "#86EFAC", "#94A3B8", "#C7D2FE"
 ];
 
 // Correct answers for font verification
@@ -162,12 +162,11 @@ const WORDS_TO_CATEGORIZE = [
 
 interface ProjectPageProps {
   studentId?: number;
-  startTab?: number | null;
 }
 
-export default function ProjectPage({ studentId, startTab }: ProjectPageProps) {
+export default function ProjectPage({ studentId }: ProjectPageProps) {
   const { language } = useLanguage();
-  const [currentTab, setCurrentTab] = useState(startTab ?? 0);
+  const [currentTab, setCurrentTab] = useState(0);
   const [responses, setResponses] = useState({});
   const [isLocked, setIsLocked] = useState(false);
 
@@ -1484,208 +1483,6 @@ export default function ProjectPage({ studentId, startTab }: ProjectPageProps) {
               }}
             >
               Submit & Complete / שלח והשלמו
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Tab 7: Product Choice
-  if (currentTab === 7) {
-    const productChoice = (responses as any).productChoice || "";
-    
-    const productOptions = [
-      { label: "Hat (כובע)", value: "hat" },
-      { label: "T-shirt (חולצה)", value: "tshirt" },
-      { label: "Bag (תיק)", value: "bag" },
-      { label: "Jacket (ז'קט)", value: "jacket" },
-      { label: "Shoes (נעליים)", value: "shoes" },
-      { label: "Poster (פוסטר)", value: "poster" },
-      { label: "Other (אחר)", value: "other" },
-    ];
-    
-    return (
-      <div style={{ backgroundColor: "#E0E7FF", minHeight: "100vh" }}>
-        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
-        
-        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
-          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-            <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-              Stage 7: Choosing a Product / שלב 7: בחירת מוצר
-            </h1>
-            <p style={{ color: "#555555", marginBottom: "2rem" }}>
-              Where will your logo appear? Choose the product you want to print your logo on. / איפה יופיע הלוגו שלך? בחר את המוצר שאתה רוצה להדפיס את הלוגו עליו.
-            </p>
-            
-            <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
-                Choose a Product / בחר מוצר
-              </h2>
-              
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "1rem", marginBottom: "1.5rem" }}>
-                {productOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => updateResponse("productChoice", option.label)}
-                    style={{
-                      padding: "1rem",
-                      border: productChoice === option.label ? "3px solid #A78BFA" : "2px solid #D1D5DB",
-                      borderRadius: "0.5rem",
-                      backgroundColor: productChoice === option.label ? "#F3E8FF" : "#F9FAFB",
-                      color: "#333333",
-                      fontWeight: "bold",
-                      cursor: "pointer",
-                      transition: "all 0.3s ease",
-                    }}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-              
-              {productChoice && (
-                <div style={{
-                  backgroundColor: "#ECFDF5",
-                  border: "2px solid #86EFAC",
-                  borderRadius: "0.375rem",
-                  padding: "1rem",
-                  marginBottom: "1rem",
-                }}>
-                  <p style={{ color: "#16A34A", fontWeight: "bold" }}>✓ Selected / נבחר</p>
-                  <p style={{ color: "#555555" }}>{productChoice}</p>
-                </div>
-              )}
-            </div>
-            
-            <button
-              onClick={handleSaveAndContinue}
-              disabled={!productChoice}
-              style={{
-                width: "100%",
-                backgroundColor: productChoice ? "#A78BFA" : "#D1D5DB",
-                color: "#333333",
-                padding: "0.75rem",
-                fontSize: "1rem",
-                fontWeight: "bold",
-                border: "none",
-                borderRadius: "0.5rem",
-                cursor: productChoice ? "pointer" : "not-allowed",
-              }}
-            >
-              Continue / המשך
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Tab 8: Reflection
-  if (currentTab === 8) {
-    const groupCollaboration = (responses as any).groupCollaboration || "";
-    const projectParts = (responses as any).projectParts || "";
-    const skillsDeveloped = (responses as any).skillsDeveloped || "";
-    
-    const isComplete = groupCollaboration.trim() && projectParts.trim() && skillsDeveloped.trim();
-    
-    return (
-      <div style={{ backgroundColor: "#F3E8FF", minHeight: "100vh" }}>
-        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
-        
-        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
-          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-            <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-              Stage 8: Project Reflection / שלב 8: הרהור על הפרויקט
-            </h1>
-            <p style={{ color: "#555555", marginBottom: "2rem" }}>
-              Reflect on your project and learning. / הרהר על הפרויקט שלך והלמידה שלך.
-            </p>
-            
-            <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
-              {/* Question 1: Group Collaboration */}
-              <div style={{ marginBottom: "2rem" }}>
-                <label style={{ display: "block", fontSize: "1.125rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-                  How did your group work together? / איך הקבוצה שלך עבדה ביחד?
-                </label>
-                <textarea
-                  value={groupCollaboration}
-                  onChange={(e) => updateResponse("groupCollaboration", e.target.value)}
-                  placeholder="Describe your teamwork, communication, and how you resolved disagreements / תאר את עבודת הקבוצה, התקשורת, וכיצד פתרת חילוקי דעות"
-                  style={{
-                    width: "100%",
-                    minHeight: "120px",
-                    padding: "0.75rem",
-                    border: "2px solid #D1D5DB",
-                    borderRadius: "0.375rem",
-                    fontFamily: "inherit",
-                    fontSize: "1rem",
-                    resize: "vertical",
-                  }}
-                />
-              </div>
-              
-              {/* Question 2: Project Parts */}
-              <div style={{ marginBottom: "2rem" }}>
-                <label style={{ display: "block", fontSize: "1.125rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-                  Which parts were challenging and which were fun? / אילו חלקים היו קשים ואילו היו כיפיים?
-                </label>
-                <textarea
-                  value={projectParts}
-                  onChange={(e) => updateResponse("projectParts", e.target.value)}
-                  placeholder="Discuss different phases: research, design, decision-making, etc. / דון בשלבים שונים: מחקר, עיצוב, קבלת החלטות וכו'"
-                  style={{
-                    width: "100%",
-                    minHeight: "120px",
-                    padding: "0.75rem",
-                    border: "2px solid #D1D5DB",
-                    borderRadius: "0.375rem",
-                    fontFamily: "inherit",
-                    fontSize: "1rem",
-                    resize: "vertical",
-                  }}
-                />
-              </div>
-              
-              {/* Question 3: Skills Developed */}
-              <div style={{ marginBottom: "2rem" }}>
-                <label style={{ display: "block", fontSize: "1.125rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-                  What skills did you develop? / אילו כישורים פיתחת?
-                </label>
-                <textarea
-                  value={skillsDeveloped}
-                  onChange={(e) => updateResponse("skillsDeveloped", e.target.value)}
-                  placeholder="e.g., Design thinking, teamwork, decision-making, research, presentation skills / למשל: חשיבה עיצובית, עבודת קבוצה, קבלת החלטות, מחקר, כישורי הצגה"
-                  style={{
-                    width: "100%",
-                    minHeight: "120px",
-                    padding: "0.75rem",
-                    border: "2px solid #D1D5DB",
-                    borderRadius: "0.375rem",
-                    fontFamily: "inherit",
-                    fontSize: "1rem",
-                    resize: "vertical",
-                  }}
-                />
-              </div>
-            </div>
-            
-            <button
-              onClick={handleSaveAndContinue}
-              disabled={!isComplete}
-              style={{
-                width: "100%",
-                backgroundColor: isComplete ? "#A78BFA" : "#D1D5DB",
-                color: "#333333",
-                padding: "0.75rem",
-                fontSize: "1rem",
-                fontWeight: "bold",
-                border: "none",
-                borderRadius: "0.5rem",
-                cursor: isComplete ? "pointer" : "not-allowed",
-              }}
-            >
-              Complete Project / השלם פרויקט
             </button>
           </div>
         </div>

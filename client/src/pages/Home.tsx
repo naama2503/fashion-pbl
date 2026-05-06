@@ -71,13 +71,7 @@ export default function Home() {
         {/* CTA Buttons */}
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
           <button
-            onClick={() => {
-              // Clear localStorage to force login screen
-              localStorage.removeItem("studentId");
-              localStorage.removeItem("studentName");
-              localStorage.removeItem("groupName");
-              navigate("/project");
-            }}
+            onClick={() => navigate("/project")}
             style={{
               backgroundColor: "#333333",
               color: "white",

@@ -46,8 +46,7 @@ export const appRouter = router({
         gestaltAnswers: z.record(z.string(), z.string()).optional(),
         canvaLink: z.string().optional(),
         vectorFileUrl: z.string().optional(),
-        productChoice: z.string().optional(),
-        reflectionData: z.record(z.string(), z.any()).optional(),
+        presentationFileUrl: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         const db = await getDb();
@@ -68,13 +67,12 @@ export const appRouter = router({
           const gestalt_answers = JSON.stringify(input.gestaltAnswers || {});
           const canva_link = input.canvaLink || "";
           const vector_file_url = input.vectorFileUrl || "";
-          const product_choice = input.productChoice || "";
-          const reflection_data = JSON.stringify(input.reflectionData || {});
+          const presentation_file_url = input.presentationFileUrl || "";
           const now = new Date().toISOString();
 
           console.log(`[saveResponse] All values prepared:`, {
             student_id, tab_number, response_data, color_feelings, font_shape_answers, 
-            gestalt_answers, canva_link, vector_file_url, product_choice, reflection_data, updated_at: now
+            gestalt_answers, canva_link, vector_file_url, presentation_file_url, updated_at: now
           });
 
           // Try to find existing record using snake_case column names
@@ -100,8 +98,7 @@ export const appRouter = router({
                   gestaltAnswers: gestalt_answers,
                   canvaLink: canva_link,
                   vectorFileUrl: vector_file_url,
-                  productChoice: product_choice,
-                  reflectionData: reflection_data,
+                  presentationFileUrl: presentation_file_url,
                   updatedAt: new Date(),
                 })
                 .where(eq(studentResponses.id, existing.id));
@@ -126,8 +123,7 @@ export const appRouter = router({
                 gestaltAnswers: gestalt_answers,
                 canvaLink: canva_link,
                 vectorFileUrl: vector_file_url,
-                productChoice: product_choice,
-                reflectionData: reflection_data,
+                presentationFileUrl: presentation_file_url,
               });
               console.log(`[saveResponse] ✓ Successfully inserted new record for student ${student_id}, tab ${tab_number}`);
             } catch (insertError) {

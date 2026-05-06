@@ -242,49 +242,14 @@ export const TAB_RUBRICS: Record<number, RubricItem[]> = {
       errorMessageHe: 'אנא העלה קובץ פריט אופנה'
     }
   ],
-  7: [ // Product Choice
+  7: [ // Presentation - File upload only
     {
-      id: 'productChoice',
-      label: 'Product Selected',
-      labelHe: 'מוצר נבחר',
-      rule: (text: string): boolean => !!(text && text.trim().length > 0),
-      errorMessage: 'Please select a product',
-      errorMessageHe: 'אנא בחר מוצר'
-    }
-  ],
-  8: [ // Reflection
-    {
-      id: 'groupCollaboration',
-      label: 'Group Collaboration Reflection',
-      labelHe: 'הרהור על שיתוף פעולה קבוצתי',
-      rule: (text: string): boolean => {
-        const errors = validateGrammar(text, 'Reflection');
-        return errors.length === 0 && text.trim().length > 0;
-      },
-      errorMessage: 'Group collaboration reflection must be filled with correct grammar',
-      errorMessageHe: 'הרהור על שיתוף פעולה קבוצתי חייב להיות מלא בדקדוק נכון'
-    },
-    {
-      id: 'projectParts',
-      label: 'Project Parts Reflection',
-      labelHe: 'הרהור על חלקי הפרויקט',
-      rule: (text: string): boolean => {
-        const errors = validateGrammar(text, 'Reflection');
-        return errors.length === 0 && text.trim().length > 0;
-      },
-      errorMessage: 'Project parts reflection must be filled with correct grammar',
-      errorMessageHe: 'הרהור על חלקי הפרויקט חייב להיות מלא בדקדוק נכון'
-    },
-    {
-      id: 'skillsDeveloped',
-      label: 'Skills Developed Reflection',
-      labelHe: 'הרהור על כישורים שפותחו',
-      rule: (text: string): boolean => {
-        const errors = validateGrammar(text, 'Reflection');
-        return errors.length === 0 && text.trim().length > 0;
-      },
-      errorMessage: 'Skills developed reflection must be filled with correct grammar',
-      errorMessageHe: 'הרהור על כישורים שפותחו חייב להיות מלא בדקדוק נכון'
+      id: 'presentationFile',
+      label: 'Presentation File Uploaded',
+      labelHe: 'קובץ מצגה הועלה',
+      rule: (file: any): boolean => !!file && file.name && file.size > 0,
+      errorMessage: 'Please upload a presentation file',
+      errorMessageHe: 'אנא העלה קובץ מצגה'
     }
   ]
 };

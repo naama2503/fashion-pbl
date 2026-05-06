@@ -31,15 +31,14 @@ export type InsertStudent = typeof students.$inferInsert;
 export const studentResponses = mysqlTable("student_responses", {
   id: int("id").autoincrement().primaryKey(),
   studentId: int("student_id").notNull(),
-  tabNumber: int("tab_number").notNull(), // 1-8
+  tabNumber: int("tab_number").notNull(), // 1-7
   responseData: text("response_data").notNull().default("{}"), // JSON stringified
   colorFeelings: text("color_feelings").default("{}"), // JSON stringified
   fontShapeAnswers: text("font_shape_answers").default("{}"), // JSON stringified
   gestaltAnswers: text("gestalt_answers").default("{}"), // JSON stringified
   canvaLink: text("canva_link"), // Tab 5 Canva link
   vectorFileUrl: text("vector_file_url"), // Tab 6 vector file
-  productChoice: text("product_choice"), // Tab 7 product choice (hat, shirt, etc.)
-  reflectionData: text("reflection_data"), // Tab 8 reflection (group collaboration, skills, etc.)
+  presentationFileUrl: text("presentation_file_url"), // Tab 7 presentation file
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
@@ -51,7 +50,7 @@ export type InsertStudentResponse = typeof studentResponses.$inferInsert;
 export const approvalLog = mysqlTable("approval_log", {
   id: int("id").autoincrement().primaryKey(),
   studentId: int("student_id").notNull(),
-  tabNumber: int("tab_number").notNull(), // 1-8
+  tabNumber: int("tab_number").notNull(), // 1-7
   isApproved: boolean("is_approved").default(false).notNull(),
   approvedBy: varchar("approved_by", { length: 255 }), // Teacher name
   approvedAt: timestamp("approved_at"),

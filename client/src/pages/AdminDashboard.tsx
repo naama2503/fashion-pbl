@@ -15,8 +15,7 @@ import { Eye, EyeOff, CheckCircle, XCircle, Loader2, ChevronDown, ChevronUp, Ext
 import { trpc } from "@/lib/trpc";
 
 const TEACHER_PASSWORD = "teacher123";
-const TAB_NAMES = ["Home", "Group Decision", "Research", "Design Inquiry", "Logo", "Vector Art", "Fashion Item", "Product Choice", "Reflection"];
-const TAB_NAMES_HE = ["בית", "החלטה קבוצתית", "מחקר", "חוקי עיצוב", "יצירת לוגו", "וקטור אמנות", "פריט אופנה", "בחירת מוצר", "רפלקציה"];
+const TAB_NAMES = ["Home", "Group Decision", "Research", "Design Inquiry", "Logo", "Vector Art", "Fashion Item"];
 
 // Helper function to extract key data from responses
 function extractSummaryData(studentResponses: any[]) {
@@ -66,8 +65,7 @@ function extractFileLinks(responseData: any) {
   return {
     canvaLink: data?.canvaLink || data?.canva_link,
     vectorFileUrl: data?.vectorFileUrl || data?.vector_file_url,
-    productChoice: data?.productChoice || data?.product_choice,
-    reflectionData: data?.reflectionData || data?.reflection_data,
+    presentationFileUrl: data?.presentationFileUrl || data?.presentation_file_url,
   };
 }
 
@@ -213,9 +211,9 @@ export default function AdminDashboard() {
             <p className="text-gray-600 mb-6">{selectedStudent.members ? `Members: ${selectedStudent.members}` : "Group"}</p>
 
             {/* Tab Status Indicators with Approval Badges */}
-            <div className="grid grid-cols-9 gap-2 mb-8">
-              {Array.from({ length: 9 }, (_, i) => {
-                const tabNum = i; // Tab 0-8 (0=Home, 1-8=Project tabs)
+            <div className="grid grid-cols-7 gap-2 mb-8">
+              {Array.from({ length: 7 }, (_, i) => {
+                const tabNum = i + 1;
                 const response = studentResponses.find(r => r.tabNumber === tabNum);
                 return (
                   <div
@@ -302,7 +300,7 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* File Links */}
-                    {(files.canvaLink || files.vectorFileUrl || files.productChoice) && (
+                    {(files.canvaLink || files.vectorFileUrl || files.presentationFileUrl) && (
                       <div className="mb-4 p-4 bg-blue-50 rounded border-l-4 border-blue-500 space-y-2">
                         {files.canvaLink && (
                           <a
@@ -326,10 +324,16 @@ export default function AdminDashboard() {
                             {translations.admin.downloadFile}
                           </a>
                         )}
-                        {files.productChoice && (
-                          <div className="text-sm text-gray-700">
-                            <strong>Product Choice:</strong> {files.productChoice}
-                          </div>
+                        {files.presentationFileUrl && (
+                          <a
+                            href={files.presentationFileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold"
+                          >
+                            <ExternalLink size={16} />
+                            {translations.admin.viewPresentation}
+                          </a>
                         )}
                       </div>
                     )}
@@ -418,8 +422,8 @@ export default function AdminDashboard() {
           <div className="grid gap-4">
             {dbStudents.map((student) => {
               const studentTabs = allStudentResponses.filter((r) => r.studentId === student.id);
-              const tabStatuses = Array.from({ length: 9 }, (_, i) => {
-                const tabNum = i; // Tab 0-8
+              const tabStatuses = Array.from({ length: 7 }, (_, i) => {
+                const tabNum = i + 1;
                 const response = studentTabs.find(r => r.tabNumber === tabNum);
                 return {
                   tabNum,
