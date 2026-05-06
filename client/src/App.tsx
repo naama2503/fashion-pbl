@@ -11,12 +11,12 @@ import ProjectPage from "./pages/ProjectPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import { StudentLogin } from "./components/StudentLogin";
 
-function Router({ studentId, startTab, onStudentLogin }: { studentId: number | null; startTab: number | null; onStudentLogin: (id: number, name: string, tab?: number) => void }) {
+function Router({ studentId, startTab, onStudentLogin, showLogin }: { studentId: number | null; startTab: number | null; onStudentLogin: (id: number, name: string, tab?: number) => void; showLogin: boolean }) {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/project"}>
-        {studentId ? <ProjectPage studentId={studentId} startTab={startTab} /> : <StudentLogin onLoginSuccess={onStudentLogin} />}
+        {studentId && !showLogin ? <ProjectPage studentId={studentId} startTab={startTab} /> : <StudentLogin onLoginSuccess={onStudentLogin} />}
       </Route>
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/404"} component={NotFound} />
@@ -30,6 +30,7 @@ function App() {
   const [studentId, setStudentId] = useState<number | null>(null);
   const [studentName, setStudentName] = useState<string | null>(null);
   const [startTab, setStartTab] = useState<number | null>(null);
+  const [showLogin, setShowLogin] = useState(false);
 
   // Load student from localStorage on mount
   useEffect(() => {
@@ -48,9 +49,14 @@ function App() {
     if (tab !== undefined) {
       setStartTab(tab);
     }
+    setShowLogin(false);
     localStorage.setItem("studentId", id.toString());
     localStorage.setItem("studentName", name);
     localStorage.setItem("groupName", name); // Store group name for database
+  };
+
+  const handleStartNewProject = () => {
+    setShowLogin(true);
   };
 
   return (
@@ -59,12 +65,19 @@ function App() {
         <LanguageProvider>
           <TooltipProvider>
             <Toaster />
-            <Router studentId={studentId} startTab={startTab} onStudentLogin={handleStudentLogin} />
+            <Router studentId={studentId} startTab={startTab} onStudentLogin={handleStudentLogin} showLogin={showLogin} />
           </TooltipProvider>
         </LanguageProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );
+}
+
+// Export function to trigger new project flow
+if (typeof window !== 'undefined') {
+  (window as any).startNewProject = () => {
+    // This will be called from Home page
+  };
 }
 
 export default App;
