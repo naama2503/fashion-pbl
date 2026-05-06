@@ -1,4 +1,3 @@
-import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 import { Lock } from "lucide-react";
 
@@ -14,9 +13,12 @@ const STAGES = [
 
 export default function Home() {
   const [, navigate] = useLocation();
-  const { user } = useAuth();
 
   const handleStageClick = (stageNum: number) => {
+    // Clear localStorage to show login form
+    localStorage.removeItem("studentId");
+    localStorage.removeItem("studentName");
+    localStorage.removeItem("groupName");
     navigate("/project");
   };
 
