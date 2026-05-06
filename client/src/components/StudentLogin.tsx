@@ -29,18 +29,16 @@ export function StudentLogin({ onLoginSuccess }: StudentLoginProps) {
   
   // Check if student has previous work
   const hasPreviousWork = localStorage.getItem("studentId") !== null;
+  const savedStudentId = localStorage.getItem("studentId");
+  const savedGroupName = localStorage.getItem("groupName");
 
   const createGroupMutation = trpc.pbl.createGroup.useMutation({
     onSuccess: (data: any) => {
       toast.success("Group created successfully!");
       // Use the real student ID returned from the mutation
       const studentId = data.studentId || 1;
-      // If returning student, show tab selector; otherwise start from tab 1
-      if (hasPreviousWork) {
-        setShowTabSelector(true);
-      } else {
-        onLoginSuccess(studentId, groupName, 1);
-      }
+      // New student: proceed to tab 1
+      onLoginSuccess(studentId, groupName, 1);
     },
     onError: (error) => {
       toast.error("Failed to create group");
@@ -49,20 +47,22 @@ export function StudentLogin({ onLoginSuccess }: StudentLoginProps) {
   });
 
   const handleContinueWithTab = () => {
-    if (!groupName.trim()) {
-      toast.error("Please enter a group name");
-      return;
-    }
-    
-    // Call onLoginSuccess with the selected tab
-    const savedStudentId = localStorage.getItem("studentId");
     if (savedStudentId) {
-      onLoginSuccess(parseInt(savedStudentId), groupName, selectedTab);
+      // Returning student: use saved group name and selected tab
+      onLoginSuccess(parseInt(savedStudentId), savedGroupName || "Returning Group", selectedTab);
       setShowTabSelector(false);
     }
   };
   
   const handleLogin = async () => {
+    // Check if this is a returning student
+    if (hasPreviousWork && savedStudentId) {
+      // Returning student: show tab selector
+      setShowTabSelector(true);
+      return;
+    }
+
+    // New student: create a new group
     if (!groupName.trim()) {
       toast.error("Please enter a group name");
       return;
@@ -130,12 +130,12 @@ export function StudentLogin({ onLoginSuccess }: StudentLoginProps) {
             </>
           ) : (
             <>
-              <h2 className="text-xl font-bold text-center mb-4">
-                Welcome back! / ברוכים הבאים חזרה!
-              </h2>
-              <p className="text-sm text-gray-600 text-center mb-4">
-                Which tab would you like to continue with? / איזה שלב אתה רוצה להמשיך?
-              </p>
+            <h2 className="text-xl font-bold text-center mb-4">
+              Welcome back, {savedGroupName}! / ברוכים הבאים חזרה, {savedGroupName}!
+            </h2>
+            <p className="text-sm text-gray-600 text-center mb-4">
+              Which tab would you like to continue with? / איזה שלב אתה רוצה להמשיך?
+            </p>
               <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
                 {TABS.map((tab, index) => (
                   <button

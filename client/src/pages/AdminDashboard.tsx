@@ -215,7 +215,7 @@ export default function AdminDashboard() {
             {/* Tab Status Indicators with Approval Badges */}
             <div className="grid grid-cols-9 gap-2 mb-8">
               {Array.from({ length: 9 }, (_, i) => {
-                const tabNum = i + 1;
+                const tabNum = i; // Tab 0-8 (0=Home, 1-8=Project tabs)
                 const response = studentResponses.find(r => r.tabNumber === tabNum);
                 return (
                   <div
@@ -419,7 +419,7 @@ export default function AdminDashboard() {
             {dbStudents.map((student) => {
               const studentTabs = allStudentResponses.filter((r) => r.studentId === student.id);
               const tabStatuses = Array.from({ length: 9 }, (_, i) => {
-                const tabNum = i + 1;
+                const tabNum = i; // Tab 0-8
                 const response = studentTabs.find(r => r.tabNumber === tabNum);
                 return {
                   tabNum,
