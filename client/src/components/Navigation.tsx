@@ -23,13 +23,15 @@ export default function Navigation({
   const [, navigate] = useLocation();
 
   const tabColors = [
-    "bg-yellow-400", // 1. Home
-    "bg-orange-400", // 2. Group Decision
-    "bg-red-400", // 3. Research
-    "bg-purple-400", // 4. Design Inquiry
-    "bg-blue-400", // 5. Creating a Logo
-    "bg-green-400", // 6. Fashion Item
-    "bg-teal-400", // 7. Presentation
+    "bg-yellow-400", // 0. Home
+    "bg-orange-400", // 1. Group Decision
+    "bg-red-400", // 2. Research
+    "bg-purple-400", // 3. Design Inquiry
+    "bg-blue-400", // 4. Creating a Logo
+    "bg-green-400", // 5. Vector Art
+    "bg-teal-400", // 6. Fashion Item
+    "bg-indigo-400", // 7. Product Choice
+    "bg-pink-400", // 8. Reflection
   ];
 
   return (

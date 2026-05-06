@@ -15,7 +15,8 @@ import { Eye, EyeOff, CheckCircle, XCircle, Loader2, ChevronDown, ChevronUp, Ext
 import { trpc } from "@/lib/trpc";
 
 const TEACHER_PASSWORD = "teacher123";
-const TAB_NAMES = ["Home", "Group Decision", "Research", "Design Inquiry", "Logo", "Vector Art", "Fashion Item"];
+const TAB_NAMES = ["Home", "Group Decision", "Research", "Design Inquiry", "Logo", "Vector Art", "Fashion Item", "Product Choice", "Reflection"];
+const TAB_NAMES_HE = ["בית", "החלטה קבוצתית", "מחקר", "חוקי עיצוב", "יצירת לוגו", "וקטור אמנות", "פריט אופנה", "בחירת מוצר", "רפלקציה"];
 
 // Helper function to extract key data from responses
 function extractSummaryData(studentResponses: any[]) {
@@ -212,8 +213,8 @@ export default function AdminDashboard() {
             <p className="text-gray-600 mb-6">{selectedStudent.members ? `Members: ${selectedStudent.members}` : "Group"}</p>
 
             {/* Tab Status Indicators with Approval Badges */}
-            <div className="grid grid-cols-7 gap-2 mb-8">
-              {Array.from({ length: 7 }, (_, i) => {
+            <div className="grid grid-cols-9 gap-2 mb-8">
+              {Array.from({ length: 9 }, (_, i) => {
                 const tabNum = i + 1;
                 const response = studentResponses.find(r => r.tabNumber === tabNum);
                 return (
@@ -417,7 +418,7 @@ export default function AdminDashboard() {
           <div className="grid gap-4">
             {dbStudents.map((student) => {
               const studentTabs = allStudentResponses.filter((r) => r.studentId === student.id);
-              const tabStatuses = Array.from({ length: 7 }, (_, i) => {
+              const tabStatuses = Array.from({ length: 9 }, (_, i) => {
                 const tabNum = i + 1;
                 const response = studentTabs.find(r => r.tabNumber === tabNum);
                 return {
