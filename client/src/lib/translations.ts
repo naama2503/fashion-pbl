@@ -126,10 +126,22 @@ export const translations = {
 
   // Tab 7: Reflection
   tab7: {
+    title: "Choosing a Product (בחירת מוצר)",
+    subtitle: "Where will your logo appear? (איפה יופיע הלוגו שלך?)",
+    productChoice: "Choose a product (בחר מוצר)",
+    productPlaceholder: "e.g., Hat, T-shirt, Bag, Jacket, etc.",
+    productOptions: "Examples: Hat (כובע), T-shirt (חולצה), Bag (תיק), Jacket (ז'קט), Shoes (נעליים), Poster (פוסטר)",
+  },
+
+  tab8: {
     title: "Reflection (הרהור)",
-    subtitle: "Think about what you learned",
-    reflection: "Write your reflection (כתוב את ההרהור שלך)",
-    reflectionPlaceholder: "What did you learn? How can fashion create change? What was challenging? What are you proud of?",
+    subtitle: "Reflect on your project and learning (הרהר על הפרויקט שלך והלמידה שלך)",
+    groupCollaboration: "How did your group work together? (איך הקבוצה שלך עבדה ביחד?)",
+    groupCollaborationPlaceholder: "Describe your teamwork, communication, and how you resolved disagreements",
+    projectParts: "Which parts of the project were challenging and which were fun? (אילו חלקים של הפרויקט היו קשים ואילו היו재미있는?)",
+    projectPartsPlaceholder: "Discuss different phases: research, design, decision-making, etc.",
+    skillsDeveloped: "What skills did you develop? (אילו כישורים פיתחת?)",
+    skillsDevelopedPlaceholder: "e.g., Design thinking, teamwork, decision-making, research, presentation skills",
   },
 
   // Teacher Dashboard

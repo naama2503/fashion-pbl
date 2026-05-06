@@ -314,3 +314,30 @@
 - [x] Ensure hooks are always called in the same order on every render
 - [x] Verify no console errors on project page
 - [x] All 132 tests passing - no regressions
+
+
+## Tab Restructuring (IN PROGRESS)
+- [ ] Update database schema to support Tab 8 reflection fields
+- [ ] Change Tab 7 from "Presentation" to "Choosing a Product" (hat, shirt, etc.)
+- [ ] Create Tab 8 "Reflection" form with:
+  - [ ] Group collaboration reflection questions
+  - [ ] Project parts reflection (which were challenging, fun, etc.)
+  - [ ] Skills developed questions (design thinking, teamwork, decision-making, etc.)
+- [ ] Update admin dashboard to display new tabs
+- [ ] Update translations for new tabs
+- [ ] Test all changes with real student data
+
+
+## Tab Restructuring - Tab 7 & 8 (IN PROGRESS)
+- [x] Update database schema to support Tab 8 (changed tabNumber from 1-7 to 1-8)
+- [x] Add productChoice column to student_responses table for Tab 7
+- [x] Add reflectionData columns for Tab 8 (groupCollaboration, projectParts, skillsDeveloped)
+- [x] Update translations for Tab 7 (Product Choice) and Tab 8 (Reflection) in Hebrew and English
+- [x] Update TABS array in ProjectPage to reflect new tab names
+- [x] Fix TypeScript errors from schema changes in AdminDashboard
+- [ ] Implement Tab 7 UI (Product Choice) - dropdown or text input for product selection
+- [ ] Implement Tab 8 UI (Reflection) - form with 3 reflection questions
+- [ ] Update admin dashboard TAB_NAMES to show new tabs
+- [ ] Enhance student login to allow returning students to jump to any tab
+- [ ] Preserve student progress across sessions (already partially implemented)
+- [ ] Test all changes and save checkpoint

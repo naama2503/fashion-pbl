@@ -17,12 +17,12 @@ const TABS = [
   { label: "Creating a Logo", labelHe: "יצירת לוגו" },
   { label: "Vector Art", labelHe: "וקטור אמנות" },
   { label: "Fashion Item", labelHe: "פריט אופנה" },
-  { label: "Presentation", labelHe: "מצגת" },
+  { label: "Product Choice", labelHe: "בחירת מוצר" },
   { label: "Reflection", labelHe: "רפלקציה" },
 ];
 
 const COLORS = [
-  "#FDE68A", "#FDBA74", "#FCA5A5", "#D8B4FE", "#93C5FD", "#86EFAC", "#94A3B8", "#C7D2FE"
+  "#FDE68A", "#FDBA74", "#FCA5A5", "#D8B4FE", "#93C5FD", "#86EFAC", "#94A3B8", "#C7D2FE", "#F3E8FF"
 ];
 
 // Correct answers for font verification

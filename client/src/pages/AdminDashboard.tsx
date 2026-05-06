@@ -65,7 +65,8 @@ function extractFileLinks(responseData: any) {
   return {
     canvaLink: data?.canvaLink || data?.canva_link,
     vectorFileUrl: data?.vectorFileUrl || data?.vector_file_url,
-    presentationFileUrl: data?.presentationFileUrl || data?.presentation_file_url,
+    productChoice: data?.productChoice || data?.product_choice,
+    reflectionData: data?.reflectionData || data?.reflection_data,
   };
 }
 
@@ -300,7 +301,7 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* File Links */}
-                    {(files.canvaLink || files.vectorFileUrl || files.presentationFileUrl) && (
+                    {(files.canvaLink || files.vectorFileUrl || files.productChoice) && (
                       <div className="mb-4 p-4 bg-blue-50 rounded border-l-4 border-blue-500 space-y-2">
                         {files.canvaLink && (
                           <a
@@ -324,16 +325,10 @@ export default function AdminDashboard() {
                             {translations.admin.downloadFile}
                           </a>
                         )}
-                        {files.presentationFileUrl && (
-                          <a
-                            href={files.presentationFileUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold"
-                          >
-                            <ExternalLink size={16} />
-                            {translations.admin.viewPresentation}
-                          </a>
+                        {files.productChoice && (
+                          <div className="text-sm text-gray-700">
+                            <strong>Product Choice:</strong> {files.productChoice}
+                          </div>
                         )}
                       </div>
                     )}
