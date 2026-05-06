@@ -11,12 +11,12 @@ import ProjectPage from "./pages/ProjectPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import { StudentLogin } from "./components/StudentLogin";
 
-function Router({ studentId, onStudentLogin }: { studentId: number | null; onStudentLogin: (id: number, name: string) => void }) {
+function Router({ studentId, startTab, onStudentLogin }: { studentId: number | null; startTab: number | null; onStudentLogin: (id: number, name: string, tab?: number) => void }) {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/project"}>
-        {studentId ? <ProjectPage studentId={studentId} /> : <StudentLogin onLoginSuccess={onStudentLogin} />}
+        {studentId ? <ProjectPage studentId={studentId} startTab={startTab} /> : <StudentLogin onLoginSuccess={onStudentLogin} />}
       </Route>
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/404"} component={NotFound} />
@@ -29,6 +29,7 @@ function Router({ studentId, onStudentLogin }: { studentId: number | null; onStu
 function App() {
   const [studentId, setStudentId] = useState<number | null>(null);
   const [studentName, setStudentName] = useState<string | null>(null);
+  const [startTab, setStartTab] = useState<number | null>(null);
 
   // Load student from localStorage on mount
   useEffect(() => {
@@ -41,9 +42,12 @@ function App() {
     }
   }, []);
 
-  const handleStudentLogin = (id: number, name: string) => {
+  const handleStudentLogin = (id: number, name: string, tab?: number) => {
     setStudentId(id);
     setStudentName(name);
+    if (tab !== undefined) {
+      setStartTab(tab);
+    }
     localStorage.setItem("studentId", id.toString());
     localStorage.setItem("studentName", name);
     localStorage.setItem("groupName", name); // Store group name for database
@@ -55,7 +59,7 @@ function App() {
         <LanguageProvider>
           <TooltipProvider>
             <Toaster />
-            <Router studentId={studentId} onStudentLogin={handleStudentLogin} />
+            <Router studentId={studentId} startTab={startTab} onStudentLogin={handleStudentLogin} />
           </TooltipProvider>
         </LanguageProvider>
       </ThemeProvider>

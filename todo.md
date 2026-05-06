@@ -338,6 +338,10 @@
 - [ ] Implement Tab 7 UI (Product Choice) - dropdown or text input for product selection
 - [ ] Implement Tab 8 UI (Reflection) - form with 3 reflection questions
 - [ ] Update admin dashboard TAB_NAMES to show new tabs
-- [ ] Enhance student login to allow returning students to jump to any tab
-- [ ] Preserve student progress across sessions (already partially implemented)
+- [x] Enhance student login to allow returning students to jump to any tab
+  - [x] Fixed JSX syntax errors in StudentLogin component
+  - [x] Added tab selector UI that appears for returning students
+  - [x] Updated App.tsx to handle startTab parameter
+  - [x] Updated ProjectPage to use startTab to initialize currentTab
+- [x] Preserve student progress across sessions (already partially implemented)
 - [ ] Test all changes and save checkpoint
