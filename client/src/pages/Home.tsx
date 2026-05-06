@@ -72,8 +72,11 @@ export default function Home() {
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
           <button
             onClick={() => {
-              // Navigate to project with newProject flag to show login
-              navigate("/project?newProject=1");
+              // Clear localStorage to force login screen
+              localStorage.removeItem("studentId");
+              localStorage.removeItem("studentName");
+              localStorage.removeItem("groupName");
+              navigate("/project");
             }}
             style={{
               backgroundColor: "#333333",
