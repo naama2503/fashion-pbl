@@ -46,8 +46,6 @@ export const appRouter = router({
         gestaltAnswers: z.record(z.string(), z.string()).optional(),
         canvaLink: z.string().optional(),
         vectorFileUrl: z.string().optional(),
-        productChoice: z.string().optional(),
-        reflectionData: z.record(z.string(), z.any()).optional(),
       }))
       .mutation(async ({ input }) => {
         const db = await getDb();
@@ -68,13 +66,11 @@ export const appRouter = router({
           const gestalt_answers = JSON.stringify(input.gestaltAnswers || {});
           const canva_link = input.canvaLink || "";
           const vector_file_url = input.vectorFileUrl || "";
-          const product_choice = input.productChoice || "";
-          const reflection_data = JSON.stringify(input.reflectionData || {});
           const now = new Date().toISOString();
 
           console.log(`[saveResponse] All values prepared:`, {
             student_id, tab_number, response_data, color_feelings, font_shape_answers, 
-            gestalt_answers, canva_link, vector_file_url, product_choice, reflection_data, updated_at: now
+            gestalt_answers, canva_link, vector_file_url, updated_at: now
           });
 
           // Try to find existing record using snake_case column names
@@ -100,8 +96,6 @@ export const appRouter = router({
                   gestaltAnswers: gestalt_answers,
                   canvaLink: canva_link,
                   vectorFileUrl: vector_file_url,
-                  productChoice: product_choice,
-                  reflectionData: reflection_data,
                   updatedAt: new Date(),
                 })
                 .where(eq(studentResponses.id, existing.id));
@@ -114,10 +108,10 @@ export const appRouter = router({
           } else {
             // Insert new record using Drizzle ORM insert method
             try {
-              console.log(`[saveResponse] Inserting new record...`);
+              console.log(`[saveResponse] Inserting new record (8 core values)...`);
               
-              // Build insert values - only include non-empty Tab 7/8 fields
-              const insertValues: any = {
+              // Use Drizzle ORM insert with proper types - only 8 core fields that exist in DB
+              await db.insert(studentResponses).values({
                 studentId: student_id,
                 tabNumber: tab_number,
                 responseData: response_data,
@@ -126,18 +120,7 @@ export const appRouter = router({
                 gestaltAnswers: gestalt_answers,
                 canvaLink: canva_link,
                 vectorFileUrl: vector_file_url,
-              };
-              
-              // Only add Tab 7/8 fields if they have content
-              if (product_choice && product_choice.trim()) {
-                insertValues.productChoice = product_choice;
-              }
-              if (reflection_data && reflection_data !== '{}' && reflection_data.trim()) {
-                insertValues.reflectionData = reflection_data;
-              }
-              
-              // Use Drizzle ORM insert with proper types
-              await db.insert(studentResponses).values(insertValues);
+              });
               console.log(`[saveResponse] ✓ Successfully inserted new record for student ${student_id}, tab ${tab_number}`);
             } catch (insertError) {
               console.error("[saveResponse] ✗ Error inserting record:", insertError);
