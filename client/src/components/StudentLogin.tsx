@@ -52,7 +52,7 @@ export function StudentLogin({ onLoginSuccess }: StudentLoginProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center p-4">
       <Card className="w-full max-w-md p-8 border-4 border-gray-900 shadow-xl">
         <h1 className="text-4xl font-black mb-2 text-center">Fashion PBL</h1>
         <p className="text-center text-gray-600 mb-8">
