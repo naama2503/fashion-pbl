@@ -298,3 +298,12 @@
 - [x] Add approval status badges (Approved/Rejected/Pending) for each tab
 - [x] Add bilingual translations for all new features
 - [x] All 132 tests passing - no regressions
+
+
+## Canva Link Validation Fix (COMPLETED)
+- [x] Fix Canva link validation to accept "can edit" share links (canva.link format)
+- [x] Update validation error message to be clearer about what link format is needed
+- [x] Test with provided link: https://canva.link/e3n4mev69tr50ns - PASSED ✓
+- [x] Verify teachers can click link and edit design directly in Canva
+- [x] All 132 tests passing - no regressions
+- [x] Validation now accepts both canva.com and canva.link formats

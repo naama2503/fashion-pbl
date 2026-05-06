@@ -1052,7 +1052,8 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
   // Tab 5: Creating a Logo (Logo Lab)
   if (currentTab === 4) {
     const canvaLink = (responses as any).canvaLink || "";
-    const isValidCanvaLink = canvaLink.includes("canva.com") && canvaLink.includes("edit");
+    // Accept both canva.com and canva.link (short share links)
+    const isValidCanvaLink = (canvaLink.includes("canva.com") || canvaLink.includes("canva.link")) && (canvaLink.includes("edit") || canvaLink.startsWith("https://canva.link"));
     
     return (
       <div style={{ backgroundColor: "#DCFCE7", minHeight: "100vh" }}>
@@ -1144,11 +1145,11 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
                     fontFamily: "'Alef', 'Assistant', sans-serif",
                     fontSize: "0.95rem",
                   }}
-                  placeholder="https://www.canva.com/design/... / הדבק קישור Canva"
+                  placeholder="https://www.canva.com/design/... or https://canva.link/... / הדבק קישור Canva"
                 />
                 {canvaLink.length > 0 && (
                   <div style={{ marginTop: "0.5rem", fontSize: "0.875rem", color: isValidCanvaLink ? "#16A34A" : "#DC2626", fontWeight: "bold" }}>
-                    {isValidCanvaLink ? "✓ Valid Canva link / קישור Canva תקין" : "✗ Please paste a valid Canva 'Can Edit' link / הדבק קישור 'Can Edit' תקין"}
+                    {isValidCanvaLink ? "✓ Valid Canva link / קישור Canva תקין" : "✗ Please paste a valid Canva 'Can Edit' link (canva.com or canva.link) / הדבק קישור 'Can Edit' תקין (canva.com או canva.link)"}
                   </div>
                 )}
               </div>
