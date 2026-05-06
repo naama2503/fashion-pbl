@@ -226,6 +226,10 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
   const [showGlobalAlert, setShowGlobalAlert] = useState(false);
   const [globalAlertMessage, setGlobalAlertMessage] = useState('');
   const [disabledButtonAttempt, setDisabledButtonAttempt] = useState(false);
+  
+  // Tab 5 and 6 file upload error states (moved to top level to fix hooks order)
+  const [fileError, setFileError] = useState("");
+  const [presentationError, setPresentationError] = useState("");
 
   const tabColor = COLORS[currentTab];
 
@@ -1178,10 +1182,9 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
     );
   }
 
-  // Tab 6: Creating a Vector
+    // Tab 6: Vector Art
   if (currentTab === 5) {
     const uploadedFile = (responses as any).vectorFile || null;
-    const [fileError, setFileError] = React.useState("");
     
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
@@ -1355,7 +1358,6 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
   // Tab 7: Presentation
   if (currentTab === 6) {
     const uploadedPresentation = (responses as any).presentationFile || null;
-    const [presentationError, setPresentationError] = React.useState("");
     
     const handlePresentationUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
