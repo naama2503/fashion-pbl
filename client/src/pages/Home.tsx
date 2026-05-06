@@ -1,3 +1,4 @@
+import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 import { Lock } from "lucide-react";
 
@@ -13,12 +14,9 @@ const STAGES = [
 
 export default function Home() {
   const [, navigate] = useLocation();
+  const { user } = useAuth();
 
   const handleStageClick = (stageNum: number) => {
-    // Clear localStorage to show login form
-    localStorage.removeItem("studentId");
-    localStorage.removeItem("studentName");
-    localStorage.removeItem("groupName");
     navigate("/project");
   };
 
@@ -73,14 +71,7 @@ export default function Home() {
         {/* CTA Buttons */}
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
           <button
-            onClick={() => {
-              // Clear localStorage to show login form
-              localStorage.removeItem("studentId");
-              localStorage.removeItem("studentName");
-              localStorage.removeItem("groupName");
-              // Reload page to reset state
-              window.location.href = "/project";
-            }}
+            onClick={() => navigate("/project")}
             style={{
               backgroundColor: "#333333",
               color: "white",
