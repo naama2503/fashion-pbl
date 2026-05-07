@@ -238,6 +238,14 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
     { enabled: false }
   );
 
+  // Fetch feedback for current tab
+  const { data: feedback } = trpc.pbl.getFeedback.useQuery(
+    { studentId: parseInt(localStorage.getItem('studentId') || '1'), tabNumber: currentTab + 1 },
+    { enabled: !!localStorage.getItem('studentId') }
+  );
+
+  const [showFeedback, setShowFeedback] = useState(false);
+
   const handleViewPreviousWork = async () => {
     setIsLoadingPreviousWork(true);
     try {
@@ -1071,6 +1079,17 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
             <p style={{ color: "#555555", marginBottom: "2rem" }}>
               Design a logo for your population using Canva. Follow the steps below. (עצבו לוגו עבור אוכלוסיה שלכם בעזרת Canva. עקבו את השלבים בהמשך.)
             </p>
+
+            {/* Teacher Feedback Banner */}
+            {feedback && feedback.feedback && (
+              <div style={{ backgroundColor: "#FEF3C7", border: "2px solid #F59E0B", borderRadius: "0.5rem", padding: "1.5rem", marginBottom: "2rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.75rem" }}>
+                  <span style={{ fontSize: "1.5rem" }}>💬</span>
+                  <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#92400E" }}>Teacher Feedback / משוב מהמורה</h3>
+                </div>
+                <p style={{ color: "#78350F", whiteSpace: "pre-wrap", lineHeight: "1.6" }}>{feedback.feedback}</p>
+              </div>
+            )}
             
             <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
               <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1.5rem" }}>📋 Logo Design Steps / שלבי עיצוב לוגו</h2>

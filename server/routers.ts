@@ -297,6 +297,49 @@ export const appRouter = router({
         }
       }),
 
+    addFeedback: publicProcedure
+      .input(z.object({ studentId: z.number(), tabNumber: z.number(), feedback: z.string() }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+        try {
+          const existing = await db.select().from(approvalLog)
+            .where(and(eq(approvalLog.studentId, input.studentId), eq(approvalLog.tabNumber, input.tabNumber)))
+            .limit(1);
+          
+          if (existing.length > 0) {
+            await db.update(approvalLog).set({ feedback: input.feedback }).where(eq(approvalLog.id, existing[0].id));
+          } else {
+            await db.insert(approvalLog).values([{
+              studentId: input.studentId,
+              tabNumber: input.tabNumber,
+              feedback: input.feedback,
+              isApproved: false,
+            }]);
+          }
+          return { success: true };
+        } catch (error) {
+          console.error('[addFeedback] Error:', error);
+          throw new Error(`Failed to add feedback: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+      }),
+
+    getFeedback: publicProcedure
+      .input(z.object({ studentId: z.number(), tabNumber: z.number() }))
+      .query(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return null;
+        try {
+          const result = await db.select().from(approvalLog)
+            .where(and(eq(approvalLog.studentId, input.studentId), eq(approvalLog.tabNumber, input.tabNumber)))
+            .limit(1);
+          return result.length > 0 ? result[0] : null;
+        } catch (error) {
+          console.error('[getFeedback] Error:', error);
+          return null;
+        }
+      }),
+
     getAllStudentResponses: publicProcedure.query(async () => {
       const db = await getDb();
       if (!db) return [];

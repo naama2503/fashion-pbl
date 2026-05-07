@@ -314,3 +314,14 @@
 - [x] Ensure hooks are always called in the same order on every render
 - [x] Verify no console errors on project page
 - [x] All 132 tests passing - no regressions
+
+
+## Teacher Feedback Feature (COMPLETED)
+- [x] Database already has feedback column in approval_log table
+- [x] Created addFeedback procedure in server routers
+- [x] Created getFeedback query procedure in server routers
+- [x] Added feedback textarea in AdminDashboard for each tab
+- [x] Added "Save Feedback" button in AdminDashboard
+- [x] Display feedback to students in ProjectPage as yellow banner
+- [x] Feedback shows with teacher comment icon and bilingual header
+- [x] All 132 tests passing with zero regressions

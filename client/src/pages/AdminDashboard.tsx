@@ -114,6 +114,16 @@ export default function AdminDashboard() {
     },
   });
 
+  // Add feedback mutation
+  const addFeedbackMutation = trpc.pbl.addFeedback.useMutation({
+    onSuccess: () => {
+      toast.success("Feedback saved successfully!");
+    },
+    onError: (error) => {
+      toast.error("Failed to save feedback");
+    },
+  });
+
   const handleLogin = () => {
     if (password === TEACHER_PASSWORD) {
       setIsLoggedIn(true);
@@ -150,6 +160,24 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error("Error rejecting:", error);
       toast.error("Failed to reject tab");
+    }
+  };
+
+  const handleSaveFeedback = async (studentId: number, tabNumber: number) => {
+    try {
+      const feedback = feedbackNotes[`${studentId}-${tabNumber}`] || "";
+      if (!feedback.trim()) {
+        toast.error("Please enter feedback before saving");
+        return;
+      }
+      await addFeedbackMutation.mutateAsync({
+        studentId,
+        tabNumber,
+        feedback,
+      });
+    } catch (error) {
+      console.error("Error saving feedback:", error);
+      toast.error("Failed to save feedback");
     }
   };
 
@@ -350,6 +378,12 @@ export default function AdminDashboard() {
                         placeholder={translations.admin.feedbackPlaceholder}
                         className="border-2 border-gray-300 min-h-24"
                       />
+                      <Button
+                        onClick={() => handleSaveFeedback(selectedStudent.id, response.tabNumber)}
+                        className="mt-2 bg-blue-600 hover:bg-blue-700 text-white"
+                      >
+                        Save Feedback
+                      </Button>
                     </div>
 
                     <div className="bg-gray-50 p-4 rounded border-l-4 border-gray-900">
