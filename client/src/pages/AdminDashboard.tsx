@@ -124,6 +124,17 @@ export default function AdminDashboard() {
     },
   });
 
+  // Delete group mutation
+  const deleteGroupMutation = trpc.pbl.deleteGroup.useMutation({
+    onSuccess: () => {
+      toast.success("Group deleted successfully!");
+      setSelectedStudentId(null);
+    },
+    onError: (error) => {
+      toast.error("Failed to delete group");
+    },
+  });
+
   const handleLogin = () => {
     if (password === TEACHER_PASSWORD) {
       setIsLoggedIn(true);
@@ -181,6 +192,19 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteGroup = async () => {
+    if (!selectedStudent) return;
+    const msg = `Are you sure you want to delete the entire group "${selectedStudent.groupName}" and all their responses? This cannot be undone.`;
+    if (!window.confirm(msg)) {
+      return;
+    }
+    try {
+      await deleteGroupMutation.mutateAsync({ studentId: selectedStudent.id });
+    } catch (error) {
+      console.error("Error deleting group:", error);
+    }
+  };
+
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-4">
@@ -230,9 +254,18 @@ export default function AdminDashboard() {
     return (
       <div className="min-h-screen bg-amber-50 p-4">
         <div className="container max-w-4xl">
-          <Button onClick={() => setSelectedStudentId(null)} variant="outline" className="mb-6">
-            ← Back to Students / חזור לתלמידים
-          </Button>
+          <div className="flex gap-2 mb-6">
+            <Button onClick={() => setSelectedStudentId(null)} variant="outline">
+              ← Back to Students / חזור לתלמידים
+            </Button>
+            <Button 
+              onClick={handleDeleteGroup}
+              variant="destructive"
+              className="bg-red-600 hover:bg-red-700"
+            >
+              🗑️ Delete Group / מחק קבוצה
+            </Button>
+          </div>
 
           <Card className="p-8 border-2 border-gray-300">
             <h2 className="text-3xl font-black mb-2">{selectedStudent.groupName || `Student ${selectedStudent.id}`}</h2>

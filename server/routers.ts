@@ -353,6 +353,28 @@ export const appRouter = router({
         return [];
       }
     }),
+
+    deleteGroup: publicProcedure
+      .input(z.object({ studentId: z.number() }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+        try {
+          // Delete all responses for this student
+          await db.delete(studentResponses)
+            .where(eq(studentResponses.studentId, input.studentId));
+          
+          // Delete the student group
+          await db.delete(students)
+            .where(eq(students.id, input.studentId));
+          
+          console.log(`[deleteGroup] Deleted group ${input.studentId} and all responses`);
+          return { success: true };
+        } catch (error) {
+          console.error('[deleteGroup] Error:', error);
+          throw new Error('Failed to delete group');
+        }
+      }),
   }),
 });
 

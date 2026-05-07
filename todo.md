@@ -325,3 +325,12 @@
 - [x] Display feedback to students in ProjectPage as yellow banner
 - [x] Feedback shows with teacher comment icon and bilingual header
 - [x] All 132 tests passing with zero regressions
+
+
+## Delete Group Feature (COMPLETED)
+- [x] Added deleteGroup procedure to server routers
+- [x] Added delete button in AdminDashboard for each group
+- [x] Added confirmation dialog before deletion
+- [x] Show success/error toast after deletion
+- [x] Automatically refresh dashboard after group deletion
+- [x] All 132 tests passing with zero regressions
