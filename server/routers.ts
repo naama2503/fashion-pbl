@@ -345,12 +345,9 @@ export const appRouter = router({
       if (!db) return [];
       try {
         // Get all responses for the dashboard list view
-        try {
-          return await db.select().from(studentResponses);
-        } catch (selectError: any) {
-          console.warn('[getAllStudentResponses] groupName column not available yet');
-          return [];
-        }
+        const allResponses = await db.select().from(studentResponses);
+        console.log('[getAllStudentResponses] Found responses:', allResponses.length);
+        return allResponses;
       } catch (error) {
         console.error('[getAllStudentResponses] Error:', error);
         return [];
