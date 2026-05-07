@@ -11,12 +11,12 @@ import ProjectPage from "./pages/ProjectPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import { StudentLogin } from "./components/StudentLogin";
 
-function Router({ studentId, onStudentLogin }: { studentId: number | null; onStudentLogin: (id: number, name: string) => void }) {
+function Router({ studentId, onStudentLogin, forceLogin }: { studentId: number | null; onStudentLogin: (id: number, name: string) => void; forceLogin: boolean }) {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/project"}>
-        {studentId ? <ProjectPage studentId={studentId} /> : <StudentLogin onLoginSuccess={onStudentLogin} />}
+        {studentId && !forceLogin ? <ProjectPage studentId={studentId} /> : <StudentLogin onLoginSuccess={onStudentLogin} />}
       </Route>
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/404"} component={NotFound} />
@@ -29,15 +29,24 @@ function Router({ studentId, onStudentLogin }: { studentId: number | null; onStu
 function App() {
   const [studentId, setStudentId] = useState<number | null>(null);
   const [studentName, setStudentName] = useState<string | null>(null);
+  const [forceLogin, setForceLogin] = useState(false);
 
   // Load student from localStorage on mount
   useEffect(() => {
-    const savedStudentId = localStorage.getItem("studentId");
-    const savedStudentName = localStorage.getItem("studentName");
-    const savedGroupName = localStorage.getItem("groupName");
-    if (savedStudentId) {
-      setStudentId(parseInt(savedStudentId));
-      setStudentName(savedStudentName);
+    // Check if URL has newProject parameter
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("newProject") === "1") {
+      setForceLogin(true);
+      // Remove the parameter from URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+      const savedStudentId = localStorage.getItem("studentId");
+      const savedStudentName = localStorage.getItem("studentName");
+      const savedGroupName = localStorage.getItem("groupName");
+      if (savedStudentId) {
+        setStudentId(parseInt(savedStudentId));
+        setStudentName(savedStudentName);
+      }
     }
   }, []);
 
@@ -55,7 +64,7 @@ function App() {
         <LanguageProvider>
           <TooltipProvider>
             <Toaster />
-            <Router studentId={studentId} onStudentLogin={handleStudentLogin} />
+            <Router studentId={studentId} onStudentLogin={handleStudentLogin} forceLogin={forceLogin} />
           </TooltipProvider>
         </LanguageProvider>
       </ThemeProvider>

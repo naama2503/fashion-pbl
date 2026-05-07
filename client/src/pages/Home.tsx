@@ -72,11 +72,8 @@ export default function Home() {
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
           <button
             onClick={() => {
-              // Clear localStorage to show login form
-              localStorage.removeItem("studentId");
-              localStorage.removeItem("studentName");
-              localStorage.removeItem("groupName");
-              navigate("/project");
+              // Use URL parameter to force login form
+              navigate("/project?newProject=1");
             }}
             style={{
               backgroundColor: "#333333",
