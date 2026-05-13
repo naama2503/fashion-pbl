@@ -87,6 +87,8 @@ export default function AdminDashboard() {
   const [selectedStudentId, setSelectedStudentId] = useState<number | null>(null);
   const [expandedStudentId, setExpandedStudentId] = useState<number | null>(null);
   const [feedbackNotes, setFeedbackNotes] = useState<{ [key: string]: string }>({});
+  const [isRenamingId, setIsRenamingId] = useState<number | null>(null);
+  const [newGroupName, setNewGroupName] = useState("");
 
   // Fetch all students from database
   const { data: dbStudents = [], isLoading: isLoadingStudents } = trpc.pbl.getAllStudents.useQuery(undefined, {
@@ -132,6 +134,21 @@ export default function AdminDashboard() {
     },
     onError: (error) => {
       toast.error("Failed to delete group");
+    },
+  });
+
+  // Rename group mutation
+  const utils = trpc.useUtils();
+  const renameGroupMutation = trpc.pbl.renameGroup.useMutation({
+    onSuccess: () => {
+      toast.success("Group renamed successfully!");
+      setIsRenamingId(null);
+      setNewGroupName("");
+      utils.pbl.getAllStudents.invalidate();
+      utils.pbl.getStudentResponses.invalidate();
+    },
+    onError: (error) => {
+      toast.error("Failed to rename group");
     },
   });
 
@@ -205,6 +222,18 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleRenameGroup = async () => {
+    if (!selectedStudent || !newGroupName.trim()) return;
+    try {
+      await renameGroupMutation.mutateAsync({ 
+        studentId: selectedStudent.id, 
+        newName: newGroupName 
+      });
+    } catch (error) {
+      console.error("Error renaming group:", error);
+    }
+  };
+
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-4">
@@ -252,7 +281,7 @@ export default function AdminDashboard() {
   // Detail view when student is selected
   if (selectedStudent && studentResponses.length > 0) {
     return (
-      <div className="min-h-screen bg-amber-50 p-4">
+      <div className="min-h-screen bg-[#f8f3f3] p-4">
         <div className="container max-w-4xl">
           <div className="flex gap-2 mb-6">
             <Button onClick={() => setSelectedStudentId(null)} variant="outline">
@@ -268,7 +297,34 @@ export default function AdminDashboard() {
           </div>
 
           <Card className="p-8 border-2 border-gray-300">
-            <h2 className="text-3xl font-black mb-2">{selectedStudent.groupName || `Student ${selectedStudent.id}`}</h2>
+            <div className="flex items-center justify-between mb-4">
+              {isRenamingId === selectedStudent.id ? (
+                <div className="flex gap-2 flex-1">
+                  <Input
+                    value={newGroupName}
+                    onChange={(e) => setNewGroupName(e.target.value)}
+                    placeholder="Enter new group name"
+                    className="flex-1"
+                  />
+                  <Button onClick={handleRenameGroup} className="bg-blue-600 hover:bg-blue-700">Save</Button>
+                  <Button onClick={() => setIsRenamingId(null)} variant="outline">Cancel</Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <h2 className="text-3xl font-black">{selectedStudent.groupName || `Student ${selectedStudent.id}`}</h2>
+                  <Button 
+                    onClick={() => {
+                      setIsRenamingId(selectedStudent.id);
+                      setNewGroupName(selectedStudent.groupName || "");
+                    }}
+                    variant="outline"
+                    size="sm"
+                  >
+                    ✏️ Rename
+                  </Button>
+                </div>
+              )}
+            </div>
             <p className="text-gray-600 mb-6">{selectedStudent.members ? `Members: ${selectedStudent.members}` : "Group"}</p>
 
             {/* Tab Status Indicators with Approval Badges */}
@@ -467,7 +523,7 @@ export default function AdminDashboard() {
 
   // List view
   return (
-    <div className="min-h-screen bg-amber-50 p-4">
+    <div className="min-h-screen bg-[#f8f3f3] p-4">
       <div className="container max-w-6xl">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-4xl font-black">{translations.admin.title}</h1>

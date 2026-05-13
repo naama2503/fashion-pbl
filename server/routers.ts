@@ -375,6 +375,23 @@ export const appRouter = router({
           throw new Error('Failed to delete group');
         }
       }),
+    renameGroup: publicProcedure
+      .input(z.object({ studentId: z.number(), newName: z.string().min(1) }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+        try {
+          await db.update(students)
+            .set({ groupName: input.newName })
+            .where(eq(students.id, input.studentId));
+          
+          console.log(`[renameGroup] Renamed group ${input.studentId} to ${input.newName}`);
+          return { success: true };
+        } catch (error) {
+          console.error('[renameGroup] Error:', error);
+          throw new Error('Failed to rename group');
+        }
+      }),
   }),
 });
 

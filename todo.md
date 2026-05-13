@@ -334,3 +334,11 @@
 - [x] Show success/error toast after deletion
 - [x] Automatically refresh dashboard after group deletion
 - [x] All 132 tests passing with zero regressions
+
+
+## Rename Group & Background Color (IN PROGRESS)
+- [ ] Add renameGroup procedure to server routers
+- [ ] Add rename button/modal in AdminDashboard
+- [ ] Change AdminDashboard background color to #f8f3f3
+- [ ] Test rename functionality
+- [ ] Verify background color displays correctly
