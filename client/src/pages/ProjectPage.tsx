@@ -1672,11 +1672,25 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
   }
 
   // Placeholder for other tabs
+  const currentTabData = TABS[currentTab];
+  
+  if (!currentTabData) {
+    return (
+      <div style={{ backgroundColor: "#f0f0f0", minHeight: "100vh", padding: "2rem", textAlign: "center" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
+        <h1 style={{ marginTop: "5rem", fontSize: "2rem", fontWeight: "bold", color: "#333333" }}>
+          Invalid Tab
+        </h1>
+        <p style={{ color: "#555555", marginTop: "1rem" }}>Please select a valid tab.</p>
+      </div>
+    );
+  }
+  
   return (
     <div style={{ backgroundColor: tabColor, minHeight: "100vh", padding: "2rem", textAlign: "center" }}>
       <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
       <h1 style={{ marginTop: "5rem", fontSize: "2rem", fontWeight: "bold", color: "#333333" }}>
-        {TABS[currentTab].label} ({TABS[currentTab].labelHe})
+        {currentTabData.label} ({currentTabData.labelHe})
       </h1>
       <p style={{ color: "#555555", marginTop: "1rem" }}>Tab content coming soon...</p>
     </div>
