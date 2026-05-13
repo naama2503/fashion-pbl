@@ -1500,51 +1500,47 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
     );
   }
 
-  // Tab 8: Reflection
+  // Tab 8: Reflection with Multiple Choice & 3 Individual Forms
   if (currentTab === 7) {
-    const personalSkills = (responses as any).personalSkills || "";
-    const personalChallenge = (responses as any).personalChallenge || "";
-    const personalDifferently = (responses as any).personalDifferently || "";
-    const groupCollaboration = (responses as any).groupCollaboration || "";
-    const groupBestPart = (responses as any).groupBestPart || "";
-    const groupImprovement = (responses as any).groupImprovement || "";
-    const processThoughts = (responses as any).processThoughts || "";
-    const processEasy = (responses as any).processEasy || "";
-    const processSuggestions = (responses as any).processSuggestions || "";
+    // Member 1 responses
+    const member1Q1 = (responses as any).member1_q1 || "";
+    const member1Q2 = (responses as any).member1_q2 || "";
+    const member1Q3 = (responses as any).member1_q3 || "";
     
-    const canSave = personalSkills.trim().length > 10 && 
-                    personalChallenge.trim().length > 10 && 
-                    personalDifferently.trim().length > 10 &&
-                    groupCollaboration.trim().length > 10 &&
-                    groupBestPart.trim().length > 10 &&
-                    groupImprovement.trim().length > 10 &&
-                    processThoughts.trim().length > 10 &&
-                    processEasy.trim().length > 10 &&
-                    processSuggestions.trim().length > 10;
+    // Member 2 responses
+    const member2Q1 = (responses as any).member2_q1 || "";
+    const member2Q2 = (responses as any).member2_q2 || "";
+    const member2Q3 = (responses as any).member2_q3 || "";
     
-    const ReflectionField = ({ label, labelHe, value, onChange }: any) => (
+    // Member 3 responses
+    const member3Q1 = (responses as any).member3_q1 || "";
+    const member3Q2 = (responses as any).member3_q2 || "";
+    const member3Q3 = (responses as any).member3_q3 || "";
+    
+    const canSave = member1Q1 && member1Q2 && member1Q3 && 
+                    member2Q1 && member2Q2 && member2Q3 &&
+                    member3Q1 && member3Q2 && member3Q3;
+    
+    const MultiChoiceQuestion = ({ label, labelHe, options, value, onChange, memberId }: any) => (
       <div style={{ marginBottom: "1.5rem" }}>
-        <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "bold", color: "#333333" }}>
+        <label style={{ display: "block", marginBottom: "0.75rem", fontWeight: "bold", color: "#333333" }}>
           {label} / {labelHe}
         </label>
-        <textarea
-          value={value}
-          onChange={onChange}
-          placeholder="Write your reflection... / כתבו את ההשקפה שלכם..."
-          style={{
-            width: "100%",
-            minHeight: "120px",
-            padding: "1rem",
-            border: "2px solid #E5E7EB",
-            borderRadius: "0.5rem",
-            fontSize: "1rem",
-            fontFamily: "inherit",
-            resize: "vertical",
-          }}
-        />
-        <p style={{ color: "#666666", fontSize: "0.875rem", marginTop: "0.5rem" }}>
-          {value.length} characters / תווים
-        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          {options.map((option: any, idx: number) => (
+            <label key={idx} style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
+              <input
+                type="radio"
+                name={`member${memberId}_question`}
+                value={option.value}
+                checked={value === option.value}
+                onChange={(e) => onChange(e.target.value)}
+                style={{ width: "18px", height: "18px", cursor: "pointer" }}
+              />
+              <span style={{ color: "#333333" }}>{option.label}</span>
+            </label>
+          ))}
+        </div>
       </div>
     );
     
@@ -1553,99 +1549,134 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
         <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
         
         <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
-          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+          <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
+            {/* Study Guide Warning */}
+            <div style={{ backgroundColor: "#FEE2E2", border: "3px solid #DC2626", borderRadius: "0.5rem", padding: "2rem", marginBottom: "2rem" }}>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#DC2626", marginBottom: "1rem" }}>
+                ⚠️ WARNING / אזהרה
+              </h2>
+              <p style={{ color: "#333333", marginBottom: "1rem", fontSize: "1.1rem", fontWeight: "bold" }}>
+                Each one of you will be asked about each part of the project. GO over your research paragraph and make sure you understand every word. Make sure you know what happened in each part of the process, even if you weren't there to do it.
+              </p>
+              <p style={{ color: "#333333", marginBottom: "2rem", fontSize: "1.1rem", fontWeight: "bold" }}>
+                כל אחד מכם יישאל על כל חלק בפרויקט. בדקו את הפסקת המחקר שלכם והבטיחו שאתם מבינים כל מילה. ודאו שאתם יודעים מה קרה בכל שלב של התהליך, גם אם לא הייתם שם לעשות זאת.
+              </p>
+              
+              <div style={{ backgroundColor: "white", padding: "1.5rem", borderRadius: "0.5rem" }}>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
+                  Check Yourself / בדוק את עצמך:
+                </h3>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                  <div>
+                    <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                      What are 2 statistics about your group? / מה 2 סטטיסטיקות על הקבוצה שלך?
+                    </p>
+                  </div>
+                  <div>
+                    <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                      How are they suffering? / איך הם סובלים?
+                    </p>
+                  </div>
+                  <div>
+                    <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                      What 3 elements does a logo have? / אילו 3 אלמנטים יש ללוגו?
+                    </p>
+                  </div>
+                  <div>
+                    <p style={{ fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+                      What is gestalt? / מה זה gestalt?
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* 3 Member Forms Side by Side */}
             <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-              Stage 8: Reflection / שלב 8: רפלקציה
+              Stage 8: Individual Reflection / שלב 8: רפלקציה אישית
             </h1>
             <p style={{ color: "#555555", marginBottom: "2rem" }}>
-              Reflect on your learning journey, group experience, and the website process.
-            </p>
-            <p style={{ color: "#555555", marginBottom: "2rem" }}>
-              חשבו על מסע הלמידה שלכם, ניסיון הקבוצה, ותהליך האתר.
+              Each group member answers on their own / כל חבר בקבוצה עונה בעצמו
             </p>
             
-            {/* Personal Reflection */}
-            <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1.5rem" }}>
-                🧠 Personal Reflection / רפלקציה אישית
-              </h2>
-              
-              <ReflectionField
-                label="What skills did you learn during this project?"
-                labelHe="אילו כישורים למדת במהלך הפרויקט?"
-                value={personalSkills}
-                onChange={(e: any) => updateResponse('personalSkills', e.target.value)}
-              />
-              
-              <ReflectionField
-                label="What was the most challenging part for you?"
-                labelHe="מה היה החלק הקשה ביותר עבורך?"
-                value={personalChallenge}
-                onChange={(e: any) => updateResponse('personalChallenge', e.target.value)}
-              />
-              
-              <ReflectionField
-                label="What would you do differently if you did this project again?"
-                labelHe="מה היית עושה אחרת אם היית עושה את הפרויקט הזה שוב?"
-                value={personalDifferently}
-                onChange={(e: any) => updateResponse('personalDifferently', e.target.value)}
-              />
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem", marginBottom: "2rem" }}>
+              {[1, 2, 3].map((memberId) => {
+                const q1Key = `member${memberId}_q1`;
+                const q2Key = `member${memberId}_q2`;
+                const q3Key = `member${memberId}_q3`;
+                const q1Value = (responses as any)[q1Key] || "";
+                const q2Value = (responses as any)[q2Key] || "";
+                const q3Value = (responses as any)[q3Key] || "";
+                
+                return (
+                  <div key={memberId} style={{ backgroundColor: "white", padding: "1.5rem", borderRadius: "0.5rem", border: "2px solid #E5E7EB" }}>
+                    <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", color: "#333333", marginBottom: "1.5rem", textAlign: "center" }}>
+                      Member {memberId} / חבר {memberId}
+                    </h3>
+                    
+                    <MultiChoiceQuestion
+                      label="What skill did you develop most?"
+                      labelHe="איזה כישור פיתחת הכי הרבה?"
+                      options={[
+                        { label: "Design thinking / חשיבה עיצובית", value: "design" },
+                        { label: "Teamwork / עבודת צוות", value: "teamwork" },
+                        { label: "Research / מחקר", value: "research" },
+                        { label: "Digital skills / כישורים דיגיטליים", value: "digital" },
+                      ]}
+                      value={q1Value}
+                      onChange={(val: string) => updateResponse(q1Key, val)}
+                      memberId={memberId}
+                    />
+                    
+                    <MultiChoiceQuestion
+                      label="What was most challenging?"
+                      labelHe="מה היה הקשה ביותר?"
+                      options={[
+                        { label: "Working with others / עבודה עם אחרים", value: "collaboration" },
+                        { label: "Understanding concepts / הבנת קונספטים", value: "concepts" },
+                        { label: "Using the website / שימוש באתר", value: "website" },
+                        { label: "Time management / ניהול זמן", value: "time" },
+                      ]}
+                      value={q2Value}
+                      onChange={(val: string) => updateResponse(q2Key, val)}
+                      memberId={memberId}
+                    />
+                    
+                    <MultiChoiceQuestion
+                      label="How would you rate the group?"
+                      labelHe="איך היית מדרג את הקבוצה?"
+                      options={[
+                        { label: "Excellent / מעולה", value: "excellent" },
+                        { label: "Good / טוב", value: "good" },
+                        { label: "Average / בינוני", value: "average" },
+                        { label: "Needs improvement / צריך שיפור", value: "improvement" },
+                      ]}
+                      value={q3Value}
+                      onChange={(val: string) => updateResponse(q3Key, val)}
+                      memberId={memberId}
+                    />
+                  </div>
+                );
+              })}
             </div>
             
-            {/* Group Reflection */}
-            <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1.5rem" }}>
-                👥 Group Reflection / רפלקציה קבוצתית
+            {/* Congratulations Section */}
+            <div style={{ backgroundColor: "#ECFDF5", border: "3px solid #16A34A", borderRadius: "0.5rem", padding: "2rem", marginBottom: "2rem", textAlign: "center" }}>
+              <h2 style={{ fontSize: "2rem", fontWeight: "bold", color: "#16A34A", marginBottom: "1rem" }}>
+                🎉 Congratulations! / ברכות!
               </h2>
-              
-              <ReflectionField
-                label="How did your group work together?"
-                labelHe="איך הקבוצה שלך עבדה ביחד?"
-                value={groupCollaboration}
-                onChange={(e: any) => updateResponse('groupCollaboration', e.target.value)}
-              />
-              
-              <ReflectionField
-                label="What was the best part of working as a group?"
-                labelHe="מה היה החלק הטוב ביותר בעבודה כקבוצה?"
-                value={groupBestPart}
-                onChange={(e: any) => updateResponse('groupBestPart', e.target.value)}
-              />
-              
-              <ReflectionField
-                label="What could be improved in your group's collaboration?"
-                labelHe="מה יכול להשתפר בשיתוף הפעולה של הקבוצה שלך?"
-                value={groupImprovement}
-                onChange={(e: any) => updateResponse('groupImprovement', e.target.value)}
-              />
-            </div>
-            
-            {/* Process Reflection */}
-            <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1.5rem" }}>
-                💻 Process & Website Reflection / רפלקציה על התהליך והאתר
-              </h2>
-              
-              <ReflectionField
-                label="What did you think of the website and the overall process?"
-                labelHe="מה דעתך על האתר והתהליך הכללי?"
-                value={processThoughts}
-                onChange={(e: any) => updateResponse('processThoughts', e.target.value)}
-              />
-              
-              <ReflectionField
-                label="Was the website easy to use? Why or why not?"
-                labelHe="האם האתר היה קל לשימוש? למה או למה לא?"
-                value={processEasy}
-                onChange={(e: any) => updateResponse('processEasy', e.target.value)}
-              />
-              
-              <ReflectionField
-                label="Do you have any suggestions for improving the website or process?"
-                labelHe="האם יש לך הצעות לשיפור האתר או התהליך?"
-                value={processSuggestions}
-                onChange={(e: any) => updateResponse('processSuggestions', e.target.value)}
-              />
+              <p style={{ fontSize: "1.25rem", color: "#333333", marginBottom: "1rem", fontWeight: "bold" }}>
+                You finished the first part of the project!
+              </p>
+              <p style={{ fontSize: "1.25rem", color: "#333333", marginBottom: "2rem", fontWeight: "bold" }}>
+                הסתיימתם את החלק הראשון של הפרויקט!
+              </p>
+              <p style={{ fontSize: "1.1rem", color: "#333333", marginBottom: "0.5rem" }}>
+                Next, you will go to Pointe with your class to print your logos.
+              </p>
+              <p style={{ fontSize: "1.1rem", color: "#333333" }}>
+                בשלב הבא, תלכו ל-Pointe עם הכיתה שלכם להדפיס את הלוגוים שלכם.
+              </p>
             </div>
             
             <button
@@ -1655,15 +1686,15 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
                 width: "100%",
                 backgroundColor: canSave ? "#C7D2FE" : "#D1D5DB",
                 color: "#333333",
-                padding: "0.75rem",
-                fontSize: "1rem",
+                padding: "1rem",
+                fontSize: "1.1rem",
                 fontWeight: "bold",
                 border: "none",
                 borderRadius: "0.5rem",
                 cursor: canSave ? "pointer" : "not-allowed",
               }}
             >
-              Submit Reflection / שלח רפלקציה
+              Submit All Responses / שלח את כל התשובות
             </button>
           </div>
         </div>
