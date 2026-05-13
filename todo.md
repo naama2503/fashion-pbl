@@ -336,9 +336,64 @@
 - [x] All 132 tests passing with zero regressions
 
 
-## Rename Group & Background Color (IN PROGRESS)
-- [ ] Add renameGroup procedure to server routers
-- [ ] Add rename button/modal in AdminDashboard
-- [ ] Change AdminDashboard background color to #f8f3f3
-- [ ] Test rename functionality
-- [ ] Verify background color displays correctly
+## Rename Group & Background Color (COMPLETED)
+- [x] Add renameGroup procedure to server routers
+- [x] Add rename button/modal in AdminDashboard
+- [x] Change AdminDashboard background color to #f8f3f3
+- [x] Test rename functionality
+- [x] Verify background color displays correctly
+
+
+## Tab 7 - Fashion Item (Rename & Enhance) (COMPLETED)
+- [x] Rename Tab 7 from "Presentation" to "Fashion Item"
+- [x] Add clothing item selection: t-shirt, hat, shoes, other
+- [x] Add explanation field: "Why would this item draw people's attention?"
+- [x] Update database schema to store fashion_item_choice and fashion_item_explanation
+- [x] Update saveResponse mutation to handle new fields
+- [x] Add validation - require both item selection and explanation
+- [x] Add bilingual translations for all new text
+
+## Tab 8 - Reflection (New Tab) (COMPLETED)
+- [x] Create Tab 8 Reflection component
+- [x] Add Personal Reflection section with questions about:
+  - [x] What skills did you learn?
+  - [x] What was most challenging?
+  - [x] What would you do differently?
+- [x] Add Group Reflection section with questions about:
+  - [x] How did your group work together?
+  - [x] What was the best part of group collaboration?
+  - [x] What could be improved in group work?
+- [x] Add Process Reflection section with questions about:
+  - [x] What did you think of the website/process?
+  - [x] Was it easy to use?
+  - [x] Any suggestions for improvement?
+- [x] Add textarea fields for all responses
+- [x] Add Save button that sends data to teacher
+- [x] Update database schema to store reflection_data
+- [x] Update saveResponse mutation for Tab 8
+- [x] Add bilingual translations for all reflection questions
+
+## Homepage - Add 8th Tab Button (COMPLETED)
+- [x] Add 8th button for Reflection tab
+- [x] Update TAB_NAMES array to include "Reflection"
+- [x] Style button consistently with other tabs
+- [x] Add bilingual label
+
+## Student Return Flow Fix (COMPLETED)
+- [x] Debug why students are not resuming at last active tab
+- [x] Verify getLastActiveTab procedure is working correctly
+- [x] Check localStorage for tab persistence
+- [x] Ensure ProjectPage navigates to correct tab on mount
+- [x] Test full flow: login → work on tab 3 → logout → login → should go to tab 3
+
+## Admin Dashboard Redesign (Cleanup) (COMPLETED)
+- [x] Simplify dashboard layout - remove clutter
+- [x] Create card-based view for each group
+- [x] Show group name prominently
+- [x] Show tab status indicators in a cleaner way
+- [x] Move approval/rejection buttons to a dedicated section
+- [x] Organize feedback section
+- [x] Add rename/delete buttons in a consistent location
+- [x] Improve visual hierarchy and spacing
+- [x] Add filters or search for finding groups
+- [x] Test with multiple groups to ensure scalability

@@ -9,7 +9,7 @@ const STAGES = [
   { num: 4, title: "Design Inquiry", titleHe: "חוקי עיצוב", color: "#D8B4FE" },
   { num: 5, title: "Creating a Logo", titleHe: "יצירת לוגו", color: "#93C5FD" },
   { num: 6, title: "Fashion Item", titleHe: "פריט אופנה", color: "#86EFAC" },
-  { num: 7, title: "Presentation", titleHe: "מצגת", color: "#94A3B8" },
+  { num: 7, title: "Reflection", titleHe: "רפלקציה", color: "#C7D2FE" },
 ];
 
 export default function Home() {

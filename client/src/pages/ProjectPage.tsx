@@ -17,7 +17,6 @@ const TABS = [
   { label: "Creating a Logo", labelHe: "יצירת לוגו" },
   { label: "Vector Art", labelHe: "וקטור אמנות" },
   { label: "Fashion Item", labelHe: "פריט אופנה" },
-  { label: "Presentation", labelHe: "מצגת" },
   { label: "Reflection", labelHe: "רפלקציה" },
 ];
 
@@ -183,6 +182,25 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
       }
     }
   }, [studentId]);
+
+  // Auto-resume to last active tab on return
+  useEffect(() => {
+    const studentId = parseInt(localStorage.getItem('studentId') || '1');
+    const lastTab = localStorage.getItem(`lastTab_${studentId}`);
+    if (lastTab) {
+      const tabNum = parseInt(lastTab);
+      if (tabNum >= 0 && tabNum < TABS.length) {
+        setCurrentTab(tabNum);
+        console.log(`Resuming to tab ${tabNum}`);
+      }
+    }
+  }, []);
+
+  // Save current tab to localStorage whenever it changes
+  useEffect(() => {
+    const studentId = parseInt(localStorage.getItem('studentId') || '1');
+    localStorage.setItem(`lastTab_${studentId}`, currentTab.toString());
+  }, [currentTab]);
   const [validationErrors, setValidationErrors] = useState([]);
   const [studentNames, setStudentNames] = useState(["Student 1", "Student 2", "Student 3"]);
   
@@ -1374,134 +1392,278 @@ export default function ProjectPage({ studentId }: ProjectPageProps) {
     );
   }
 
-  // Tab 7: Presentation
+  // Tab 7: Fashion Item
   if (currentTab === 6) {
-    const uploadedPresentation = (responses as any).presentationFile || null;
+    const fashionItemChoice = (responses as any).fashionItemChoice || null;
+    const fashionItemExplanation = (responses as any).fashionItemExplanation || "";
     
-    const handlePresentationUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      
-      const allowedTypes = ['.ppt', '.pptx', '.pdf', '.key'];
-      const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
-      
-      if (!allowedTypes.includes(fileExtension)) {
-        setPresentationError('Please upload a valid presentation file (PPT, PPTX, PDF, or Keynote)');
-        return;
-      }
-      
-      if (file.size > 50 * 1024 * 1024) { // 50MB limit for presentations
-        setPresentationError('File size must be less than 50MB');
-        return;
-      }
-      
-      setPresentationError('');
-      updateResponse('presentationFile', { name: file.name, size: file.size, type: file.type });
-    };
+    const fashionItems = [
+      { value: "tshirt", label: "T-Shirt / חולצת טי", emoji: "👕" },
+      { value: "hat", label: "Hat / כובע", emoji: "🧢" },
+      { value: "shoes", label: "Shoes / נעליים", emoji: "👟" },
+      { value: "other", label: "Other / אחר", emoji: "✨" },
+    ];
+    
+    const canSave = fashionItemChoice && fashionItemExplanation.trim().length > 10;
     
     return (
-      <div style={{ backgroundColor: "#E0E7FF", minHeight: "100vh" }}>
+      <div style={{ backgroundColor: "#86EFAC", minHeight: "100vh" }}>
         <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
         
         <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
           <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
             <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
-              Stage 7: Final Presentation / שלב 7: מצגה סופית
+              Stage 7: Fashion Item / שלב 7: פריט אופנה
             </h1>
             <p style={{ color: "#555555", marginBottom: "2rem" }}>
-              Upload your final presentation about how fashion can create social change. / העלו את המצגה הסופית שלכם על איך אופנה יכולה ליצור שינוי חברה.
+              Choose what fashion item you would want to iron your logo onto and explain why it would draw people's attention.
+            </p>
+            <p style={{ color: "#555555", marginBottom: "2rem" }}>
+              בחרו איזה פריט אופנה תרצו להדביק את הלוגו שלכם עליו והסבירו למה זה היה משוך את תשומת הלב של אנשים.
             </p>
             
-            {/* Presentation Upload Section */}
+            {/* Fashion Item Selection */}
             <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1rem" }}>
-                📊 Upload Your Presentation / העלו את המצגה
+              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1.5rem" }}>
+                👗 Choose a Fashion Item / בחרו פריט אופנה
               </h2>
-              <p style={{ color: "#555555", marginBottom: "1.5rem" }}>
-                Upload your presentation file (PowerPoint, PDF, or Keynote). / העלו קובץ מצגה (PowerPoint, PDF, או Keynote).
-              </p>
               
-              <div style={{
-                border: "2px dashed #818CF8",
-                borderRadius: "0.5rem",
-                padding: "2rem",
-                textAlign: "center",
-                backgroundColor: "#F0F4FF",
-                marginBottom: "1rem",
-              }}>
-                <input
-                  type="file"
-                  accept=".ppt,.pptx,.pdf,.key"
-                  onChange={handlePresentationUpload}
-                  style={{ display: "none" }}
-                  id="presentationFileInput"
-                />
-                <label
-                  htmlFor="presentationFileInput"
-                  style={{
-                    display: "block",
-                    cursor: "pointer",
-                    padding: "1rem",
-                  }}
-                >
-                  <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>📄</div>
-                  <p style={{ color: "#333333", fontWeight: "bold", marginBottom: "0.25rem" }}>
-                    Click to upload or drag and drop / לחץ לטעינה או גרור ורטוב
-                  </p>
-                  <p style={{ color: "#555555", fontSize: "0.875rem" }}>
-                    PPT, PPTX, PDF, Keynote (Max 50MB)
-                  </p>
-                </label>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem", marginBottom: "2rem" }}>
+                {fashionItems.map((item) => (
+                  <button
+                    key={item.value}
+                    onClick={() => updateResponse('fashionItemChoice', item.value)}
+                    style={{
+                      padding: "1.5rem",
+                      border: fashionItemChoice === item.value ? "3px solid #16A34A" : "2px solid #E5E7EB",
+                      borderRadius: "0.5rem",
+                      backgroundColor: fashionItemChoice === item.value ? "#ECFDF5" : "#F9FAFB",
+                      cursor: "pointer",
+                      transition: "all 0.2s",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                      color: "#333333",
+                    }}
+                  >
+                    <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>{item.emoji}</div>
+                    {item.label}
+                  </button>
+                ))}
               </div>
               
-              {presentationError && (
-                <div style={{
-                  backgroundColor: "#FEE2E2",
-                  border: "1px solid #FCA5A5",
-                  borderRadius: "0.375rem",
-                  padding: "0.75rem",
-                  marginBottom: "1rem",
-                  color: "#DC2626",
-                  fontSize: "0.875rem",
-                }}>
-                  ⚠️ {presentationError}
-                </div>
-              )}
-              
-              {uploadedPresentation && (
-                <div style={{
-                  backgroundColor: "#ECFDF5",
-                  border: "2px solid #86EFAC",
-                  borderRadius: "0.375rem",
-                  padding: "1rem",
-                  marginBottom: "1rem",
-                }}>
-                  <p style={{ color: "#16A34A", fontWeight: "bold", marginBottom: "0.25rem" }}>
-                    ✓ Presentation uploaded / מצגה טוענה
-                  </p>
-                  <p style={{ color: "#555555", fontSize: "0.875rem" }}>
-                    {uploadedPresentation.name} ({(uploadedPresentation.size / 1024 / 1024).toFixed(2)} MB)
-                  </p>
-                </div>
-              )}
+              {/* Explanation Field */}
+              <div>
+                <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "bold", color: "#333333" }}>
+                  Why would this item draw people's attention? / למה זה היה משוך את תשומת הלב?
+                </label>
+                <textarea
+                  value={fashionItemExplanation}
+                  onChange={(e) => updateResponse('fashionItemExplanation', e.target.value)}
+                  placeholder="Explain your choice... / הסבירו את בחירתכם..."
+                  style={{
+                    width: "100%",
+                    minHeight: "150px",
+                    padding: "1rem",
+                    border: "2px solid #E5E7EB",
+                    borderRadius: "0.5rem",
+                    fontSize: "1rem",
+                    fontFamily: "inherit",
+                    resize: "vertical",
+                  }}
+                />
+                <p style={{ color: "#666666", fontSize: "0.875rem", marginTop: "0.5rem" }}>
+                  {fashionItemExplanation.length} characters / תווים
+                </p>
+              </div>
             </div>
             
             <button
               onClick={handleSaveAndContinue}
-              disabled={!uploadedPresentation}
+              disabled={!canSave}
               style={{
                 width: "100%",
-                backgroundColor: uploadedPresentation ? "#A78BFA" : "#D1D5DB",
+                backgroundColor: canSave ? "#86EFAC" : "#D1D5DB",
                 color: "#333333",
                 padding: "0.75rem",
                 fontSize: "1rem",
                 fontWeight: "bold",
                 border: "none",
                 borderRadius: "0.5rem",
-                cursor: uploadedPresentation ? "pointer" : "not-allowed",
+                cursor: canSave ? "pointer" : "not-allowed",
               }}
             >
-              Submit & Complete / שלח והשלמו
+              Save & Continue / שמור והמשך
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Tab 8: Reflection
+  if (currentTab === 7) {
+    const personalSkills = (responses as any).personalSkills || "";
+    const personalChallenge = (responses as any).personalChallenge || "";
+    const personalDifferently = (responses as any).personalDifferently || "";
+    const groupCollaboration = (responses as any).groupCollaboration || "";
+    const groupBestPart = (responses as any).groupBestPart || "";
+    const groupImprovement = (responses as any).groupImprovement || "";
+    const processThoughts = (responses as any).processThoughts || "";
+    const processEasy = (responses as any).processEasy || "";
+    const processSuggestions = (responses as any).processSuggestions || "";
+    
+    const canSave = personalSkills.trim().length > 10 && 
+                    personalChallenge.trim().length > 10 && 
+                    personalDifferently.trim().length > 10 &&
+                    groupCollaboration.trim().length > 10 &&
+                    groupBestPart.trim().length > 10 &&
+                    groupImprovement.trim().length > 10 &&
+                    processThoughts.trim().length > 10 &&
+                    processEasy.trim().length > 10 &&
+                    processSuggestions.trim().length > 10;
+    
+    const ReflectionField = ({ label, labelHe, value, onChange }: any) => (
+      <div style={{ marginBottom: "1.5rem" }}>
+        <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "bold", color: "#333333" }}>
+          {label} / {labelHe}
+        </label>
+        <textarea
+          value={value}
+          onChange={onChange}
+          placeholder="Write your reflection... / כתבו את ההשקפה שלכם..."
+          style={{
+            width: "100%",
+            minHeight: "120px",
+            padding: "1rem",
+            border: "2px solid #E5E7EB",
+            borderRadius: "0.5rem",
+            fontSize: "1rem",
+            fontFamily: "inherit",
+            resize: "vertical",
+          }}
+        />
+        <p style={{ color: "#666666", fontSize: "0.875rem", marginTop: "0.5rem" }}>
+          {value.length} characters / תווים
+        </p>
+      </div>
+    );
+    
+    return (
+      <div style={{ backgroundColor: "#C7D2FE", minHeight: "100vh" }}>
+        <Navigation currentTab={currentTab} onTabChange={setCurrentTab} canAccessTab={canAccessTab} tabs={TABS} completedTabs={completedTabs} />
+        
+        <div style={{ marginLeft: "16rem", paddingTop: "5rem", padding: "2rem" }}>
+          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+            <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#333333", marginBottom: "0.5rem" }}>
+              Stage 8: Reflection / שלב 8: רפלקציה
+            </h1>
+            <p style={{ color: "#555555", marginBottom: "2rem" }}>
+              Reflect on your learning journey, group experience, and the website process.
+            </p>
+            <p style={{ color: "#555555", marginBottom: "2rem" }}>
+              חשבו על מסע הלמידה שלכם, ניסיון הקבוצה, ותהליך האתר.
+            </p>
+            
+            {/* Personal Reflection */}
+            <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1.5rem" }}>
+                🧠 Personal Reflection / רפלקציה אישית
+              </h2>
+              
+              <ReflectionField
+                label="What skills did you learn during this project?"
+                labelHe="אילו כישורים למדת במהלך הפרויקט?"
+                value={personalSkills}
+                onChange={(e: any) => updateResponse('personalSkills', e.target.value)}
+              />
+              
+              <ReflectionField
+                label="What was the most challenging part for you?"
+                labelHe="מה היה החלק הקשה ביותר עבורך?"
+                value={personalChallenge}
+                onChange={(e: any) => updateResponse('personalChallenge', e.target.value)}
+              />
+              
+              <ReflectionField
+                label="What would you do differently if you did this project again?"
+                labelHe="מה היית עושה אחרת אם היית עושה את הפרויקט הזה שוב?"
+                value={personalDifferently}
+                onChange={(e: any) => updateResponse('personalDifferently', e.target.value)}
+              />
+            </div>
+            
+            {/* Group Reflection */}
+            <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1.5rem" }}>
+                👥 Group Reflection / רפלקציה קבוצתית
+              </h2>
+              
+              <ReflectionField
+                label="How did your group work together?"
+                labelHe="איך הקבוצה שלך עבדה ביחד?"
+                value={groupCollaboration}
+                onChange={(e: any) => updateResponse('groupCollaboration', e.target.value)}
+              />
+              
+              <ReflectionField
+                label="What was the best part of working as a group?"
+                labelHe="מה היה החלק הטוב ביותר בעבודה כקבוצה?"
+                value={groupBestPart}
+                onChange={(e: any) => updateResponse('groupBestPart', e.target.value)}
+              />
+              
+              <ReflectionField
+                label="What could be improved in your group's collaboration?"
+                labelHe="מה יכול להשתפר בשיתוף הפעולה של הקבוצה שלך?"
+                value={groupImprovement}
+                onChange={(e: any) => updateResponse('groupImprovement', e.target.value)}
+              />
+            </div>
+            
+            {/* Process Reflection */}
+            <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "0.5rem", marginBottom: "2rem" }}>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#333333", marginBottom: "1.5rem" }}>
+                💻 Process & Website Reflection / רפלקציה על התהליך והאתר
+              </h2>
+              
+              <ReflectionField
+                label="What did you think of the website and the overall process?"
+                labelHe="מה דעתך על האתר והתהליך הכללי?"
+                value={processThoughts}
+                onChange={(e: any) => updateResponse('processThoughts', e.target.value)}
+              />
+              
+              <ReflectionField
+                label="Was the website easy to use? Why or why not?"
+                labelHe="האם האתר היה קל לשימוש? למה או למה לא?"
+                value={processEasy}
+                onChange={(e: any) => updateResponse('processEasy', e.target.value)}
+              />
+              
+              <ReflectionField
+                label="Do you have any suggestions for improving the website or process?"
+                labelHe="האם יש לך הצעות לשיפור האתר או התהליך?"
+                value={processSuggestions}
+                onChange={(e: any) => updateResponse('processSuggestions', e.target.value)}
+              />
+            </div>
+            
+            <button
+              onClick={handleSaveAndContinue}
+              disabled={!canSave}
+              style={{
+                width: "100%",
+                backgroundColor: canSave ? "#C7D2FE" : "#D1D5DB",
+                color: "#333333",
+                padding: "0.75rem",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                border: "none",
+                borderRadius: "0.5rem",
+                cursor: canSave ? "pointer" : "not-allowed",
+              }}
+            >
+              Submit Reflection / שלח רפלקציה
             </button>
           </div>
         </div>
